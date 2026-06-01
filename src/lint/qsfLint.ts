@@ -25,7 +25,7 @@ export class QsfLint
         {
             const line = document.lineAt(lineIndex).text;
 
-            // ignora commenti
+            // skip comments
             if (line.trim().startsWith('#')) { continue; }
 
             // multiple spaces

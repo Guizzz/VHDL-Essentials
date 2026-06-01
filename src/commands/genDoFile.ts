@@ -44,7 +44,7 @@ async function writeFileWithConfirmOverwrite( uri: vscode.Uri, content: string, 
     }
 
     await vscode.workspace.fs.writeFile(uri, Buffer.from(content));
-    return true; // scritto
+    return true; // written
 }
 
 export function registerGenSimulationUnit(context: vscode.ExtensionContext) 
@@ -64,7 +64,7 @@ export function registerGenSimulationUnit(context: vscode.ExtensionContext)
                     return;
                 }
 
-                // se file passato dal comando → prova auto-match
+                // file passed from command → try auto-match
                 let pickedUnit;
 
                 if (file) 
@@ -80,7 +80,7 @@ export function registerGenSimulationUnit(context: vscode.ExtensionContext)
                     } 
                     else if (matches.length > 1) 
                     {
-                        // ambiguità → fallback UI
+                        // ambiguity → fallback to UI picker
                         const picked = await vscode.window.showQuickPick(
                             matches.map(unit => ({
                                 label: unit.entity,
@@ -99,7 +99,7 @@ export function registerGenSimulationUnit(context: vscode.ExtensionContext)
                     }
                 }
 
-                // fallback normale (nessun file o nessun match)
+                // normal fallback (no file or no match)
                 if (!pickedUnit) {
                     const picked = await vscode.window.showQuickPick(
                         units.map(unit => ({

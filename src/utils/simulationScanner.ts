@@ -35,21 +35,23 @@ async function populateEntityDb(files: vscode.Uri[])
     return entityDb;
 }
 
-function isTestBench(text:string)
+function isTestBench(text: string): boolean
 {
-    
+    // Strongest signal: instantiates another entity
+    if (/\bport\s+map\s*\(/i.test(text)) { return true; }
+
     const hasPorts = /port\s*\(/i.test(text);
-    const hasWaitFor = /wait\s+for/i.test(text);
-    const hasAssert = /assert\s+/i.test(text);
-    const hasSimulationArchitecture = /architecture\s+sim/i.test(text);
+    if (!hasPorts)
+    {
+        // Portless entity: testbench only if it has simulation constructs
+        const hasWaitFor = /wait\s+for/i.test(text);
+        const hasAssert = /assert\s+/i.test(text);
+        const hasSimArch = /architecture\s+sim\b/i.test(text);
 
-    return (
-        !hasPorts ||
-        hasWaitFor ||
-        hasAssert ||
-        hasSimulationArchitecture
-    );
+        return hasWaitFor || hasAssert || hasSimArch;
+    }
 
+    return false;
 }
 
 function getPorts(text:string)
@@ -125,7 +127,7 @@ export async function scanSimulationUnits( folder: vscode.Uri ): Promise<Simulat
     for (const [entity, info] of entityDb)
     {
         const text = info.text;
-        const tb_file = vscode.workspace.asRelativePath(info.file);
+        const tbFile = vscode.workspace.asRelativePath(info.file);
 
         if  ( !isTestBench(text)) { continue;}
 
@@ -149,7 +151,7 @@ export async function scanSimulationUnits( folder: vscode.Uri ): Promise<Simulat
 
             const matches = current.text.matchAll(regex);
 
-            // prima dipendenze
+            // dependencies first
             for (const match of matches)
             {
                 const dep = match[1];
@@ -160,12 +162,12 @@ export async function scanSimulationUnits( folder: vscode.Uri ): Promise<Simulat
                 }
             }
 
-            // poi il file corrente
+            // then current file
             ordered.push(currentPath);
         }
 
         resolveDependencies(entity);
-        // rimuovi la root entity che il test bench stesso
+        // remove tb root entity (the testbench itself)
         ordered.pop();
 
 
@@ -175,7 +177,7 @@ export async function scanSimulationUnits( folder: vscode.Uri ): Promise<Simulat
         units.push({
             entity,
             signals: getPorts(text),
-            file: tb_file,
+            file: tbFile,
             uriFile: info.file,
             entityNeeded: ordered,
             runTimeNs: totalNs

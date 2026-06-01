@@ -18,7 +18,7 @@ export function parseSignals(text: string): ParsedSignalLike[]
         });
     }
 
-    // porte entity
+    // entity ports
     const portRegex =  /\b(\w+)\s*:\s*(in|out|inout|buffer)\s+([\w\s\(\)\d]+)\b/gi;
 
     while ((match = portRegex.exec(text)) !== null)

@@ -45,7 +45,7 @@ export class EntityIndexer
                 new vscode.Range(pos, pos)
             );
 
-            // converte le porte in mappa
+            // convert ports to map
             const ports = new Map<string, EntityPort>();
 
             for (const port of entity.ports)
