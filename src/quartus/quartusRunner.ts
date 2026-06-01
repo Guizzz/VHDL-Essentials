@@ -11,7 +11,7 @@ import {
 } from './quartusProject';
 
 import { getQuartusBin } from './quartusConfig';
-import { buildStatus } from '../ui/statusBar';
+import { taskStatus } from '../ui/statusBar';
 
 const logger = new QuartusLogger(quartusOutput);
 
@@ -55,12 +55,12 @@ export async function runQuartusTask(options: QuartusTaskOptions)
         return;
     }
 
-    buildStatus.text = `$(sync~spin) ${options.statusRunning}`;
+    taskStatus.text = `$(sync~spin) ${options.statusRunning}`;
     quartusOutput.show(true);
 
     const executable = path.join(binPath, options.command);
 
-    logger.startBuild(projectName);
+    logger.startTask(projectName, options.statusRunning.replace('...', ''));
 
     const proc = spawn(
         executable,
@@ -88,10 +88,10 @@ export async function runQuartusTask(options: QuartusTaskOptions)
         logger.finishBuild(success);
 
         if (success) {
-            buildStatus.text = `$(check) ${options.statusSuccess}`;
+            taskStatus.text = `$(check) ${options.statusSuccess}`;
             vscode.window.showInformationMessage(options.successMessage(projectName));
         } else {
-            buildStatus.text = `$(error) ${options.statusFail}`;
+            taskStatus.text = `$(error) ${options.statusFail}`;
             vscode.window.showErrorMessage(options.failMessage(projectName));
         }
     });
@@ -105,7 +105,7 @@ export async function runSimulation(options: QuestaSimOption) {
         return;
     }
 
-    buildStatus.text = `$(sync~spin) Starting Simulation...`;
+    taskStatus.text = `$(sync~spin) Starting Simulation...`;
 
     const proc = spawn(
         "vsim",
@@ -128,10 +128,10 @@ export async function runSimulation(options: QuestaSimOption) {
         const success = code === 0;
 
         if (success) {
-            buildStatus.text = `$(check) Simulation complete`;
+            taskStatus.text = `$(check) Simulation complete`;
             vscode.window.showInformationMessage(`${options.projectName}: Simulation complete for ${options.label}`);
         } else {
-            buildStatus.text = `$(error) Simulation Error`;
+            taskStatus.text = `$(error) Simulation Error`;
             vscode.window.showErrorMessage(`${options.projectName}: Simulation fail for ${options.label}`);
         }
     });

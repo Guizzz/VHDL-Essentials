@@ -3,7 +3,7 @@ import { hasQuartusProject } from '../quartus/quartusProject';
 
 export let buildButton: vscode.StatusBarItem;
 export let flashButton: vscode.StatusBarItem;
-export let buildStatus: vscode.StatusBarItem;
+export let taskStatus: vscode.StatusBarItem;
 
 export function createStatusBar(context: vscode.ExtensionContext) 
 {
@@ -24,17 +24,17 @@ export function createStatusBar(context: vscode.ExtensionContext)
     flashButton.text = "$(arrow-down) Flash";
     flashButton.command = 'quartus-assistant.flash';
 
-    buildStatus = vscode.window.createStatusBarItem(
+    taskStatus = vscode.window.createStatusBarItem(
                     vscode.StatusBarAlignment.Left,
                     0
                 );
 
-    buildStatus.text = "$(gear) Quartus: idle";
+    taskStatus.text = "$(gear) Quartus: idle";
 
     context.subscriptions.push(
         buildButton,
         flashButton,
-        buildStatus
+        taskStatus
     );
 }
 
@@ -45,10 +45,10 @@ export async function updateButtonsVisibility()
     if (hasProject) {
         buildButton.show();
         flashButton.show();
-        buildStatus.show();
+        taskStatus.show();
     } else {
         buildButton.hide();
         flashButton.hide();
-        buildStatus.hide();
+        taskStatus.hide();
     }
 }
