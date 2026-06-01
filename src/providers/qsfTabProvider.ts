@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { getQuestaFile, getSettingsFile, getWorkspace } from '../quartus/quartusProject';
 import { parseQsf, ProjectInfo } from '../parsers/qsfParser';
 import { scanSimulationUnits } from '../utils/simulationScanner';
+import { PinAssignment } from '../types/types';
 
 export class QsfProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 
@@ -128,7 +129,7 @@ export class QsfProvider implements vscode.TreeDataProvider<vscode.TreeItem> {
 
         if (element.label === "Pin Assignments") 
         {
-            return this.qsfData.pins.map((p: any) => {
+            return this.qsfData.pins.map((p: PinAssignment) => {
                 const item = new vscode.TreeItem(p.signal);
                 item.description = p.pin;
                 return item;
