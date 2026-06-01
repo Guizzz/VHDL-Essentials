@@ -20,7 +20,6 @@ export interface QuartusMessage {
 
 export class QuartusLogger {
 
-    private currentStage = 'Quartus';
     private warnings = 0;
     private errors = 0;
 
@@ -31,12 +30,12 @@ export class QuartusLogger {
         this.output.appendLine(line);
     }
 
-    startBuild(project: string) 
+    startTask(project: string, label = 'Compiling') 
     {
         this.output.clear();
         this.output.appendLine('');
         this.output.appendLine('━━━━━━━━━━━━━━━━━━━━━━━━━━');
-        this.output.appendLine(`Compiling ${project}`);
+        this.output.appendLine(`${label} ${project}`);
         this.output.appendLine('━━━━━━━━━━━━━━━━━━━━━━━━━━');
         this.output.appendLine('');
     }

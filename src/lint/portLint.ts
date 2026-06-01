@@ -6,7 +6,7 @@ export class TopLevelPortLint
 {
     private diagnostics = vscode.languages.createDiagnosticCollection('vhdl-qsf');
 
-    constructor(private context: vscode.ExtensionContext)
+    constructor(context: vscode.ExtensionContext)
     {
         context.subscriptions.push(
             vscode.workspace.onDidOpenTextDocument(doc => this.validate(doc)),
@@ -27,7 +27,7 @@ export class TopLevelPortLint
         if (!qsfFile) { return; }
 
         const qsf = await parseQsf(qsfFile);
-        // controlla che il file sia il top-level
+        // check if file is the top-level entity
         if (!qsf.topLevel || qsf.topLevel.entity.toLowerCase() !== entityName.toLowerCase())
         {
             this.diagnostics.delete(document.uri);

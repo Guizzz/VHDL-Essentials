@@ -24,7 +24,7 @@ export class EntityHoverProvider implements vscode.HoverProvider {
                 `entity ${word} is\n\tport(\n`,
                 'vhdl'
             );
-        for(const [portName, port] of entity.ports)
+        for(const [, port] of entity.ports)
         {
             markdown.appendCodeblock(
                 `\t\t${port.name} : ${port.direction} ${port.type}\n`,
