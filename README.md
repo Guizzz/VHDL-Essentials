@@ -1,10 +1,10 @@
-# 🚀 Quartus Assistant
+# VHDL Essentials
 
 Complete Quartus + VHDL workflow integration for Visual Studio Code.
 
 ![Panel View](resources/screen/panel.png)
 
-Quartus Assistant brings FPGA development directly into VSCode with:
+VHDL Essentials brings FPGA development directly into VSCode with:
 
 - ⚡ Quartus build integration
 - 🧪 QuestaSim workflow support
@@ -15,11 +15,9 @@ Quartus Assistant brings FPGA development directly into VSCode with:
 - 🎨 Semantic highlighting
 - 📚 Workspace-wide indexing
 
-
 ---
 
 # ✨ Features
-
 
 ## 🔎 VHDL Navigation
 
@@ -50,7 +48,7 @@ Jump directly to the declaration.
 
 ## 📌 FPGA Pin Integration
 
-Quartus Assistant understands your `.qsf` constraints and links them directly to VHDL signals.
+VHDL Essentials understands your `.qsf` constraints and links them directly to VHDL signals.
 
 ### 🖱️ Pin Hover Information
 
@@ -85,7 +83,6 @@ Features:
 
 ![Qsf Highlighting](resources/screen/qsf_highlighting.png)
 
-
 ---
 
 ## ⚡ Quartus Workflow Integration
@@ -103,22 +100,27 @@ Integrated status bar controls:
 
 ![Quick Commands](resources/screen/quik_commands.png)
 
-### 🏗️ Integrated Quartus Build and Flash Output
+### 🏗️ Integrated Build and Flash Output
 
-Quartus Assistant provides integrated build execution and live tool output directly inside VSCode.
+VHDL Essentials provides integrated build execution and live tool output directly inside VSCode.
 
 ![Quartus Build](resources/screen/build_2.png)
 
 ---
 
-# ⚠️ Diagnostics
+## ⚠️ Diagnostics
 
-Quartus Assistant validates top-level FPGA pin assignments directly inside the editor.
+VHDL Essentials validates top-level FPGA pin assignments directly inside the editor.
 
 Warnings are generated automatically when:
 
 * a top-level signal has no assigned FPGA pin
 * constraints are missing from the `.qsf`
+
+Duplicate pin and signal assignments are also detected in `.qsf` files:
+
+* same `PIN_xx` assigned to multiple signals → Error
+* same signal assigned to multiple pins → Warning
 
 Example warning:
 
@@ -127,7 +129,7 @@ Example warning:
 
 ---
 
-# 🎨 Semantic Highlighting
+## 🎨 Semantic Highlighting
 
 The extension provides semantic highlighting for:
 
@@ -140,7 +142,7 @@ Highlighting only appears when declarations actually exist inside the indexed wo
 
 ---
 
-# 📚 Automatic Workspace Indexing
+## 📚 Automatic Workspace Indexing
 
 Workspace-wide indexing for:
 
@@ -158,34 +160,75 @@ The index updates automatically when:
 
 ---
 
-# 🛠️ Supported Toolchain
-
-* Intel Quartus Prime
-* QuestaSim / ModelSim
-* VHDL
-
----
-
-# 🤔 Why Quartus Assistant?
-
-FPGA workflows inside VSCode are usually fragmented across multiple tools.
-
-Quartus Assistant unifies:
-
-* editing
-* navigation
-* simulation
-* constraints
-* diagnostics
-* build tools
-
-inside a single lightweight VSCode workflow.
-
----
-
 # 📦 Installation
 
-Install directly from the Visual Studio Code Marketplace.
+Install from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=Guizzz.quartus-assistant).
+
+**Extension ID**: `Guizzz.quartus-assistant`
+
+Or install from the command line:
+
+```
+code --install-extension Guizzz.quartus-assistant
+```
+
+---
+
+# ⚙️ Configuration
+
+### `maxv.quartusPath`
+
+Path to your Intel Quartus Prime installation.
+
+| | |
+|---|---|
+| **Type** | `string` |
+| **Default** | `C:\\altera_lite\\25.1std` |
+| **Example** | `C:\\intelFPGA\\25.1std\\quartus` |
+
+Set this in `settings.json`:
+
+```json
+{
+    "maxv.quartusPath": "C:\\intelFPGA\\25.1std\\quartus"
+}
+```
+
+---
+
+# 🛠️ Commands
+
+All commands are accessible via the Command Palette (`Ctrl+Shift+P`).
+
+| Command ID | Title |
+|---|---|
+| `quartus-assistant.build` | Quartus: Build |
+| `quartus-assistant.flash` | Quartus: Flash |
+| `quartus-assistant.setQuartusPath` | Quartus: Set Quartus Path |
+| `quartus-assistant.generateDo` | Quartus: Generate QuestaSim DO |
+| `quartus-assistant.runDo` | Quartus: Run QuestaSim simulation |
+
+---
+
+# 🛠️ Prerequisites
+
+- **Intel Quartus Prime** (Lite/Standard/Pro) — required for build and flash commands
+- **QuestaSim** or **ModelSim** — required for simulation and `.do` generation
+- **VHDL** source files (`.vhd`, `.vhdl`)
+- **Quartus Settings File** (`.qsf`) — required for pin diagnostics and project explorer
+
+---
+
+# ❓ Troubleshooting
+
+| Problem | Solution |
+|---|---|
+| "Quartus command not found" | Set `maxv.quartusPath` to your Quartus installation folder |
+| Pin diagnostics not showing | Ensure a `.qsf` file exists in the workspace root |
+| Testbench not appearing | Make sure the testbench entity name matches the filename |
+| `.do` file generation fails | Verify that the testbench entity is parsed correctly and all dependencies are in the workspace |
+| No hover information | Ensure the workspace index is built (save or reopen files) |
+| Build output is empty | Check that `quartus_sh` exists in the configured Quartus path |
 
 ---
 
@@ -194,7 +237,6 @@ Install directly from the Visual Studio Code Marketplace.
 Planned features:
 
 * references provider
-* semantic tokens
 * waveform integration
 * pin planner integration
 
