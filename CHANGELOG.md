@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.9.0] - 2026-06-02
+
+### Added
+- Added duplicate pin and signal assignment detection for QSF files
+  - Same `PIN_xx` assigned to multiple signals → Error diagnostic
+  - Same signal assigned to multiple pins → Warning diagnostic
+
+### Changed
+- Renamed `buildStatus` → `taskStatus` and `startBuild` → `startTask` in runner and status bar
+- Enabled strict TypeScript flags and resolved unused variables
+- Translated remaining Italian comments to English
+
+### Fixed
+- Replaced `any` type with `PinAssignment` interface in QSF tab provider
+
 ## [0.8.4] - 2026-05-29
 
 ### Changed
