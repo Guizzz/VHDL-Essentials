@@ -90,7 +90,76 @@ export class QsfLint
             }
         }
 
+        this.checkDuplicateAssignments(document, diagnostics);
+
         this.diagnostics.set(document.uri, diagnostics);
+    }
+
+    private checkDuplicateAssignments(document: vscode.TextDocument, diagnostics: vscode.Diagnostic[]): void
+    {
+        const assignments: { pin: string; signal: string; line: number }[] = [];
+
+        for (let lineIndex = 0; lineIndex < document.lineCount; lineIndex++)
+        {
+            const line = document.lineAt(lineIndex).text;
+            if (line.trim().startsWith('#')) { continue; }
+
+            const match = line.match(/set_location_assignment (PIN_[A-Z0-9]+) -to (\w+)/);
+            if (match)
+            {
+                assignments.push({ pin: match[1], signal: match[2], line: lineIndex });
+            }
+        }
+
+        // same PIN_xx assigned to different signals
+        const byPin = new Map<string, typeof assignments>();
+        for (const a of assignments)
+        {
+            const group = byPin.get(a.pin);
+            if (group) { group.push(a); } else { byPin.set(a.pin, [a]); }
+        }
+        for (const [, group] of byPin)
+        {
+            if (group.length < 2) { continue; }
+
+            const signals = [...new Set(group.map(a => a.signal))].join(', ');
+            for (const a of group)
+            {
+                const range = new vscode.Range(a.line, 0, a.line, document.lineAt(a.line).text.length);
+                diagnostics.push(
+                    new vscode.Diagnostic(
+                        range,
+                        `Duplicate pin '${a.pin}': assigned to ${signals}`,
+                        vscode.DiagnosticSeverity.Error
+                    )
+                );
+            }
+        }
+
+        // same signal assigned to different pins
+        const bySignal = new Map<string, typeof assignments>();
+        for (const a of assignments)
+        {
+            const group = bySignal.get(a.signal);
+            if (group) { group.push(a); } else { bySignal.set(a.signal, [a]); }
+        }
+        for (const [, group] of bySignal)
+        {
+            if (group.length < 2) { continue; }
+
+            const pins = [...new Set(group.map(a => a.pin))].join(', ');
+            for (const a of group)
+            {
+                const range = new vscode.Range(a.line, 0, a.line, document.lineAt(a.line).text.length);
+                diagnostics.push(
+                    new vscode.Diagnostic(
+                        range,
+                        `Duplicate signal '${a.signal}': assigned to ${pins}`,
+                        vscode.DiagnosticSeverity.Warning
+                    )
+                );
+            }
+        }
     }
 
     public dispose(): void
