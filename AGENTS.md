@@ -33,6 +33,17 @@ Command order (not enforced by tooling, but expected by convention): `lint → c
 
 **Config key**: `maxv.quartusPath` (default `C:\\altera_lite\\25.1std`).
 
+## Git rules
+
+- **No push/commit without approval** — ogni push e commit deve essere prima approvato dall'utente. Mai fare push o commit senza chiedere prima.
+- **No tag generation** — non generare mai tag git (né crearli, né pushatli) a meno che non sia esplicitamente richiesto.
+- **Version creation (`crea versione v#.#.#`)** — alla richiesta "crea versione v#.#.#":
+  1. Genera una nuova sezione nel changelog (CHANGELOG.md) per la versione indicata
+  2. Aggiorna la versione in package.json (e package-lock.json se presente)
+  3. Crea un commit con **solo** quei due file (CHANGELOG.md, package.json)
+  4. Il messaggio del commit deve essere esattamente la versione (es. `v1.2.3`)
+  Presuppone che tutte le altre modifiche del progetto siano già state committate separatamente.
+
 ## Key constraints
 
 - **No test files exist yet.** The test infra (`@vscode/test-cli`, `out/test/**/*.test.js`) is configured but unused. If adding tests, place them in `src/test/` and compile with `npm run compile-tests`.
