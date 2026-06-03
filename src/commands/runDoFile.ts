@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { getProjectName, getQuestaFile, getWorkspace } from '../quartus/quartusProject';
 import path from 'path';
-import { quartusOutput } from '../quartus/quartusLogger';
+import { quartusOutput } from '../quartus/logger';
 import { QuestaSimOption, runSimulation } from '../quartus/quartusRunner';
 
 export function registerRunSimulationUnit(context: vscode.ExtensionContext) 

@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import { spawn } from 'child_process';
 
-import { QuartusLogger, quartusOutput } from './quartusLogger';
+import { QuartusLogger, quartusOutput } from './logger';
 
 import {
     getProjectDir,
