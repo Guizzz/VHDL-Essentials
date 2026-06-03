@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.10.1] - 2026-06-03
+
+### Fixed
+- Ctrl+/ now inserts `--` line comment instead of `/**/` block comment in VHDL files (#46)
+
 ## [0.10.0] - 2026-06-03
 
 ### Added
