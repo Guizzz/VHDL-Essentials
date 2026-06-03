@@ -12,6 +12,7 @@ VHDL Essentials brings FPGA development directly into VSCode with:
 - 📌 FPGA pin diagnostics
 - 🔗 QSF integration
 - 🤖 Automatic `.do` generation
+- ✅ Real-time VHDL syntax checking
 - 🎨 Semantic highlighting
 - 📚 Workspace-wide indexing
 
@@ -126,6 +127,25 @@ Example warning:
 
 ![Pin Warning](resources/screen/warning_pin.png)
 
+
+---
+
+## ✅ Real-Time VHDL Syntax Checking
+
+The extension validates VHDL syntax in real time as you type, highlighting errors directly in the editor.
+
+Checked patterns:
+
+* **Unclosed scopes** — missing `end` for `if`, `process`, `for...loop`, `while...loop`, `case`, `generate`, `block`
+* **Wrong loop termination** — `for`/`while` loops must close with `end loop;` (not `end while;`)
+* **Missing semicolons** — detected on statement lines
+* **Unexpected `end`** — stray `end` without a matching open scope
+
+![Syntax Check](resources/screen/syntax_check.png)
+
+Diagnostics appear in the Problems panel (`Ctrl+Shift+M`) with clear messages.
+
+No configuration needed — works out of the box on all `.vhd` and `.vhdl` files.
 
 ---
 
