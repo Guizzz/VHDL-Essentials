@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.10.0] - 2026-06-03
+
+### Added
+- Real-time VHDL syntax checking — validates scopes (`if`/`end if`, `process`/`end process`, `for...loop`/`end loop`, etc.), missing semicolons, wrong loop termination (`end while` instead of `end loop`), and stray `end` keywords (#38)
+- Diagnostics appear in the Problems panel with 400ms debounce — no configuration needed
+
+### Documentation
+- Updated README with syntax checking feature section and screenshot
+
 ## [0.9.1] - 2026-06-03
 
 ### Fixed
