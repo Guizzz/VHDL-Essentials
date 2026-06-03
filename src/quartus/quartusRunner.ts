@@ -107,6 +107,8 @@ export async function runSimulation(options: QuestaSimOption) {
 
     taskStatus.text = `$(sync~spin) Starting Simulation...`;
 
+    logger.startTask(options.projectName, 'Starting Simulation');
+
     const proc = spawn(
         "vsim",
         ["-gui", "-do", options.doFile],

@@ -1,16 +1,22 @@
 import * as vscode from 'vscode';
-import { parseQsf } from '../parsers/qsfParser';
+import { parseQsf, ProjectInfo } from '../parsers/qsfParser';
 import { getSettingsFile } from '../quartus/quartusProject';
 
 export class TopLevelPortLint
 {
     private diagnostics = vscode.languages.createDiagnosticCollection('vhdl-qsf');
+    private cachedQsf: ProjectInfo | null = null;
 
     constructor(context: vscode.ExtensionContext)
     {
         context.subscriptions.push(
             vscode.workspace.onDidOpenTextDocument(doc => this.validate(doc)),
-            vscode.workspace.onDidChangeTextDocument(e => this.validate(e.document))
+            vscode.workspace.onDidChangeTextDocument(e => this.validate(e.document)),
+            vscode.workspace.onDidSaveTextDocument(doc => {
+                if (doc.fileName.endsWith('.qsf')) {
+                    this.cachedQsf = null;
+                }
+            })
         );
     }
 
@@ -23,10 +29,14 @@ export class TopLevelPortLint
         if (!entityMatch) { return; }
 
         const entityName = entityMatch[1];
-        const qsfFile = await getSettingsFile();
-        if (!qsfFile) { return; }
 
-        const qsf = await parseQsf(qsfFile);
+        if (!this.cachedQsf) {
+            const qsfFile = await getSettingsFile();
+            if (!qsfFile) { return; }
+            this.cachedQsf = await parseQsf(qsfFile);
+        }
+
+        const qsf = this.cachedQsf;
         // check if file is the top-level entity
         if (!qsf.topLevel || qsf.topLevel.entity.toLowerCase() !== entityName.toLowerCase())
         {
