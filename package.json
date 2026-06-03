@@ -5,12 +5,19 @@
   "version": "0.10.1",
   "publisher": "Guizzz",
   "icon": "resources/icon.png",
+  "galleryBanner": {
+    "color": "#1a1a2e",
+    "theme": "dark"
+  },
   "engines": {
     "vscode": "^1.120.0"
   },
   "categories": [
     "Programming Languages",
-    "Other"
+    "Debuggers",
+    "Snippets",
+    "Formatters",
+    "Education"
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
@@ -159,7 +166,16 @@
     "intel",
     "vhdl",
     "questasim",
+    "modelsim",
     "autocompile",
-    "simulation"
+    "simulation",
+    "altera",
+    "synthesis",
+    "intel fpga",
+    "vhdl lint",
+    "fpga development",
+    "testbench",
+    "ip core",
+    "pin planner"
   ]
 }

@@ -1,5 +1,9 @@
 # VHDL Essentials
 
+[![Version](https://vsmarketplacebadges.dev/version-short/Guizzz.quartus-assistant.svg)](https://marketplace.visualstudio.com/items?itemName=Guizzz.quartus-assistant)
+[![Installs](https://vsmarketplacebadges.dev/installs-short/Guizzz.quartus-assistant.svg)](https://marketplace.visualstudio.com/items?itemName=Guizzz.quartus-assistant)
+
+
 Complete Quartus + VHDL workflow integration for Visual Studio Code.
 
 ![Panel View](resources/screen/panel.png)
@@ -204,13 +208,13 @@ Path to your Intel Quartus Prime installation.
 |---|---|
 | **Type** | `string` |
 | **Default** | `C:\\altera_lite\\25.1std` |
-| **Example** | `C:\\intelFPGA\\25.1std\\quartus` |
+| **Example** | `C:\\intelFPGA\\25.1std` |
 
 Set this in `settings.json`:
 
 ```json
 {
-    "maxv.quartusPath": "C:\\intelFPGA\\25.1std\\quartus"
+    "maxv.quartusPath": "C:\\intelFPGA\\25.1std"
 }
 ```
 
