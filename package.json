@@ -80,7 +80,7 @@
         "maxv.quartusPath": {
           "type": "string",
           "default": "C:\\altera_lite\\25.1std",
-          "description": "Path to Quartus installation folder (e.g. C:\\intelFPGA\\25.1std\\quartus)"
+          "description": "Path to Quartus installation folder (e.g. C:\\intelFPGA\\25.1std)"
         }
       }
     },
