@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.9.1] - 2026-06-03
+
+### Fixed
+- Output channel now cleared on simulation start — logs from previous build/flash no longer mixed with simulation output (#24)
+- Port lint no longer calls `findFiles` + QSF parsing on every keystroke; result is cached and re-parsed only when `.qsf` is saved (#23)
+
+### Refactored
+- Consolidated duplicate file watchers in `qsfViewService`: replaced redundant `createFileSystemWatcher` + workspace event listeners with a single watcher using `onDidCreate` / `onDidChange` / `onDidDelete` (#16)
+- Split `quartusLogger.ts` into `logger/` folder: output channel management, task lifecycle, and TCL output parsing are now in separate modules
+- Extracted tree node classes (`PinAssignmentsNode`, `TestBenchesNode`, `QuestaScriptsNode`) from `qsfTabProvider.ts` into dedicated `treeNodes.ts` (#17)
+
 ## [0.9.0] - 2026-06-02
 
 ### Added
