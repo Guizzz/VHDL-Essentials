@@ -23,7 +23,7 @@ export class VarPackHoverProvider implements vscode.HoverProvider {
         markdown.supportThemeIcons = true;
         
         markdown.appendCodeblock(
-            `${symbol.symbol.kind} ${word} : ${symbol.symbol.type}`,
+            `${symbol.symbol.kind} ${word} : ${symbol.symbol.type}${symbol.symbol.value ? ` := ${symbol.symbol.value}` : ''}`,
             'vhdl'
         );
 

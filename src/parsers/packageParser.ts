@@ -15,7 +15,7 @@ export function parsePackages(text: string): ParsedPackage[] {
         const packageOffset = packageMatch.index;
 
         const symbols: ParsedPackageSymbol[] = [];
-        const symbolRegex = /\b(constant|signal|type|subtype|function|procedure)\s+(\w+)(?:\s*:\s*(\w+))/gm;
+        const symbolRegex = /\b(constant|signal|type|subtype|function|procedure)\s+(\w+)(?:\s*:\s*([^;:=]+))?(?:\s*:=\s*([^;\n]+))?/gm;
 
         let symbolMatch: RegExpExecArray | null;
 
@@ -23,7 +23,8 @@ export function parsePackages(text: string): ParsedPackage[] {
         {
             const kind = symbolMatch[1];
             const symbolName = symbolMatch[2];
-            const type = symbolMatch[3];
+            const type = symbolMatch[3]?.trim() ?? '';
+            const value = symbolMatch[4]?.trim();
 
             const symbolOffset = packageOffset + packageMatch[0].indexOf(packageBody) + symbolMatch.index;
             
@@ -31,7 +32,8 @@ export function parsePackages(text: string): ParsedPackage[] {
                 kind,
                 name: symbolName,
                 offset: symbolOffset,
-                type: type
+                type: type,
+                value: value || undefined
             });
         }
 

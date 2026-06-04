@@ -38,12 +38,14 @@ export interface ParsedPackageSymbol {
     name: string;
     offset: number;
     type: string;
+    value?: string;
 }
 
 export interface PackageSymbolInfo {
     location: vscode.Location;
     type: string;
     kind: string;
+    value?: string;
 }
 
 export interface PackageInfo {

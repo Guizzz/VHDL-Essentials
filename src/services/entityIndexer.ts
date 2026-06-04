@@ -77,6 +77,7 @@ export class EntityIndexer
                     location: vscode.Location;
                     type: string;
                     kind: string;
+                    value?: string;
                 }
             >();
 
@@ -94,7 +95,8 @@ export class EntityIndexer
                     {
                         location: symbolLocation,
                         type: symbol.type,
-                        kind: symbol.kind
+                        kind: symbol.kind,
+                        value: symbol.value
                     }
                 );
             }
