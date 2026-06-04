@@ -601,7 +601,7 @@ export class SyntaxLinter
         if (/^report\b/i.test(line)) { return; }
         if (/^severity\b/i.test(line)) { return; }
         if (/^\w+\s*:\s*(entity|component)\s/i.test(line)) { return; }
-        if (/^\s*\w+\s*:\s*(in|out|inout|buffer|positive|natural|integer|string|time|boolean|real|character)\b/i.test(line)) { return; }
+        if (/^\s*\w+(?:\s*,\s*\w+)*\s*:\s*(in|out|inout|buffer|positive|natural|integer|string|time|boolean|real|character)\b/i.test(line)) { return; }
         if (line.length < 4) { return; }
 
         const range = new vscode.Range(lineNum, line.length - 1, lineNum, line.length);
