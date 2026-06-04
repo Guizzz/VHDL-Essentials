@@ -14,11 +14,12 @@ package common_pkg is
     signal sys_clk : std_logic;
     signal sys_rst : std_logic;
 
-    function clog2(x : positive) return natural;
+    function clog(x : positive) return natural;
+    function clog_2(x : positive) return natural;
 end package common_pkg;
 
 package body common_pkg is
-    function clog2(x : positive) return natural is
+    function clog(x : positive) return natural is
         variable result : natural := 0;
         variable temp : positive := 1;
     begin

@@ -16,7 +16,7 @@ VHDL Essentials brings FPGA development directly into VSCode with:
 - 📌 FPGA pin diagnostics
 - 🔗 QSF integration
 - 🤖 Automatic `.do` generation
-- ✅ Real-time VHDL syntax checking
+- ✅ Real-time VHDL syntax & completeness checking
 - 🎨 Semantic highlighting
 - 📚 Workspace-wide indexing
 
@@ -85,8 +85,11 @@ Features:
 * Pin assignment explorer
 * QuestaSim scripts explorer
 * Testbench management
+* **Left-click** on any file → opens it
+* **Right-click** on a testbench → Generate QuestaSim DO
+* **Right-click** on a `.do` file → Run QuestaSim simulation
 
-![Qsf Highlighting](resources/screen/qsf_highlighting.png)
+![Context Menu](resources/screen/right_click.png)
 
 ---
 
@@ -115,22 +118,25 @@ VHDL Essentials provides integrated build execution and live tool output directl
 
 ## ⚠️ Diagnostics
 
-VHDL Essentials validates top-level FPGA pin assignments directly inside the editor.
+VHDL Essentials validates your code on multiple levels:
 
-Warnings are generated automatically when:
+### 📌 FPGA Pin Diagnostics
 
-* a top-level signal has no assigned FPGA pin
-* constraints are missing from the `.qsf`
-
-Duplicate pin and signal assignments are also detected in `.qsf` files:
-
+* a top-level signal has no assigned FPGA pin → Warning
+* constraints are missing from the `.qsf` → Warning
 * same `PIN_xx` assigned to multiple signals → Error
 * same signal assigned to multiple pins → Warning
 
-Example warning:
+### 📝 VHDL Code Linters
 
-![Pin Warning](resources/screen/warning_pin.png)
+* **Duplicate declarations** — duplicate signal, variable, or port names in the same scope
+* **Sensitivity list** — signals read inside a process but missing from the sensitivity list
+* **Syntax scopes** — unclosed `if`, `process`, `for`/`while` loops, mismatched `end` labels
+* **Package body completeness** — function/procedure declared in a package but not implemented in its body
 
+All diagnostics appear in the Problems panel (`Ctrl+Shift+M`) with clear messages.
+
+![Package Body Warning](resources/screen/body_lint_warning.png)
 
 ---
 
@@ -142,8 +148,10 @@ Checked patterns:
 
 * **Unclosed scopes** — missing `end` for `if`, `process`, `for...loop`, `while...loop`, `case`, `generate`, `block`
 * **Wrong loop termination** — `for`/`while` loops must close with `end loop;` (not `end while;`)
-* **Missing semicolons** — detected on statement lines
+* **Missing semicolons** — detected on statement lines (skips component instantiation `label : component`)
 * **Unexpected `end`** — stray `end` without a matching open scope
+* **Function/procedure body** — declaration without `is` does not open a scope
+* **Component instantiation** — `label : entity work.xxx` recognized, no false warnings
 
 ![Syntax Check](resources/screen/syntax_check.png)
 
@@ -163,6 +171,8 @@ The extension provides semantic highlighting for:
 * FPGA pin-aware signals
 
 Highlighting only appears when declarations actually exist inside the indexed workspace.
+
+![Qsf Highlighting](resources/screen/qsf_highlighting.png)
 
 ---
 
@@ -247,6 +257,9 @@ All commands are accessible via the Command Palette (`Ctrl+Shift+P`).
 
 | Problem | Solution |
 |---|---|
+| "Duplicate declaration warnings on entity ports" | Components with matching port names inside the same file are now excluded from parsing |
+| "Package body warnings on implemented functions" | Check that the function/procedure name and parameters match the package declaration exactly |
+| "Syntax false positive on component instantiation" | Lines matching `label : entity work.xxx` are now recognized and not flagged for missing `;` |
 | "Quartus command not found" | Set `maxv.quartusPath` to your Quartus installation folder |
 | Pin diagnostics not showing | Ensure a `.qsf` file exists in the workspace root |
 | Testbench not appearing | Make sure the testbench entity name matches the filename |
@@ -260,9 +273,9 @@ All commands are accessible via the Command Palette (`Ctrl+Shift+P`).
 
 Planned features:
 
-* references provider
 * waveform integration
 * pin planner integration
+* live build transcript streaming
 
 ---
 
