@@ -1,8 +1,28 @@
 import { ParsedSignalLike } from "../types/types";
 
+function getComponentRanges(text: string): Array<{start: number; end: number}>
+{
+    const ranges: Array<{start: number; end: number}> = [];
+    const regex = /component\s+\w+\s+is[\s\S]*?end\s+component\s*;?/gi;
+    let match: RegExpExecArray | null;
+
+    while ((match = regex.exec(text)) !== null)
+    {
+        ranges.push({start: match.index, end: match.index + match[0].length});
+    }
+
+    return ranges;
+}
+
 export function parseSignals(text: string): ParsedSignalLike[]
 {
     const symbols: ParsedSignalLike[] = [];
+    const componentRanges = getComponentRanges(text);
+
+    function isInsideComponent(offset: number): boolean
+    {
+        return componentRanges.some(r => offset >= r.start && offset < r.end);
+    }
 
     const regex = /\b(signal|variable|constant)\s+(\w+)\s*:\s*([\w\s\(\)\d<>:=\-']+)/gi;
 
@@ -10,6 +30,8 @@ export function parseSignals(text: string): ParsedSignalLike[]
 
     while ((match = regex.exec(text)) !== null)
     {
+        if (isInsideComponent(match.index)) { continue; }
+
         symbols.push({
             kind: match[1].toLowerCase(),
             name: match[2],
@@ -23,6 +45,8 @@ export function parseSignals(text: string): ParsedSignalLike[]
 
     while ((match = portRegex.exec(text)) !== null)
     {
+        if (isInsideComponent(match.index)) { continue; }
+
         let type = match[3].trim();
 
         // strip trailing structural ) that closes the port block (not part of type)

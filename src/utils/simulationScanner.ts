@@ -37,11 +37,16 @@ async function populateEntityDb(files: vscode.Uri[])
 
 function isTestBench(text: string): boolean
 {
-    // Strongest signal: instantiates another entity
-    if (/\bport\s+map\s*\(/i.test(text)) { return true; }
+    const hasPortMap = /\bport\s+map\s*\(/i.test(text);
+    const entityHasPorts = /entity\s+\w+\s+is\s+port\s*\(/i.test(text);
 
-    const hasPorts = /port\s*\(/i.test(text);
-    if (!hasPorts)
+    // Entity with own ports + port map → design component, not testbench
+    if (hasPortMap && entityHasPorts) { return false; }
+
+    // Strongest signal: portless entity instantiating via port map
+    if (hasPortMap) { return true; }
+
+    if (!entityHasPorts)
     {
         // Portless entity: testbench only if it has simulation constructs
         const hasWaitFor = /wait\s+for/i.test(text);
