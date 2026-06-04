@@ -14,8 +14,8 @@ export function parseEntities(text: string): EntitySymbol[]
         const entityOffset = entityMatch.index;
         const ports: EntityPort[] = [];
 
-        // find port(...) block
-        const portBlockMatch = /port\s*\(([\s\S]*?)\)\s*;/i.exec(entityBody);
+        // find port(...) block — balanced parentheses to handle types like std_logic_vector(N-1 downto 0)
+        const portBlockMatch = /port\s*\(((?:[^()]|\([^()]*\))*)\)\s*;/i.exec(entityBody);
 
         if (portBlockMatch)
         {

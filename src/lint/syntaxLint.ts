@@ -66,6 +66,7 @@ export class SyntaxLinter
 
         const stack: ScopeFrame[] = [];
         let parenBalance = 0;
+        let inAssertBlock = false;
 
         for (let i = 0; i < lines.length; i++)
         {
@@ -128,6 +129,21 @@ export class SyntaxLinter
                         `'begin' outside any scope`,
                         vscode.DiagnosticSeverity.Warning
                     ));
+                }
+                continue;
+            }
+
+            if (/^assert\b/i.test(line))
+            {
+                inAssertBlock = true;
+                continue;
+            }
+
+            if (inAssertBlock)
+            {
+                if (/^severity\b/i.test(line))
+                {
+                    inAssertBlock = false;
                 }
                 continue;
             }
@@ -585,7 +601,7 @@ export class SyntaxLinter
         if (/^report\b/i.test(line)) { return; }
         if (/^severity\b/i.test(line)) { return; }
         if (/^\w+\s*:\s*(entity|component)\s/i.test(line)) { return; }
-        if (/^\s*\w+\s*:\s*(in|out|inout|buffer)\b/i.test(line)) { return; }
+        if (/^\s*\w+\s*:\s*(in|out|inout|buffer|positive|natural|integer|string|time|boolean|real|character)\b/i.test(line)) { return; }
         if (line.length < 4) { return; }
 
         const range = new vscode.Range(lineNum, line.length - 1, lineNum, line.length);

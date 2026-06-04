@@ -45,7 +45,7 @@ export class TopLevelPortLint
         }
 
         const diags: vscode.Diagnostic[] = [];
-        const portBlockMatch = text.match(/port\s*\(([\s\S]*?)\)\s*;/im);
+        const portBlockMatch = text.match(/port\s*\(((?:[^()]|\([^()]*\))*)\)\s*;/im);
         
         if (!portBlockMatch)
         {
