@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.11.0] - 2026-06-05
+
+### Added
+- 33 VHDL code snippets: `entity`, `arch`, `pkg`, `pkgb`, `process`, `proc_nr`, `proc_comb`, `fsm`, `inst`, `comp`, `tb`, `clock`, `stim`, `sig`, `sigv`, `var`, `const`, `type`, `subtype`, `case`, `for`, `if`, `func`, `proc`, `func_decl`, `proc_decl`, `forg`, `ifg`, `cnt`, `sr`, `others`, `wait`, `assert` (#37)
+- Package body completeness lint — warns when a function/procedure is declared in a package but not implemented in its body
+- demo/ project with source VHD files and testbench (for development and testing)
+- 58 unit tests across 7 test files for parsers, hover icons, and real-world VHDL (#25)
+
+### Fixed
+- Context menu commands now accept serialized `vscode.Uri` from tree view items; auto-matches selected file without QuickPick; robust path extraction with `fsPath`/`resourceUri.fsPath` (#36)
+- `isTestBench()` no longer flags entities with own ports + `port map` as testbenches — requires entity with no ports to be considered a testbench
+- `variableParser` now skips `component ... end component` blocks to avoid false duplicate port declarations
+- `syntaxLint.checkSemicolon` skips `label : name` pattern (component instantiation continuation) to avoid false positive `Missing ;`
+- `syntaxLint.tryOpenScope` for `function`/`procedure`: if line ends with `;` and no `is` → declaration only, does not open a scope
+
 ## [0.10.3] - 2026-06-04
 
 ### Added
