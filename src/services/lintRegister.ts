@@ -4,6 +4,7 @@ import { DuplicateSignalLinter } from '../lint/duplicateSignalsLint';
 import { QsfLint } from '../lint/qsfLint';
 import { SyntaxLinter } from '../lint/syntaxLint';
 import { SensitivityLinter } from '../lint/sensitivityLint';
+import { PackageBodyLint } from '../lint/packageBodyLint';
 
 export function registerLintFeature(context: vscode.ExtensionContext)
 {
@@ -12,13 +13,15 @@ export function registerLintFeature(context: vscode.ExtensionContext)
     const qsfLint = new QsfLint(context);
     const syntaxLint = new SyntaxLinter(context);
     const sensitivityLint = new SensitivityLinter(context);
+    const packageBodyLint = new PackageBodyLint(context);
 
     context.subscriptions.push(
         topLevelPortLint,
         duplicateLint,
         qsfLint,
         syntaxLint,
-        sensitivityLint
+        sensitivityLint,
+        packageBodyLint
     );
 
 }
