@@ -27,6 +27,30 @@ function stripComment(line: string): string
     return idx >= 0 ? line.slice(0, idx) : line;
 }
 
+function findSignalRange(
+    line: string,
+    signalName: string,
+    lineNum: number
+): vscode.Range | null
+{
+    const procMatch = line.match(/process\s*\(([^)]*)\)/i);
+    if (!procMatch) { return null; }
+
+    const sensContent = procMatch[1];
+    const parenOffset = procMatch[0].indexOf('(');
+    const sensStart = (procMatch.index ?? 0) + parenOffset + 1;
+
+    const sigRegex = new RegExp(`\\b${signalName}\\b`, 'i');
+    const sigMatch = sensContent.match(sigRegex);
+    if (!sigMatch) { return null; }
+
+    const sigPos = sensStart + (sigMatch.index ?? 0);
+    return new vscode.Range(
+        lineNum, sigPos,
+        lineNum, sigPos + sigMatch[0].length
+    );
+}
+
 function extractIdents(expr: string): Set<string>
 {
     const idents = new Set<string>();
@@ -237,27 +261,22 @@ export class SensitivityLinter
 
             if (!isSync)
             {
-                const extra: string[] = [];
                 for (const sig of sensList)
                 {
                     if (!readSignals.has(sig))
                     {
-                        extra.push(sig);
+                        const sigRange = findSignalRange(
+                            lines[i], sig, i
+                        );
+                        const d = new vscode.Diagnostic(
+                            sigRange ?? processLineRange,
+                            `Unnecessary signal '${sig}' in sensitivity list (never read)`,
+                            vscode.DiagnosticSeverity.Hint
+                        );
+                        d.source = 'VHDL Essentials';
+                        d.tags = [vscode.DiagnosticTag.Unnecessary];
+                        diags.push(d);
                     }
-                }
-
-                if (extra.length > 0)
-                {
-                    const msg = extra.length === 1
-                        ? `Unnecessary signal '${extra[0]}' in sensitivity list (never read)`
-                        : `Unnecessary signals in sensitivity list: ${extra.map(s => `'${s}'`).join(', ')}`;
-                    const d = new vscode.Diagnostic(
-                        processLineRange,
-                        msg,
-                        vscode.DiagnosticSeverity.Hint
-                    );
-                    d.source = 'VHDL Essentials';
-                    diags.push(d);
                 }
             }
         }
