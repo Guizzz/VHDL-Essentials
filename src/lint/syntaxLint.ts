@@ -326,6 +326,9 @@ export class SyntaxLinter
         m = tryMatch(/^function\s+(\w+)/i);
         if (m)
         {
+            // declaration (signature only, ends with ;) → skip, no scope
+            if (!/\bis\b/i.test(line) && line.endsWith(';')) { return false; }
+
             stack.push({ type: 'function', name: m[1], line: lineNum, hasIs: false, hasBegin: false });
             return true;
         }
@@ -333,6 +336,9 @@ export class SyntaxLinter
         m = tryMatch(/^procedure\s+(\w+)/i);
         if (m)
         {
+            // declaration (signature only, ends with ;) → skip, no scope
+            if (!/\bis\b/i.test(line) && line.endsWith(';')) { return false; }
+
             stack.push({ type: 'procedure', name: m[1], line: lineNum, hasIs: false, hasBegin: false });
             return true;
         }
@@ -601,6 +607,7 @@ export class SyntaxLinter
         if (/^report\b/i.test(line)) { return; }
         if (/^severity\b/i.test(line)) { return; }
         if (/^\w+\s*:\s*(entity|component)\s/i.test(line)) { return; }
+        if (/^\s*\w+\s*:\s*\w+\s*$/i.test(line)) { return; }
         if (/^\s*\w+(?:\s*,\s*\w+)*\s*:\s*(in|out|inout|buffer|positive|natural|integer|string|time|boolean|real|character)\b/i.test(line)) { return; }
         if (line.length < 4) { return; }
 
