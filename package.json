@@ -119,6 +119,12 @@
         }
       ]
     },
+    "snippets": [
+      {
+        "language": "vhdl",
+        "path": "./snippets/vhdl.code-snippets"
+      }
+    ],
     "grammars": [
       {
         "language": "vhdl",

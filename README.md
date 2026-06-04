@@ -16,6 +16,7 @@ VHDL Essentials brings FPGA development directly into VSCode with:
 - 📌 FPGA pin diagnostics
 - 🔗 QSF integration
 - 🤖 Automatic `.do` generation
+- ✅ VHDL code snippets & templates
 - ✅ Real-time VHDL syntax & completeness checking
 - 🎨 Semantic highlighting
 - 📚 Workspace-wide indexing
@@ -191,6 +192,50 @@ The index updates automatically when:
 * files are created
 * files are deleted
 * files are modified
+
+---
+
+## 📝 VHDL Snippets
+
+Type a prefix and press `Tab` to expand into common VHDL constructs.
+
+| Prefix | Expands to |
+|---|---|
+| `entity` | Entity declaration with port list |
+| `arch` | Architecture body |
+| `pkg` | Package declaration |
+| `pkgb` | Package body |
+| `process` | Synchronous process with async reset |
+| `proc_nr` | Synchronous process (clock only) |
+| `proc_comb` | Combinational process |
+| `fsm` | Finite state machine (register + next-state + output) |
+| `inst` | Direct entity instantiation with port map |
+| `comp` | Component declaration |
+| `tb` | Complete testbench template |
+| `clock` | Clock generation (`clk <= not clk after 10 ns`) |
+| `stim` | Stimulus process |
+| `sig` | Signal declaration |
+| `sigv` | Vector signal declaration |
+| `var` | Variable declaration |
+| `const` | Constant declaration |
+| `type` | Enumerated type declaration |
+| `subtype` | Subtype declaration |
+| `case` | Case/when statement |
+| `for` | For loop |
+| `if` | If/elsif/else statement |
+| `func` | Function body |
+| `proc` | Procedure body |
+| `func_decl` | Function prototype (for packages) |
+| `proc_decl` | Procedure prototype (for packages) |
+| `forg` | For generate |
+| `ifg` | If generate |
+| `cnt` | Counter with reset and enable |
+| `sr` | Shift register |
+| `others` | Others aggregate `(others => '0'/'1')` |
+| `wait` | Wait for/on/until |
+| `assert` | Assert/report with severity |
+
+No configuration needed — snippets work on all `.vhd` and `.vhdl` files.
 
 ---
 

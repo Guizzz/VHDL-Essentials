@@ -1,0 +1,434 @@
+{
+	"Entity with ports": {
+		"prefix": "entity",
+		"body": [
+			"entity ${1:${TM_FILENAME_BASE}} is",
+			"\tport (",
+			"\t\t${2:clk} : in  std_logic;",
+			"\t\t${3:rst} : in  std_logic;",
+			"\t\t${4:data} : out std_logic_vector(${5:7} downto 0)",
+			"\t);",
+			"end entity ${1:${TM_FILENAME_BASE}};",
+			"$0"
+		],
+		"description": "Entity declaration with port list"
+	},
+	"Architecture body": {
+		"prefix": "arch",
+		"body": [
+			"architecture ${1:rtl} of ${2:${TM_FILENAME_BASE}} is",
+			"\t${3:-- declarations}",
+			"begin",
+			"\t${4:-- body}",
+			"end architecture ${1:rtl};",
+			"$0"
+		],
+		"description": "Architecture body with declarative part"
+	},
+	"Package declaration": {
+		"prefix": "pkg",
+		"body": [
+			"package ${1:${TM_FILENAME_BASE}} is",
+			"\t${2:-- declarations}",
+			"",
+			"\t${3:-- function prototypes}",
+			"end package ${1:${TM_FILENAME_BASE}};",
+			"$0"
+		],
+		"description": "Package declaration with prototypes"
+	},
+	"Package body": {
+		"prefix": "pkgb",
+		"body": [
+			"package body ${1:${TM_FILENAME_BASE}} is",
+			"\t${2:-- implementations}",
+			"end package body ${1:${TM_FILENAME_BASE}};",
+			"$0"
+		],
+		"description": "Package body with function/procedure implementations"
+	},
+	"Direct entity instantiation": {
+		"prefix": "inst",
+		"body": [
+			"${1:u_${2:entity}} : entity work.${2:entity}",
+			"\tport map (",
+			"\t\t${3:port_a} => ${4:signal_a},",
+			"\t\t${5:port_b} => ${6:signal_b}",
+			"\t);",
+			"$0"
+		],
+		"description": "Direct entity instantiation with port map"
+	},
+	"Component declaration": {
+		"prefix": "comp",
+		"body": [
+			"component ${1:name} is",
+			"\tport (",
+			"\t\t${2:clk} : in  std_logic;",
+			"\t\t${3:data} : out std_logic_vector(${4:7} downto 0)",
+			"\t);",
+			"end component ${1:name};",
+			"$0"
+		],
+		"description": "Component declaration with port list"
+	},
+	"Synchronous process with reset": {
+		"prefix": "process",
+		"body": [
+			"process(${1:clk}, ${2:rst})",
+			"begin",
+			"\tif ${2:rst} = '1' then",
+			"\t\t${3:-- reset}",
+			"\telsif rising_edge(${1:clk}) then",
+			"\t\t${4:-- logic}",
+			"\tend if;",
+			"end process;",
+			"$0"
+		],
+		"description": "Synchronous process with async reset and rising_edge clock"
+	},
+	"Synchronous process without reset": {
+		"prefix": "proc_nr",
+		"body": [
+			"process(${1:clk})",
+			"begin",
+			"\tif rising_edge(${1:clk}) then",
+			"\t\t${2:-- logic}",
+			"\tend if;",
+			"end process;",
+			"$0"
+		],
+		"description": "Synchronous process with rising_edge clock only (no reset)"
+	},
+	"Combinational process": {
+		"prefix": "proc_comb",
+		"body": [
+			"process(${1:all})",
+			"begin",
+			"\t${2:-- combinational logic}",
+			"end process;",
+			"$0"
+		],
+		"description": "Combinational process (VHDL-2008 all-inputs sensitivity)"
+	},
+	"Finite state machine": {
+		"prefix": "fsm",
+		"body": [
+			"type ${1:state_t} is (${2:idle}, ${3:state1}, ${4:state2});",
+			"signal ${5:state} : ${1:state_t} := ${2:idle};",
+			"signal ${6:next_state} : ${1:state_t};",
+			"",
+			"-- State register",
+			"process(${7:clk}, ${8:rst})",
+			"begin",
+			"\tif ${8:rst} = '1' then",
+			"\t\t${5:state} <= ${2:idle};",
+			"\telsif rising_edge(${7:clk}) then",
+			"\t\t${5:state} <= ${6:next_state};",
+			"\tend if;",
+			"end process;",
+			"",
+			"-- Next state logic",
+			"process(${5:state}, ${9:inputs})",
+			"begin",
+			"\t${6:next_state} <= ${5:state};",
+			"\tcase ${5:state} is",
+			"\t\twhen ${2:idle} =>",
+			"\t\t\t${10:-- transitions}",
+			"\t\twhen ${3:state1} =>",
+			"\t\t\t${11:-- transitions}",
+			"\t\twhen ${4:state2} =>",
+			"\t\t\t${12:-- transitions}",
+			"\tend case;",
+			"end process;",
+			"",
+			"-- Output logic",
+			"process(${5:state})",
+			"begin",
+			"\t${13:-- defaults}",
+			"\tcase ${5:state} is",
+			"\t\twhen ${2:idle} =>",
+			"\t\t\t${14:-- outputs}",
+			"\t\twhen ${3:state1} =>",
+			"\t\t\t${15:-- outputs}",
+			"\t\twhen ${4:state2} =>",
+			"\t\t\t${16:-- outputs}",
+			"\tend case;",
+			"end process;",
+			"$0"
+		],
+		"description": "Finite state machine with state register, next-state logic and output logic"
+	},
+	"Signal declaration": {
+		"prefix": "sig",
+		"body": [
+			"signal ${1:name} : ${2:std_logic};",
+			"$0"
+		],
+		"description": "Signal declaration"
+	},
+	"Vector signal declaration": {
+		"prefix": "sigv",
+		"body": [
+			"signal ${1:name} : std_logic_vector(${2:7} downto 0);",
+			"$0"
+		],
+		"description": "std_logic_vector signal declaration"
+	},
+	"Variable declaration": {
+		"prefix": "var",
+		"body": [
+			"variable ${1:name} : ${2:std_logic};",
+			"$0"
+		],
+		"description": "Variable declaration"
+	},
+	"Constant declaration": {
+		"prefix": "const",
+		"body": [
+			"constant ${1:name} : ${2:positive} := ${3:value};",
+			"$0"
+		],
+		"description": "Constant declaration"
+	},
+	"Enumerated type declaration": {
+		"prefix": "type",
+		"body": [
+			"type ${1:name} is (${2:val1}, ${3:val2}, ${4:val3});",
+			"$0"
+		],
+		"description": "Enumerated type declaration"
+	},
+	"Subtype declaration": {
+		"prefix": "subtype",
+		"body": [
+			"subtype ${1:name} is ${2:std_logic_vector}(${3:7} downto 0);",
+			"$0"
+		],
+		"description": "Subtype declaration"
+	},
+	"Case statement": {
+		"prefix": "case",
+		"body": [
+			"case ${1:expression} is",
+			"\twhen ${2:value} =>",
+			"\t\t${3:-- body}",
+			"\twhen others =>",
+			"\t\t${4:-- others}",
+			"end case;",
+			"$0"
+		],
+		"description": "Case/when statement"
+	},
+	"For loop": {
+		"prefix": "for",
+		"body": [
+			"for ${1:i} in 0 to ${2:N-1} loop",
+			"\t${3:-- body}",
+			"end loop;",
+			"$0"
+		],
+		"description": "For loop"
+	},
+	"If statement": {
+		"prefix": "if",
+		"body": [
+			"if ${1:condition} then",
+			"\t${2:-- body}",
+			"${3:elsif ${4:condition} then",
+			"\t${5:-- body}}",
+			"${6:else",
+			"\t${7:-- body}}",
+			"end if;",
+			"$0"
+		],
+		"description": "If/elsif/else statement"
+	},
+	"Wait statement": {
+		"prefix": "wait",
+		"body": [
+			"wait for ${1:time};",
+			"$0"
+		],
+		"description": "Wait for/on/until"
+	},
+	"Function body": {
+		"prefix": "func",
+		"body": [
+			"function ${1:name} (",
+			"\t${2:param} : ${3:std_logic_vector}",
+			") return ${4:std_logic_vector} is",
+			"\tvariable ${5:result} : ${4:std_logic_vector}(${6:7} downto 0);",
+			"begin",
+			"\t${7:-- body}",
+			"\treturn ${5:result};",
+			"end function ${1:name};",
+			"$0"
+		],
+		"description": "Function declaration and body"
+	},
+	"Procedure body": {
+		"prefix": "proc",
+		"body": [
+			"procedure ${1:name} (",
+			"\t${2:signal} ${3:param} : in ${4:std_logic_vector}",
+			") is",
+			"begin",
+			"\t${5:-- body}",
+			"end procedure ${1:name};",
+			"$0"
+		],
+		"description": "Procedure declaration and body"
+	},
+	"Function prototype": {
+		"prefix": "func_decl",
+		"body": [
+			"function ${1:name} (${2:param} : ${3:std_logic_vector}) return ${4:std_logic_vector};",
+			"$0"
+		],
+		"description": "Function prototype (for package declaration)"
+	},
+	"Procedure prototype": {
+		"prefix": "proc_decl",
+		"body": [
+			"procedure ${1:name} (${2:signal} ${3:param} : in ${4:std_logic_vector});",
+			"$0"
+		],
+		"description": "Procedure prototype (for package declaration)"
+	},
+	"Testbench template": {
+		"prefix": "tb",
+		"body": [
+			"-- Testbench for ${1:${TM_FILENAME_BASE}}",
+			"entity ${1:${TM_FILENAME_BASE}} is",
+			"end entity ${1:${TM_FILENAME_BASE}};",
+			"",
+			"architecture sim of ${1:${TM_FILENAME_BASE}} is",
+			"",
+			"\t-- Stimulus signals",
+			"\tsignal ${2:clk} : std_logic := '0';",
+			"\tsignal ${3:rst} : std_logic := '0';",
+			"\tsignal ${4:output} : std_logic_vector(${5:7} downto 0);",
+			"",
+			"begin",
+			"",
+			"\t-- Unit Under Test",
+			"\t${6:uut} : entity work.${7:entity}",
+			"\t\tport map (",
+			"\t\t\t${2:clk} => ${2:clk},",
+			"\t\t\t${3:rst} => ${3:rst},",
+			"\t\t\t${8:data} => ${4:output}",
+			"\t\t);",
+			"",
+			"\t-- Clock generation",
+			"\t${2:clk} <= not ${2:clk} after ${9:10} ns;",
+			"",
+			"\t-- Stimulus process",
+			"\tprocess",
+			"\tbegin",
+			"\t\t-- Initialize",
+			"\t\t${3:rst} <= '1';",
+			"\t\twait for ${10:100} ns;",
+			"\t\t${3:rst} <= '0';",
+			"\t\t${11:-- apply stimulus}",
+			"\t\twait;",
+			"\tend process;",
+			"",
+			"end architecture sim;",
+			"$0"
+		],
+		"description": "Complete testbench template with clock generation and stimulus process"
+	},
+	"Clock generation": {
+		"prefix": "clock",
+		"body": [
+			"${1:clk} <= not ${1:clk} after ${2:10} ns;",
+			"$0"
+		],
+		"description": "Clock generation concurrent assignment"
+	},
+	"Stimulus process": {
+		"prefix": "stim",
+		"body": [
+			"process",
+			"begin",
+			"\t${1:-- initialize}",
+			"\twait for ${2:100} ns;",
+			"\t${3:-- apply stimulus}",
+			"\twait;",
+			"end process;",
+			"$0"
+		],
+		"description": "Stimulus process with wait statements"
+	},
+	"Assert statement": {
+		"prefix": "assert",
+		"body": [
+			"assert ${1:condition}",
+			"\treport \"${2:message}\"",
+			"\tseverity ${3|failure,error,warning,note|};",
+			"$0"
+		],
+		"description": "Assert/report statement with severity choice"
+	},
+	"For generate": {
+		"prefix": "forg",
+		"body": [
+			"${1:gen_${2:label}} : for ${3:i} in 0 to ${4:N-1} generate",
+			"\t${5:-- body}",
+			"end generate ${1:gen_${2:label}};",
+			"$0"
+		],
+		"description": "For generate statement"
+	},
+	"If generate": {
+		"prefix": "ifg",
+		"body": [
+			"${1:gen_${2:label}} : if ${3:condition} generate",
+			"\t${4:-- body}",
+			"end generate ${1:gen_${2:label}};",
+			"$0"
+		],
+		"description": "If generate statement"
+	},
+	"Counter with reset and enable": {
+		"prefix": "cnt",
+		"body": [
+			"process(${1:clk}, ${2:rst})",
+			"begin",
+			"\tif ${2:rst} = '1' then",
+			"\t\t${3:counter} <= (others => '0');",
+			"\telsif rising_edge(${1:clk}) then",
+			"\t\tif ${4:en} = '1' then",
+			"\t\t\t${3:counter} <= ${3:counter} + 1;",
+			"\t\tend if;",
+			"\tend if;",
+			"end process;",
+			"$0"
+		],
+		"description": "Counter with synchronous reset and enable"
+	},
+	"Shift register": {
+		"prefix": "sr",
+		"body": [
+			"process(${1:clk}, ${2:rst})",
+			"begin",
+			"\tif ${2:rst} = '1' then",
+			"\t\t${3:shift_reg} <= (others => '0');",
+			"\telsif rising_edge(${1:clk}) then",
+			"\t\t${3:shift_reg} <= ${4:din} & ${3:shift_reg}(${5:7} downto 1);",
+			"\tend if;",
+			"end process;",
+			"$0"
+		],
+		"description": "Shift register with serial input"
+	},
+	"Others aggregate": {
+		"prefix": "others",
+		"body": [
+			"(others => '${1|0,1|}')${2}",
+			"$0"
+		],
+		"description": "Others aggregate with choice of '0' or '1'"
+	}
+}

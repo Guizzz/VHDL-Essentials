@@ -15,7 +15,6 @@ package common_pkg is
     signal sys_rst : std_logic;
 
     function clog(x : positive) return natural;
-    function clog_2(x : positive) return natural;
 end package common_pkg;
 
 package body common_pkg is
