@@ -51,7 +51,7 @@ export async function runQuartusTask(options: QuartusTaskOptions)
     const binPath = getQuartusBin(options.tool);
 
     if (!binPath) {
-        vscode.window.showErrorMessage('Quartus path not configured');
+        vscode.window.showErrorMessage('Quartus path not configured or invalid');
         return;
     }
 
@@ -62,17 +62,27 @@ export async function runQuartusTask(options: QuartusTaskOptions)
 
     logger.startTask(projectName, options.statusRunning.replace('...', ''));
 
-    const proc = spawn(
-        executable,
-        options.args,
-        {
-            cwd: projectDir,
-            env: {
-                ...process.env,
-                PATH: `${binPath};${process.env.PATH}`
+    let proc;
+
+    try {
+        proc = spawn(
+            executable,
+            options.args,
+            {
+                cwd: projectDir,
+                env: {
+                    ...process.env,
+                    PATH: `${binPath};${process.env.PATH}`
+                }
             }
-        }
-    );
+        );
+    }
+    catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
+        vscode.window.showErrorMessage(`Failed to start ${options.command}: ${msg}`);
+        taskStatus.text = `$(error) ${options.statusFail}`;
+        return;
+    }
 
     proc.stdout.on('data', d => {
         logger.parseChunk(d.toString());
@@ -80,6 +90,11 @@ export async function runQuartusTask(options: QuartusTaskOptions)
 
     proc.stderr.on('data', d => {
         logger.parseChunk(d.toString());
+    });
+
+    proc.on('error', err => {
+        vscode.window.showErrorMessage(`Failed to start ${options.command}: ${err.message}`);
+        taskStatus.text = `$(error) ${options.statusFail}`;
     });
 
     proc.on('close', code => {

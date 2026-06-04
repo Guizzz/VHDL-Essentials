@@ -15,12 +15,18 @@
 
 Command order (not enforced by tooling, but expected by convention): `lint → check-types → build` (already encoded in `compile` and `package` scripts).
 
+## Workflow (standard operativo)
+
+Prima di iniziare a lavorare su una issue, preparare uno **schema del lavoro** (cosa va modificato, file coinvolti, rischi) e sottoporlo all'utente per approvazione. Solo dopo il via si procede con implementazione, commit e chiusura issue.
+
+Alla chiusura di una issue su GitHub, **linkare sempre il commit relativo** nel commento di chiusura.
+
 ## Architecture
 
 **Entrypoint**: `src/extension.ts` — bundles to `dist/extension.js` via esbuild (CJS, Node target, `vscode` external).
 
 **Major directories**:
-- `src/commands/` — 5 registered commands (build, flash, setPath, genDoFile, runDoFile)
+- `src/commands/` — 4 registered commands (build, flash, genDoFile, runDoFile)
 - `src/services/` — indexer, watchers, language registration, lint registration, QSF tree view
 - `src/providers/` — definition providers, hover providers, tree data provider, semantic highlight
 - `src/parsers/` — VHDL entity, package, variable, and QSF parsers
