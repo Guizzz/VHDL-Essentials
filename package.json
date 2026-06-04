@@ -30,10 +30,6 @@
         "title": "Quartus: Build"
       },
       {
-        "command": "quartus-assistant.setQuartusPath",
-        "title": "Quartus: Set Quartus Path"
-      },
-      {
         "command": "quartus-assistant.flash",
         "title": "Quartus: Flash"
       },

@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { registerBuildCommand } from './commands/build';
 import { registerFlashCommand } from './commands/flash';
-import { registerSetQuartusPathCommand } from './commands/setPath';
 import { setupMaterialIcons } from './ui/setIcon';
 import { createStatusBar, updateButtonsVisibility } from './ui/statusBar';
 import { registerGenSimulationUnit } from './commands/genDoFile';
@@ -26,7 +25,6 @@ export async function activate(context: vscode.ExtensionContext)
     // Command
     registerBuildCommand(context);
     registerFlashCommand(context);
-    registerSetQuartusPathCommand(context);
     registerGenSimulationUnit(context);
     registerRunSimulationUnit(context);
 
