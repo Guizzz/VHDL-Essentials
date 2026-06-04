@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.10.3] - 2026-06-04
+
+### Added
+- Sensitivity list lint: checks that all read signals are in `process(...)` sensitivity lists for combinatorial processes, and that clock/reset signals used in `rising_edge()`/`falling_edge()` are listed for synchronous processes (#42)
+- Skips `process (all)` (VHDL-2008) and processes without sensitivity lists
+- Hint for unnecessary signals in sensitivity list displayed directly on the variable name with `DiagnosticTag.Unnecessary`
+
+### Fixed
+- `checkSemicolon` now handles comma-separated port declarations like `y, q : out std_logic` — no more false "Missing ';'"
+- `port(...)` regex now correctly matches types with parentheses like `std_logic_vector(N-1 downto 0)` (#55)
+- Syntax linter no longer produces false "Missing ';'" on generics type keywords (`positive`, `natural`, `integer`, etc.) and multi-line `assert`/`report`/`severity` blocks (#56)
+
 ## [0.10.2] - 2026-06-04
 
 ### Added
