@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.10.2] - 2026-06-04
+
+### Added
+- Package variable hover now shows declared value when available (e.g. `integer := 50000000`) (#54)
+- Added validation and error handling for `maxv.quartusPath`: `fs.existsSync()` check, `path.normalize()`, try/catch around `spawn`, and improved error messages (#47)
+
+### Removed
+- Removed `quartus-assistant.setQuartusPath` command — replaced by VS Code's built-in settings UI (#50)
+
+### Fixed
+- Removed trailing `\\quartus` from `maxv.quartusPath` setting description to avoid confusion
+
 ## [0.10.1] - 2026-06-03
 
 ### Fixed
