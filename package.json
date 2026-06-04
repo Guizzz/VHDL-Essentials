@@ -105,6 +105,20 @@
         }
       ]
     },
+    "menus": {
+      "view/item/context": [
+        {
+          "view": "quartus-assistant-view",
+          "when": "viewItem == testbench",
+          "command": "quartus-assistant.generateDo"
+        },
+        {
+          "view": "quartus-assistant-view",
+          "when": "viewItem == questascript",
+          "command": "quartus-assistant.runDo"
+        }
+      ]
+    },
     "grammars": [
       {
         "language": "vhdl",

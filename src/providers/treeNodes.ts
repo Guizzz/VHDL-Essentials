@@ -39,10 +39,11 @@ export class TestBenchesNode extends vscode.TreeItem
             const relativePath = vscode.workspace.asRelativePath(uri);
             const item = new vscode.TreeItem(relativePath, vscode.TreeItemCollapsibleState.None);
             item.resourceUri = uri;
+            item.contextValue = 'testbench';
             item.command = {
-                command: 'quartus-assistant.generateDo',
-                title: 'Generate Questasim .do file',
-                arguments: [relativePath]
+                command: 'vscode.open',
+                title: 'Open File',
+                arguments: [uri]
             };
             return item;
         });
@@ -66,10 +67,11 @@ export class QuestaScriptsNode extends vscode.TreeItem
             const relativePath = vscode.workspace.asRelativePath(uri);
             const item = new vscode.TreeItem(relativePath, vscode.TreeItemCollapsibleState.None);
             item.resourceUri = uri;
+            item.contextValue = 'questascript';
             item.command = {
-                command: 'quartus-assistant.runDo',
-                title: 'Run Simulation',
-                arguments: [relativePath]
+                command: 'vscode.open',
+                title: 'Open File',
+                arguments: [uri]
             };
             return item;
         });

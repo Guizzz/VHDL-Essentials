@@ -51,7 +51,7 @@ export function registerGenSimulationUnit(context: vscode.ExtensionContext)
 {
     const command = vscode.commands.registerCommand(
             'quartus-assistant.generateDo',
-            async (file?: string) => {
+            async (file?: string | vscode.Uri) => {
 
                 const workspace = getWorkspace();
                 if (!workspace) {return;}
@@ -64,23 +64,58 @@ export function registerGenSimulationUnit(context: vscode.ExtensionContext)
                     return;
                 }
 
-                // file passed from command → try auto-match
                 let pickedUnit;
 
-                if (file) 
+                if (file && typeof file !== 'string')
                 {
-                    const matches = units.filter(unit => unit.file === file );
+                    const arg = file as any;
+                    const filePath: string | undefined =
+                        arg.fsPath || arg.resourceUri?.fsPath;
 
-                    if (matches.length === 1) {
+                    if (!filePath)
+                    {
+                        vscode.window.showErrorMessage('Invalid file argument');
+                        return;
+                    }
+
+                    const normalized = filePath.toLowerCase();
+                    const matches = units.filter(
+                        unit => unit.uriFile.fsPath.toLowerCase() === normalized
+                    );
+
+                    if (matches.length === 1)
+                    {
                         pickedUnit = {
                             label: matches[0].entity,
                             detail: matches[0].file,
                             unit: matches[0]
                         };
-                    } 
-                    else if (matches.length > 1) 
+                    }
+                    else if (matches.length === 0)
                     {
-                        // ambiguity → fallback to UI picker
+                        vscode.window.showErrorMessage('No simulation unit found for this file');
+                        return;
+                    }
+                    else
+                    {
+                        vscode.window.showErrorMessage('Multiple simulation units found for this file');
+                        return;
+                    }
+                }
+                else if (typeof file === 'string')
+                {
+                    const matches = units.filter(unit => unit.file === file );
+
+                    if (matches.length === 1)
+                    {
+                        pickedUnit = {
+                            label: matches[0].entity,
+                            detail: matches[0].file,
+                            unit: matches[0]
+                        };
+                    }
+                    else if (matches.length > 1)
+                    {
                         const picked = await vscode.window.showQuickPick(
                             matches.map(unit => ({
                                 label: unit.entity,
@@ -99,7 +134,6 @@ export function registerGenSimulationUnit(context: vscode.ExtensionContext)
                     }
                 }
 
-                // normal fallback (no file or no match)
                 if (!pickedUnit) {
                     const picked = await vscode.window.showQuickPick(
                         units.map(unit => ({

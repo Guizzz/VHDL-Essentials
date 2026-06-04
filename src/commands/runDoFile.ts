@@ -8,7 +8,7 @@ export function registerRunSimulationUnit(context: vscode.ExtensionContext)
 {
     const command = vscode.commands.registerCommand(
                 'quartus-assistant.runDo',
-                async (file?: string) => 
+                async (file?: string | vscode.Uri) => 
                 {
                     const workspace = getWorkspace();
                     if (!workspace) {return;}
@@ -23,7 +23,23 @@ export function registerRunSimulationUnit(context: vscode.ExtensionContext)
                     const projectName = await getProjectName();
                     
 
-                    if (file) {
+                    if (file && typeof file !== 'string')
+                    {
+                        const arg = file as any;
+                        const uri = arg.resourceUri ?? arg;
+
+                        quartusOutput.show(true);
+                        const opt: QuestaSimOption = {
+                            doFile: vscode.workspace.asRelativePath(uri as vscode.Uri),
+                            label: path.basename(uri.fsPath ?? uri.path),
+                            projectName: projectName!
+                        };
+                        await runSimulation(opt);
+                        return;
+                    }
+
+                    if (typeof file === 'string')
+                    {
                         quartusOutput.show(true);
                         const opt: QuestaSimOption = {
                             doFile: file,
@@ -59,11 +75,6 @@ export function registerRunSimulationUnit(context: vscode.ExtensionContext)
                     }
 
                     quartusOutput.show(true);
-
-                    console.log (picked);
-                    console.log("cwd:", workspaceRoot);
-                    console.log("file:", picked.unit.fsPath);
-
                     const opt: QuestaSimOption = {
                         doFile: picked.detail,
                         label: picked.label,
