@@ -1,5 +1,18 @@
 import { ParsedPackage, ParsedPackageSymbol } from "../types/types";
 
+function isInsideParens(text: string, index: number): boolean
+{
+    let depth = 0;
+
+    for (let i = 0; i < index; i++)
+    {
+        if (text[i] === '(') { depth++; }
+        else if (text[i] === ')') { depth--; }
+    }
+
+    return depth > 0;
+}
+
 export function parsePackages(text: string): ParsedPackage[] {
 
     const packages: ParsedPackage[] = [];
@@ -15,12 +28,14 @@ export function parsePackages(text: string): ParsedPackage[] {
         const packageOffset = packageMatch.index;
 
         const symbols: ParsedPackageSymbol[] = [];
-        const symbolRegex = /\b(constant|signal|type|subtype|function|procedure)\s+(\w+)(?:\s*:\s*([^;:=]+))?(?:\s*:=\s*([^;\n]+))?/gm;
+        const symbolRegex = /\b(constant|signal|type|subtype|function|procedure)\s+(\w+)(?:\s*:\s*([^;:=\)]+))?(?:\s*:=\s*([^;\n]+))?/gm;
 
         let symbolMatch: RegExpExecArray | null;
 
         while ((symbolMatch = symbolRegex.exec(packageBody)) !== null) 
         {
+            if (isInsideParens(packageBody, symbolMatch.index)) { continue; }
+
             const kind = symbolMatch[1];
             const symbolName = symbolMatch[2];
             const type = symbolMatch[3]?.trim() ?? '';

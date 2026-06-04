@@ -19,15 +19,30 @@ export function parseSignals(text: string): ParsedSignalLike[]
     }
 
     // entity ports
-    const portRegex =  /\b(\w+)\s*:\s*(in|out|inout|buffer)\s+([\w\s\(\)\d]+)\b/gi;
+    const portRegex = /\b(\w+)\s*:\s*(in|out|inout|buffer)\s+([^;]+)/gi;
 
     while ((match = portRegex.exec(text)) !== null)
     {
+        let type = match[3].trim();
+
+        // strip trailing structural ) that closes the port block (not part of type)
+        if (type.endsWith(')'))
+        {
+            const without = type.slice(0, -1).trimEnd();
+            const opens = (without.match(/\(/g) || []).length;
+            const closes = (without.match(/\)/g) || []).length;
+
+            if (opens === closes)
+            {
+                type = without;
+            }
+        }
+
         symbols.push({
             kind: 'port',
             name: match[1],
             direction: match[2],
-            type: match[3].trim(),
+            type,
             offset: match.index
         });
     }

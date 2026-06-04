@@ -42,7 +42,7 @@ export function extractMessage(line: string): QuartusMessage | null
         .replace(/\\"/g, '"')
         .trim();
 
-    const stage = strings[strings.length - 3] || 'Quartus';
+    const stage = strings[2] || 'Quartus';
 
     return {
         stage,
