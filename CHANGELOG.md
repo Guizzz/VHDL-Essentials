@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.12.0] - 2026-06-05
+
+### Added
+- VHDL auto-completion: ~80 keywords, local symbols (signals/variables/constants/ports), entities, package names, and package symbols; context-aware (entity/component/architecture context shows only entities) (#57)
+- Pin assignment tree items now have a blue `plug` icon and left-click opens `.qsf` at the pin's line (#36)
+- Improved entity context detection — works with labels like `spi_master_out : entity work.fa`
+
 ## [0.11.0] - 2026-06-05
 
 ### Added
