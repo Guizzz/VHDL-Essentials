@@ -114,6 +114,47 @@ suite('entityParser', () =>
         assert.strictEqual(result[0].ports[1].type, 'std_logic_vector(15 downto 0)');
     });
 
+    test('comments inside port block are stripped from names', () =>
+    {
+        const result = parseEntities(`entity attenuator_manager is
+    port(
+        -- Clock principale CPLD
+        CLK_CPLD : in std_logic;
+
+        -- Segnale di controllo
+        PULSE    : in std_logic;
+
+        -- SPI da micro (SLAVE)
+        MICRO_SPI_CLK  : in std_logic;
+        MICRO_SPI_SS   : in std_logic;
+        MICRO_SPI_MOSI : in std_logic;
+
+        -- SPI verso attenuatore (MASTER)
+        ACT_SPI_CLK  : out std_logic;
+        ACT_SPI_SS   : out std_logic;
+        ACT_SPI_MOSI : out std_logic
+    );
+end entity;`);
+
+        assert.strictEqual(result.length, 1);
+        assert.strictEqual(result[0].ports.length, 8);
+
+        const names = result[0].ports.map(p => p.name);
+        assert.ok(names.includes('CLK_CPLD'), 'CLK_CPLD should be a port name');
+        assert.ok(names.includes('PULSE'), 'PULSE should be a port name');
+        assert.ok(names.includes('MICRO_SPI_CLK'), 'MICRO_SPI_CLK should be a port name');
+        assert.ok(names.includes('MICRO_SPI_SS'), 'MICRO_SPI_SS should be a port name');
+        assert.ok(names.includes('MICRO_SPI_MOSI'), 'MICRO_SPI_MOSI should be a port name');
+        assert.ok(names.includes('ACT_SPI_CLK'), 'ACT_SPI_CLK should be a port name');
+        assert.ok(names.includes('ACT_SPI_SS'), 'ACT_SPI_SS should be a port name');
+        assert.ok(names.includes('ACT_SPI_MOSI'), 'ACT_SPI_MOSI should be a port name');
+
+        // no port name should contain comment text
+        assert.ok(names.every(n => !n.includes('Clock') && !n.includes('principale')));
+        assert.ok(names.every(n => !n.includes('Segnale') && !n.includes('controllo')));
+        assert.ok(names.every(n => !n.includes('SLAVE') && !n.includes('MASTER')));
+    });
+
     test('preserve offset values', () =>
     {
         const text = `library ieee;
@@ -124,6 +165,6 @@ suite('entityParser', () =>
 
         assert.strictEqual(result.length, 1);
         assert.ok(result[0].offset >= 0);
-        assert.strictEqual(text.substring(result[0].offset, result[0].offset + 8), 'entity p');
+        assert.strictEqual(text.substring(result[0].offset, result[0].offset + 10), 'positioned');
     });
 });

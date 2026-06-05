@@ -1,6 +1,11 @@
 import { EntitySymbol, EntityPort } from "../types/types";
 
 
+function stripVhdlComments(text: string): string
+{
+    return text.replace(/--[^\n]*/g, '');
+}
+
 export function parseEntities(text: string): EntitySymbol[]
 {
     const entities: EntitySymbol[] = [];
@@ -11,7 +16,7 @@ export function parseEntities(text: string): EntitySymbol[]
     {
         const entityName = entityMatch[1];
         const entityBody = entityMatch[2];
-        const entityOffset = entityMatch.index;
+        const nameOffset = entityMatch.index + entityMatch[0].indexOf(entityName);
         const ports: EntityPort[] = [];
 
         // find port(...) block — balanced parentheses to handle types like std_logic_vector(N-1 downto 0)
@@ -19,11 +24,8 @@ export function parseEntities(text: string): EntitySymbol[]
 
         if (portBlockMatch)
         {
-            const portBlock = portBlockMatch[1];
+            const portBlock = stripVhdlComments(portBlockMatch[1]);
 
-            // supporta:
-            // clk : in std_logic;
-            // a,b : out unsigned(7 downto 0);
             const portRegex = /([\w\s,]+)\s*:\s*(in|out|inout|buffer)\s+([^;]+);?/gi;
 
             let portMatch: RegExpExecArray | null;
@@ -36,13 +38,13 @@ export function parseEntities(text: string): EntitySymbol[]
 
                 for (const name of names)
                 {
-                    const relativeOffset = entityMatch[0].indexOf(portMatch[0]);
+                    const nameMatch = new RegExp(`\\b${name}\\b`).exec(entityMatch[0]);
 
                     ports.push({
                         name,
                         direction,
                         type,
-                        offset: entityOffset + relativeOffset
+                        offset: entityMatch.index + (nameMatch?.index ?? 0)
                     });
                 }
             }
@@ -50,7 +52,7 @@ export function parseEntities(text: string): EntitySymbol[]
 
         entities.push({
             name: entityName,
-            offset: entityOffset,
+            offset: nameOffset,
             ports
         });
     }

@@ -28,15 +28,15 @@ export async function activate(context: vscode.ExtensionContext)
     registerGenSimulationUnit(context);
     registerRunSimulationUnit(context);
 
-    // Lint
-    registerLintFeature(context);
-
     // Tree View
     await registerQsfView(context);
 
     // VHDL indexing
     const indexer = new EntityIndexer();
     await indexer.buildIndex();
+
+    // Lint (after indexer is built — PortMapLinter depends on it)
+    registerLintFeature(context, indexer);
 
     // Workspace listeners
     registerWorkspaceWatchers(context, indexer);
