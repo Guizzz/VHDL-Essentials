@@ -17,6 +17,7 @@ VHDL Essentials brings FPGA development directly into VSCode with:
 - 🔗 QSF integration
 - 🤖 Automatic `.do` generation
 - ✅ VHDL code snippets & templates
+- ✅ VHDL auto-completion (keywords, symbols, entities, packages)
 - ✅ Real-time VHDL syntax & completeness checking
 - 🎨 Semantic highlighting
 - 📚 Workspace-wide indexing
@@ -24,6 +25,27 @@ VHDL Essentials brings FPGA development directly into VSCode with:
 ---
 
 # ✨ Features
+
+## ✨ VHDL Auto-Completion
+
+The extension provides smart auto-completion as you type in VHDL files.
+
+Suggested completions:
+
+| Categoria | Esempi |
+|---|---|
+| **VHDL keywords** | `entity`, `architecture`, `signal`, `process`, `rising_edge`, `std_logic`, `case`, `when`, `for`, `loop` (~80 keywords) |
+| **Local symbols** | signals, variables, constants, and ports declared in the current file |
+| **Entities** | workspace entity names (suggested after `entity`, `component`, `architecture ... of`) |
+| **Packages** | package names (suggested after `use work.`) |
+| **Package symbols** | symbols inside a package (suggested after `use work.pkgname.`) |
+
+**Context-aware filtering**: when typing in an entity/component/architecture context, only entity names are shown — VHDL functions like `rising_edge` are excluded.
+
+![Variable Completion](resources/screen/var_drop.png)
+![Entity Completion](resources/screen/entity_drop.png)
+
+---
 
 ## 🔎 VHDL Navigation
 
@@ -83,10 +105,11 @@ Dedicated FPGA project TreeView integrated inside VSCode.
 Features:
 
 * Top-level entity detection
-* Pin assignment explorer
+* Pin assignment explorer (each pin shows blue `$(plug)` icon)
 * QuestaSim scripts explorer
 * Testbench management
 * **Left-click** on any file → opens it
+* **Left-click** on a pin assignment → opens `.qsf` at the pin line
 * **Right-click** on a testbench → Generate QuestaSim DO
 * **Right-click** on a `.do` file → Run QuestaSim simulation
 
@@ -239,6 +262,8 @@ No configuration needed — snippets work on all `.vhd` and `.vhdl` files.
 
 ---
 
+---
+
 # 📦 Installation
 
 Install from the [Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=Guizzz.quartus-assistant).
@@ -283,7 +308,6 @@ All commands are accessible via the Command Palette (`Ctrl+Shift+P`).
 |---|---|
 | `quartus-assistant.build` | Quartus: Build |
 | `quartus-assistant.flash` | Quartus: Flash |
-| `quartus-assistant.setQuartusPath` | Quartus: Set Quartus Path |
 | `quartus-assistant.generateDo` | Quartus: Generate QuestaSim DO |
 | `quartus-assistant.runDo` | Quartus: Run QuestaSim simulation |
 
