@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 
 import { EntityIndexer } from './entityIndexer';
 import { VhdlDefinitionProvider } from '../providers/definitions/definitionProvider';
+import { VhdlCompletionProvider } from '../providers/vhdlCompletionProvider';
 import { VhdlHighlightProvider } from '../providers/vhdlHighlightProvider';
 import { PinHoverProvider } from '../providers/hover/pinHoverProvider';
 import { PinDefinitionProvider } from '../providers/definitions/pinDefinitionProvider';
@@ -41,11 +42,17 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
                                     new PinDefinitionProvider()
                                 );
     
+    const completionProvider = vscode.languages.registerCompletionItemProvider(
+        'vhdl',
+        new VhdlCompletionProvider(indexer)
+    );
+
     const highlightProvider = new VhdlHighlightProvider(indexer);
     highlightProvider.activate();
 
     context.subscriptions.push(
         definitionProvider,
+        completionProvider,
         varPackHoverProvider,
         varEntityHoverProvider,
         entityHoverProvider,
