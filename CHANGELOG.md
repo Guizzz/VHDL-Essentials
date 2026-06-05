@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.12.1] - 2026-06-05
+
+### Added
+- Port map validation: missing ports and undeclared formals detected in direct entity instantiations (`label : entity work.xxx`) (#39)
+- 108 new unit tests across port map parser, port map linter, entity parser, and regression tests
+
+### Fixed
+- `offsetToPosition` with CRLF files: replaced `split(/\r?\n/)` with substring + `split('\n')` to avoid 1-char/line accumulation error that placed diagnostics on wrong lines (#39)
+- `parseMappings` no longer splits on commas inside VHDL comments
+- `findBalancedParen` now skips VHDL comments during parenthesis counting
+- Entity declaration offset now points to entity name, not the `entity` keyword
+- EntityIndexer O(n²) → O(n) bug in file removal
+- Various code quality: translated Italian comments to English, improved error handler, hover ordering, CI step ordering
+
 ## [0.12.0] - 2026-06-05
 
 ### Added
