@@ -15,11 +15,11 @@
 
 Command order (not enforced by tooling, but expected by convention): `lint → check-types → build` (already encoded in `compile` and `package` scripts).
 
-## Workflow (standard operativo)
+## Workflow
 
-Prima di iniziare a lavorare su una issue, preparare uno **schema del lavoro** (cosa va modificato, file coinvolti, rischi) e sottoporlo all'utente per approvazione. Solo dopo il via si procede con implementazione, commit e chiusura issue.
+Before starting work on an issue, prepare a **work plan** (what needs to change, files involved, risks) and submit it to the user for approval. Only proceed with implementation, commit, and issue closure after receiving the go-ahead.
 
-Alla chiusura di una issue su GitHub, **linkare sempre il commit relativo** nel commento di chiusura.
+When closing a GitHub issue, **always link the relevant commit** in the closing comment.
 
 ## Architecture
 
@@ -41,14 +41,15 @@ Alla chiusura di una issue su GitHub, **linkare sempre il commit relativo** nel 
 
 ## Git rules
 
-- **No push/commit without approval** — ogni push e commit deve essere prima approvato dall'utente. Mai fare push o commit senza chiedere prima.
-- **No tag generation** — non generare mai tag git (né crearli, né pushatli) a meno che non sia esplicitamente richiesto.
-- **Version creation (`crea versione v#.#.#`)** — alla richiesta "crea versione v#.#.#":
-  1. Genera una nuova sezione nel changelog (CHANGELOG.md) per la versione indicata
-  2. Aggiorna la versione in package.json (e package-lock.json se presente)
-  3. Crea un commit con **solo** quei due file (CHANGELOG.md, package.json)
-  4. Il messaggio del commit deve essere esattamente la versione (es. `v1.2.3`)
-  Presuppone che tutte le altre modifiche del progetto siano già state committate separatamente.
+- **No push/commit without approval** — every push and commit must be approved by the user first. Never push or commit without asking.
+- **No tag generation** — never create or push git tags unless explicitly requested.
+- **CHANGELOG.md is OFF-LIMITS** — never touch the changelog. Only the user decides when and how to update it. The only exception is the `crea versione v#.#.#` workflow below, and only when explicitly requested.
+- **Version creation (`crea versione v#.#.#`)** — on request "crea versione v#.#.#":
+  1. Generate a new changelog section (CHANGELOG.md) for the given version
+  2. Update version in package.json (and package-lock.json if present)
+  3. Create a commit with **only** those two files (CHANGELOG.md, package.json)
+  4. The commit message must be exactly the version (e.g. `v1.2.3`)
+  Assumes all other project changes have already been committed separately.
 
 ## Key constraints
 
@@ -68,4 +69,4 @@ Alla chiusura di una issue su GitHub, **linkare sempre il commit relativo** nel 
 - No external runtime dependencies — the extension bundle is self-contained (only `vscode` externalized).
 - **Opening braces on new line** (Allman style) — functions, `if`, `for`, `while`, `class`.
 - **Inline helpers used once** — avoid extracting a function unless called from ≥2 places. If it's single-use, keep it inline or a private method at most.
-- **Single-line early returns** — `if (!cond) { return; }` su stessa riga quando il body è solo un `return` o un semplice statement.
+- **Single-line early returns** — `if (!cond) { return; }` on the same line when the body is just a `return` or a simple statement.
