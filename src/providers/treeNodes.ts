@@ -17,6 +17,21 @@ export class PinAssignmentsNode extends vscode.TreeItem
         {
             const item = new vscode.TreeItem(p.signal);
             item.description = p.pin;
+            item.resourceUri = p.location.uri;
+            item.iconPath = new vscode.ThemeIcon('plug', new vscode.ThemeColor('charts.blue'));
+            item.command = {
+                command: 'vscode.open',
+                title: 'Open Pin Assignment',
+                arguments: [
+                    p.location.uri,
+                    {
+                        selection: new vscode.Range(
+                            p.location.range.start,
+                            p.location.range.start
+                        )
+                    }
+                ]
+            };
             return item;
         });
     }
