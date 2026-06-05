@@ -3,14 +3,14 @@ import * as vscode from 'vscode';
 export async function setupMaterialIcons() {
     const config = vscode.workspace.getConfiguration();
 
-    // legge associazioni esistenti
+    // read existing associations
     const current = config.get<Record<string, string>>( 'material-icon-theme.files.associations' ) || {};
 
-    // aggiunge/override
+    // add/override
     current['*.qsf'] = 'settings';
     current['*.qpf'] = '3d';
 
-    // salva nelle user settings
+    // save to user settings
     await config.update(
         'material-icon-theme.files.associations',
         current,

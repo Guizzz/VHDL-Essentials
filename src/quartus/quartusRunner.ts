@@ -140,6 +140,11 @@ export async function runSimulation(options: QuestaSimOption) {
         logger.appendLine("🧪 Simulation started 🔬");
     });
 
+    proc.on('error', err => {
+        vscode.window.showErrorMessage(`Failed to start vsim: ${err.message}`);
+        taskStatus.text = `$(error) Simulation Error`;
+    });
+
     proc.on('close', code => {
 
         const success = code === 0;

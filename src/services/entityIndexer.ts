@@ -29,7 +29,19 @@ export class EntityIndexer
         const path = file.fsPath;
         this.removeFile(path);
 
-        const doc = await vscode.workspace.openTextDocument(file);
+        let doc: vscode.TextDocument;
+
+        try 
+        {
+            doc = await vscode.workspace.openTextDocument(file);
+        } 
+        catch (err) 
+        {
+            const msg = err instanceof Error ? err.message : String(err);
+            console.error(`Failed to open ${path}: ${msg}`);
+            return;
+        }
+
         const text = doc.getText();
 
         const entities = parseEntities(text);

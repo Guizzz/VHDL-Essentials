@@ -22,12 +22,12 @@ export class VarPackHoverProvider implements vscode.HoverProvider {
         const markdown = new vscode.MarkdownString();
         markdown.supportThemeIcons = true;
         
+        markdown.appendMarkdown(`$(${getIcon(symbol.symbol.kind)}) **${word}**\n\n`);
+
         markdown.appendCodeblock(
             `${symbol.symbol.kind} ${word} : ${symbol.symbol.type}${symbol.symbol.value ? ` := ${symbol.symbol.value}` : ''}`,
             'vhdl'
         );
-
-        markdown.appendMarkdown(`$(${getIcon(symbol.symbol.kind)}) **${word}**\n\n`);
 
         markdown.isTrusted = true;
         return new vscode.Hover( markdown,range);
