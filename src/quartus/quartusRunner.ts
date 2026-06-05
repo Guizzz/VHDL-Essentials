@@ -10,7 +10,7 @@ import {
     getProjectName
 } from './quartusProject';
 
-import { getQuartusBin } from './quartusConfig';
+import { getQuartusBin, getQuestaPath } from './quartusConfig';
 import { taskStatus } from '../ui/statusBar';
 
 const logger = new QuartusLogger(quartusOutput);
@@ -125,7 +125,7 @@ export async function runSimulation(options: QuestaSimOption) {
     logger.startTask(options.projectName, 'Starting Simulation');
 
     const proc = spawn(
-        "vsim",
+        getQuestaPath(),
         ["-gui", "-do", options.doFile],
         {
             cwd: workspaceRoot,
