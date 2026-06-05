@@ -156,6 +156,7 @@ VHDL Essentials validates your code on multiple levels:
 * **Duplicate declarations** — duplicate signal, variable, or port names in the same scope
 * **Sensitivity list** — signals read inside a process but missing from the sensitivity list
 * **Syntax scopes** — unclosed `if`, `process`, `for`/`while` loops, mismatched `end` labels
+* **Port map validation** — missing ports and undeclared formals detected in direct entity instantiations (`label : entity work.xxx`)
 * **Package body completeness** — function/procedure declared in a package but not implemented in its body
 
 All diagnostics appear in the Problems panel (`Ctrl+Shift+M`) with clear messages.
