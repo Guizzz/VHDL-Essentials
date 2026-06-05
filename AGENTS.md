@@ -53,7 +53,7 @@ When closing a GitHub issue, **always link the relevant commit** in the closing 
 
 ## Key constraints
 
-- **No test files exist yet.** The test infra (`@vscode/test-cli`, `out/test/**/*.test.js`) is configured but unused. If adding tests, place them in `src/test/` and compile with `npm run compile-tests`.
+- **Tests exist** in `src/test/` (parsers, utils, linters). Compile with `npm run compile-tests` and run with `npm test`. When adding tests, place them in the appropriate subdirectory under `src/test/`.
 - **Generated files in `dist/` and `out/`** are gitignored and vscodeignored. Do not commit build output.
 - **Extension is packaged** — `.vscodeignore` excludes `src/`, `*.ts`, `*.map`, config files from the `.vsix`.
 - **CI**: GitHub Actions on `v*` tags — runs `npm ci && vsce package && vsce publish`. No tests run in CI.

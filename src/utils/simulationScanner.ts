@@ -35,7 +35,7 @@ async function populateEntityDb(files: vscode.Uri[])
     return entityDb;
 }
 
-function isTestBench(text: string): boolean
+export function isTestBench(text: string): boolean
 {
     const hasPortMap = /\bport\s+map\s*\(/i.test(text);
     const entityHasPorts = /entity\s+\w+\s+is\s+port\s*\(/i.test(text);
@@ -59,7 +59,7 @@ function isTestBench(text: string): boolean
     return false;
 }
 
-function getPorts(text:string)
+export function getPorts(text:string)
 {
     const signals: string[] = [];
     const regex = /signal\s+(\w+)\s*:/gi;
@@ -74,7 +74,7 @@ function getPorts(text:string)
 
 }
 
-function runtimeEstimation(text:string)
+export function runtimeEstimation(text:string)
 {
     const waitRegex = /wait\s+for\s+(\d+)\s*(ns|us|ms)/gi;
     let totalNs = 0;

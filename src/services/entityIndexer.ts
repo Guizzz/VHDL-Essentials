@@ -194,14 +194,6 @@ export class EntityIndexer
 
     getEntity(name: string) 
     {
-        for (const [entityName, entity] of this.entityMap) 
-        {
-            if (entityName === name) 
-            {
-                return entity;
-            }
-        }
-
-        return undefined;
+        return this.entityMap.get(name);
     }
 }

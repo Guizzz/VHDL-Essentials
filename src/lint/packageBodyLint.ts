@@ -1,5 +1,54 @@
 import * as vscode from 'vscode';
 
+export function extractPackageDeclaredNames(text: string): Map<string, number>
+{
+    const names = new Map<string, number>();
+    const pkgRegex = /package\s+(?!body\b)(\w+)\s+is([\s\S]*?)end\s+package\s*(?:\w+\s*)?;/gi;
+    let match: RegExpExecArray | null;
+
+    while ((match = pkgRegex.exec(text)) !== null)
+    {
+        const body = match[2];
+        const bodyOffset = match.index + match[0].indexOf(body);
+        const itemRegex = /\b(function|procedure)\s+(\w+)\s*(?:\(|;|\breturn\b|\bis\b)/gi;
+        let itemMatch: RegExpExecArray | null;
+
+        while ((itemMatch = itemRegex.exec(body)) !== null)
+        {
+            const name = itemMatch[2];
+            const key = name.toLowerCase();
+
+            if (!names.has(key))
+            {
+                names.set(key, bodyOffset + itemMatch.index);
+            }
+        }
+    }
+
+    return names;
+}
+
+export function extractPackageImplementedNames(text: string): Set<string>
+{
+    const names = new Set<string>();
+    const bodyRegex = /package\s+body\s+(\w+)\s+is([\s\S]*?)end\s+package\s+body\s*(?:\w+\s*)?;/gi;
+    let match: RegExpExecArray | null;
+
+    while ((match = bodyRegex.exec(text)) !== null)
+    {
+        const body = match[2];
+        const itemRegex = /\b(function|procedure)\s+(\w+)\s*(?:\(|;|\breturn\b|\bis\b)/gi;
+        let itemMatch: RegExpExecArray | null;
+
+        while ((itemMatch = itemRegex.exec(body)) !== null)
+        {
+            names.add(itemMatch[2].toLowerCase());
+        }
+    }
+
+    return names;
+}
+
 export class PackageBodyLint
 {
     private diagnostics: vscode.DiagnosticCollection;
@@ -62,51 +111,12 @@ export class PackageBodyLint
 
     private extractDeclaredNames(text: string): Map<string, number>
     {
-        const names = new Map<string, number>();
-        const pkgRegex = /package\s+(?!body\b)(\w+)\s+is([\s\S]*?)end\s+package\s*(?:\w+\s*)?;/gi;
-        let match: RegExpExecArray | null;
-
-        while ((match = pkgRegex.exec(text)) !== null)
-        {
-            const body = match[2];
-            const bodyOffset = match.index + match[0].indexOf(body);
-            const itemRegex = /\b(function|procedure)\s+(\w+)\s*(?:\(|;|\breturn\b|\bis\b)/gi;
-            let itemMatch: RegExpExecArray | null;
-
-            while ((itemMatch = itemRegex.exec(body)) !== null)
-            {
-                const name = itemMatch[2];
-                const key = name.toLowerCase();
-
-                if (!names.has(key))
-                {
-                    names.set(key, bodyOffset + itemMatch.index);
-                }
-            }
-        }
-
-        return names;
+        return extractPackageDeclaredNames(text);
     }
 
     private extractImplementedNames(text: string): Set<string>
     {
-        const names = new Set<string>();
-        const bodyRegex = /package\s+body\s+(\w+)\s+is([\s\S]*?)end\s+package\s+body\s*(?:\w+\s*)?;/gi;
-        let match: RegExpExecArray | null;
-
-        while ((match = bodyRegex.exec(text)) !== null)
-        {
-            const body = match[2];
-            const itemRegex = /\b(function|procedure)\s+(\w+)\s*(?:\(|;|\breturn\b|\bis\b)/gi;
-            let itemMatch: RegExpExecArray | null;
-
-            while ((itemMatch = itemRegex.exec(body)) !== null)
-            {
-                names.add(itemMatch[2].toLowerCase());
-            }
-        }
-
-        return names;
+        return extractPackageImplementedNames(text);
     }
 
     dispose(): void

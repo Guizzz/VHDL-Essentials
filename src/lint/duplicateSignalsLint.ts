@@ -1,6 +1,54 @@
 import * as vscode from 'vscode';
 import { parseSignals } from '../parsers/variableParser';
 
+function offsetToPosition(text: string, offset: number): vscode.Position
+{
+    const lines = text.split(/\r?\n/);
+    let remaining = offset;
+    for (let i = 0; i < lines.length; i++)
+    {
+        if (remaining <= lines[i].length)
+        {
+            return new vscode.Position(i, remaining);
+        }
+        remaining -= lines[i].length + 1;
+    }
+    return new vscode.Position(0, 0);
+}
+
+export function findDuplicateSignals(text: string): vscode.Diagnostic[]
+{
+    const signals = parseSignals(text);
+    const diagnostics: vscode.Diagnostic[] = [];
+    const seen = new Map<string, typeof signals[0]>();
+
+    for (const signal of signals)
+    {
+        const key = signal.name.toLowerCase();
+        if (seen.has(key))
+        {
+            const pos = offsetToPosition(text, signal.offset);
+            const range = new vscode.Range(
+                pos,
+                pos.translate(0, signal.name.length)
+            );
+            const diagnostic = new vscode.Diagnostic(
+                range,
+                `Duplicate declaration of '${signal.name}'`,
+                vscode.DiagnosticSeverity.Error
+            );
+            diagnostic.source = 'VHDL Essentials';
+            diagnostics.push(diagnostic);
+        }
+        else
+        {
+            seen.set(key, signal);
+        }
+    }
+
+    return diagnostics;
+}
+
 export class DuplicateSignalLinter
 {
     private diagnostics = vscode.languages.createDiagnosticCollection('vhdl');
@@ -21,35 +69,8 @@ export class DuplicateSignalLinter
     {
         if (document.languageId !== 'vhdl') {return;}
 
-        const text = document.getText();
-        const signals = parseSignals(text);
-        const diagnostics: vscode.Diagnostic[] = [];
-        const seen = new Map<string, typeof signals[0]>();
-
-        for (const signal of signals)
-        {
-            const key = signal.name.toLowerCase();
-            if (seen.has(key))
-            {
-                const pos = document.positionAt(signal.offset);
-                const range = new vscode.Range(
-                    pos,
-                    pos.translate(0, signal.name.length)
-                );
-                const diagnostic = new vscode.Diagnostic(
-                    range,
-                    `Duplicate declaration of '${signal.name}'`,
-                    vscode.DiagnosticSeverity.Error
-                );
-                diagnostic.source = 'VHDL Essentials';
-                diagnostics.push(diagnostic);
-            }
-            else
-            {
-                seen.set(key, signal);
-            }
-        }
-        this.diagnostics.set(document.uri, diagnostics);
+        const diags = findDuplicateSignals(document.getText());
+        this.diagnostics.set(document.uri, diags);
     }
 
     dispose(): void
