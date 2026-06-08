@@ -1,19 +1,7 @@
 import * as vscode from 'vscode';
 import { parseSignals } from '../parsers/variableParser';
 import { VHDL_KEYWORDS } from '../utils/vhdlKeywords';
-
-function offsetToLine(text: string, offset: number): number
-{
-    let line = 0;
-    for (let i = 0; i < offset; i++)
-    {
-        if (text[i] === '\n')
-        {
-            line++;
-        }
-    }
-    return line;
-}
+import { offsetToPosition } from '../utils/positionUtils';
 
 export function findUnusedSignals(text: string): vscode.Diagnostic[]
 {
@@ -33,14 +21,9 @@ export function findUnusedSignals(text: string): vscode.Diagnostic[]
             continue;
         }
 
-        const declLine = offsetToLine(text, signal.offset);
-
-        // Compute column of the signal name within its line (same method as range below)
-        let col = 0;
-        for (let i = signal.offset - 1; i >= 0 && text[i] !== '\n'; i--)
-        {
-            col++;
-        }
+        const pos = offsetToPosition(text, signal.offset);
+        const declLine = pos.line;
+        const col = pos.character;
 
         // Skip declarations inside comments
         const lineText = lines[declLine];

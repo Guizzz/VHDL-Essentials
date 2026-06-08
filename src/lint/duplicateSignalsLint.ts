@@ -1,20 +1,6 @@
 import * as vscode from 'vscode';
 import { parseSignals } from '../parsers/variableParser';
-
-function offsetToPosition(text: string, offset: number): vscode.Position
-{
-    const lines = text.split(/\r?\n/);
-    let remaining = offset;
-    for (let i = 0; i < lines.length; i++)
-    {
-        if (remaining <= lines[i].length)
-        {
-            return new vscode.Position(i, remaining);
-        }
-        remaining -= lines[i].length + 1;
-    }
-    return new vscode.Position(0, 0);
-}
+import { offsetToPosition } from '../utils/positionUtils';
 
 export function findDuplicateSignals(text: string): vscode.Diagnostic[]
 {
