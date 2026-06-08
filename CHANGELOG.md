@@ -3,7 +3,21 @@
 All notable changes to this project will be documented in this file.
 
 
-## [0.12.2] - 2026-06-08
+## [0.12.3] - 2026-06-08
+
+### Added
+- Code Actions (Quick Fixes) for all lint diagnostics — press `Alt+Enter` on any warning to apply automatic fixes: missing/extra ports in port map, duplicate declarations, unused signals, sensitivity list corrections, QSF duplicates, missing semicolons, wrong `end` keywords, unclosed scopes, `else`/`elsif`/`when` wrapping, package body stubs, and unassigned port stubs (#43)
+- Shared `VHDL_KEYWORDS` constant extracted to `src/utils/vhdlKeywords.ts` — both sensitivity and unused-signal linters now import from one place (#67)
+- Centralized `offsetToPosition()` utility in `src/utils/positionUtils.ts` — used by duplicate-signal, port-map, and unused-signal linters (#66)
+- 400ms debounce on `TodoCommentLinter` to avoid redundant validation on rapid edits (#65)
+
+### Fixed
+- `findUnusedSignals`: signal names are now regex-escaped before building the search pattern, preventing crashes if a signal name contained regex-special characters (#68)
+- Bare `end` without trailing space (e.g., `end` alone on a line) is now correctly recognized as a scope terminator — no more spurious `Unclosed architecture` diagnostic
+- `fixPortmapMissingPort` code action: scans forward from entity line tracking paren depth, appends comma to last mapping, and inserts new mapping with correct indent alignment (no stray `;` at wrong position)
+
+### Documentation
+- Added Code Actions feature section with autofix screenshot to README
 
 ### Added
 - Unused signal/variable/constant lint: warns when a declaration is never used; unused names are grayed out (40% opacity) for visual feedback; declarations inside VHDL comments (`-- signal foo...`) are correctly ignored
