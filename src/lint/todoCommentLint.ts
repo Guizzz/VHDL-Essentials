@@ -69,6 +69,7 @@ export function extractTodoComments(text: string): vscode.Diagnostic[]
 export class TodoCommentLinter
 {
     private diagnostics = vscode.languages.createDiagnosticCollection('vhdl-todos');
+    private debounceTimer: ReturnType<typeof setTimeout> | undefined;
 
     constructor(context: vscode.ExtensionContext)
     {
@@ -79,7 +80,18 @@ export class TodoCommentLinter
 
         context.subscriptions.push(
             vscode.workspace.onDidOpenTextDocument(doc => this.validate(doc)),
-            vscode.workspace.onDidChangeTextDocument(e => this.validate(e.document))
+            vscode.workspace.onDidChangeTextDocument(e => this.schedule(e.document))
+        );
+    }
+
+    private schedule(document: vscode.TextDocument)
+    {
+        if (document.languageId !== 'vhdl') { return; }
+
+        clearTimeout(this.debounceTimer);
+        this.debounceTimer = setTimeout(
+            () => this.validate(document),
+            400
         );
     }
 
@@ -93,6 +105,7 @@ export class TodoCommentLinter
 
     dispose(): void
     {
+        clearTimeout(this.debounceTimer);
         this.diagnostics.dispose();
     }
 }
