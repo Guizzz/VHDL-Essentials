@@ -40,6 +40,7 @@ export function validatePortMaps(
                 vscode.DiagnosticSeverity.Warning
             );
             d.source = 'VHDL Essentials';
+            d.code = 'portmap.missing-port';
             diags.push(d);
         }
 
@@ -55,6 +56,7 @@ export function validatePortMaps(
                 vscode.DiagnosticSeverity.Error
             );
             d.source = 'VHDL Essentials';
+            d.code = 'portmap.undefined-port';
             diags.push(d);
         }
     }

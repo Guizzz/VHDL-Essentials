@@ -99,11 +99,13 @@ export class PackageBodyLint
 
             const pos = document.positionAt(offset);
             const range = new vscode.Range(pos, pos.translate(0, 20));
-            diags.push(new vscode.Diagnostic(
+            const d = new vscode.Diagnostic(
                 range,
                 `Function/procedure declared in package but not implemented in package body`,
                 vscode.DiagnosticSeverity.Warning
-            ));
+            );
+            d.code = 'packagebody.missing-impl';
+            diags.push(d);
         }
 
         this.diagnostics.set(document.uri, diags);

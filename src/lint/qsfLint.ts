@@ -28,6 +28,7 @@ export function lintQsfText(text: string): vscode.Diagnostic[]
                     vscode.DiagnosticSeverity.Warning
                 )
             );
+            diagnostics[diagnostics.length - 1].code = 'qsf.multi-space';
         }
 
         const tabs = /\t/g;
@@ -46,6 +47,7 @@ export function lintQsfText(text: string): vscode.Diagnostic[]
                     vscode.DiagnosticSeverity.Information
                 )
             );
+            diagnostics[diagnostics.length - 1].code = 'qsf.tab';
         }
 
         if (
@@ -67,6 +69,7 @@ export function lintQsfText(text: string): vscode.Diagnostic[]
                     vscode.DiagnosticSeverity.Hint
                 )
             );
+            diagnostics[diagnostics.length - 1].code = 'qsf.unknown-command';
         }
     }
 
@@ -112,7 +115,8 @@ function checkDuplicateQsfAssignments(lines: string[], diagnostics: vscode.Diagn
                     vscode.DiagnosticSeverity.Error
                 )
             );
-        }
+            diagnostics[diagnostics.length - 1].code = 'qsf.duplicate-pin';
+            }
     }
 
     const bySignal = new Map<string, typeof assignments>();
@@ -136,7 +140,8 @@ function checkDuplicateQsfAssignments(lines: string[], diagnostics: vscode.Diagn
                     vscode.DiagnosticSeverity.Warning
                 )
             );
-        }
+            diagnostics[diagnostics.length - 1].code = 'qsf.duplicate-signal';
+            }
     }
 }
 

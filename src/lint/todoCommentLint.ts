@@ -59,6 +59,7 @@ export function extractTodoComments(text: string): vscode.Diagnostic[]
                 vscode.DiagnosticSeverity.Information
             );
             diagnostic.source = 'VHDL Essentials';
+            diagnostic.code = 'todo.tag';
             diagnostics.push(diagnostic);
         }
     }

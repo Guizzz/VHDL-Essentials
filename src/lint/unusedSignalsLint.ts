@@ -68,6 +68,7 @@ export function findUnusedSignals(text: string): vscode.Diagnostic[]
                 vscode.DiagnosticSeverity.Warning
             );
             diagnostic.source = 'VHDL Essentials';
+            diagnostic.code = 'unused-signal';
             diagnostics.push(diagnostic);
         }
     }

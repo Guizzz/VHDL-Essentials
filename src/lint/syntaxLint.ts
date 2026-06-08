@@ -30,11 +30,13 @@ const END_KINDS: Record<string, string> =
 function makeDiag(
     range: vscode.Range,
     message: string,
-    severity: vscode.DiagnosticSeverity
+    severity: vscode.DiagnosticSeverity,
+    code?: string
 ): vscode.Diagnostic
 {
     const d = new vscode.Diagnostic(range, message, severity);
     d.source = 'VHDL Essentials';
+    if (code) { d.code = code; }
     return d;
 }
 
@@ -67,7 +69,7 @@ function tryOpenScope(
     if (m)
     {
         stack.push({ type: 'entity', name: m[1], line: lineNum, hasIs: false, hasBegin: false });
-        diags.push(makeDiag(new vscode.Range(lineNum, 0, lineNum, line.length), `'entity' missing 'is'`, vscode.DiagnosticSeverity.Error));
+        diags.push(makeDiag(new vscode.Range(lineNum, 0, lineNum, line.length), `'entity' missing 'is'`, vscode.DiagnosticSeverity.Error, 'syntax.missing-is'));
         return true;
     }
 
@@ -82,7 +84,7 @@ function tryOpenScope(
     if (m)
     {
         stack.push({ type: 'architecture', name: m[1], line: lineNum, hasIs: false, hasBegin: false });
-        diags.push(makeDiag(new vscode.Range(lineNum, 0, lineNum, line.length), `'architecture' missing 'is'`, vscode.DiagnosticSeverity.Error));
+        diags.push(makeDiag(new vscode.Range(lineNum, 0, lineNum, line.length), `'architecture' missing 'is'`, vscode.DiagnosticSeverity.Error, 'syntax.missing-is'));
         return true;
     }
 
@@ -157,7 +159,7 @@ function tryOpenScope(
     if (m)
     {
         stack.push({ type: 'component', name: m[1], line: lineNum, hasIs: false, hasBegin: false });
-        diags.push(makeDiag(new vscode.Range(lineNum, 0, lineNum, line.length), `'component' missing 'is'`, vscode.DiagnosticSeverity.Error));
+        diags.push(makeDiag(new vscode.Range(lineNum, 0, lineNum, line.length), `'component' missing 'is'`, vscode.DiagnosticSeverity.Error, 'syntax.missing-is'));
         return true;
     }
 
@@ -179,7 +181,7 @@ function tryOpenScope(
     if (m)
     {
         stack.push({ type: 'package', name: m[1], line: lineNum, hasIs: false, hasBegin: false });
-        diags.push(makeDiag(new vscode.Range(lineNum, 0, lineNum, line.length), `'package' missing 'is'`, vscode.DiagnosticSeverity.Error));
+        diags.push(makeDiag(new vscode.Range(lineNum, 0, lineNum, line.length), `'package' missing 'is'`, vscode.DiagnosticSeverity.Error, 'syntax.missing-is'));
         return true;
     }
 
@@ -239,7 +241,8 @@ function checkEnd(
         diags.push(makeDiag(
             new vscode.Range(lineNum, 0, lineNum, line.length),
             `'end' without matching scope`,
-            vscode.DiagnosticSeverity.Error
+            vscode.DiagnosticSeverity.Error,
+            'syntax.end-without-scope'
         ));
         return;
     }
@@ -253,7 +256,8 @@ function checkEnd(
             diags.push(makeDiag(
                 new vscode.Range(lineNum, 0, lineNum, line.length),
                 `'end package body' does not match enclosing '${top.type}'`,
-                vscode.DiagnosticSeverity.Error
+                vscode.DiagnosticSeverity.Error,
+                'syntax.end-mismatch'
             ));
             return;
         }
@@ -263,7 +267,8 @@ function checkEnd(
             diags.push(makeDiag(
                 new vscode.Range(lineNum, 0, lineNum, line.length),
                 `'end package body ${name}' does not match 'package body ${top.name}'`,
-                vscode.DiagnosticSeverity.Warning
+                vscode.DiagnosticSeverity.Warning,
+                'syntax.end-name-mismatch'
             ));
         }
         finalizeScope(top, diags);
@@ -280,7 +285,8 @@ function checkEnd(
             diags.push(makeDiag(
                 new vscode.Range(lineNum, 0, lineNum, line.length),
                 `'end for loop' does not match enclosing '${top.type}'`,
-                vscode.DiagnosticSeverity.Error
+                vscode.DiagnosticSeverity.Error,
+                'syntax.end-mismatch'
             ));
             return;
         }
@@ -298,7 +304,8 @@ function checkEnd(
             diags.push(makeDiag(
                 new vscode.Range(lineNum, 0, lineNum, line.length),
                 `'end while loop' does not match enclosing '${top.type}'`,
-                vscode.DiagnosticSeverity.Error
+                vscode.DiagnosticSeverity.Error,
+                'syntax.end-mismatch'
             ));
             return;
         }
@@ -316,7 +323,8 @@ function checkEnd(
             diags.push(makeDiag(
                 new vscode.Range(lineNum, 0, lineNum, line.length),
                 `'end loop' does not match enclosing '${top.type}'`,
-                vscode.DiagnosticSeverity.Error
+                vscode.DiagnosticSeverity.Error,
+                'syntax.end-mismatch'
             ));
             return;
         }
@@ -337,7 +345,8 @@ function checkEnd(
             diags.push(makeDiag(
                 new vscode.Range(lineNum, 0, lineNum, line.length),
                 `Unknown 'end' type '${kind}'`,
-                vscode.DiagnosticSeverity.Hint
+                vscode.DiagnosticSeverity.Hint,
+                'syntax.unknown-end-type'
             ));
             return;
         }
@@ -348,7 +357,8 @@ function checkEnd(
             diags.push(makeDiag(
                 new vscode.Range(lineNum, 0, lineNum, line.length),
                 `'end ${kind}' does not match enclosing '${top.type}'`,
-                vscode.DiagnosticSeverity.Error
+                vscode.DiagnosticSeverity.Error,
+                'syntax.end-mismatch'
             ));
             return;
         }
@@ -358,7 +368,8 @@ function checkEnd(
             diags.push(makeDiag(
                 new vscode.Range(lineNum, 0, lineNum, line.length),
                 `'end ${kind} ${name}' does not match '${top.type} ${top.name}'`,
-                vscode.DiagnosticSeverity.Warning
+                vscode.DiagnosticSeverity.Warning,
+                'syntax.end-name-mismatch'
             ));
         }
 
@@ -389,7 +400,8 @@ function finalizeScope(
         diags.push(makeDiag(
             new vscode.Range(frame.line, 0, frame.line, 50),
             `'${frame.type}' missing 'is' declaration`,
-            vscode.DiagnosticSeverity.Error
+            vscode.DiagnosticSeverity.Error,
+            'syntax.missing-is'
         ));
     }
 
@@ -398,7 +410,8 @@ function finalizeScope(
         diags.push(makeDiag(
             new vscode.Range(frame.line, 0, frame.line, 50),
             `'process' without 'begin'`,
-            vscode.DiagnosticSeverity.Error
+            vscode.DiagnosticSeverity.Error,
+            'syntax.process-no-begin'
         ));
     }
 
@@ -407,7 +420,8 @@ function finalizeScope(
         diags.push(makeDiag(
             new vscode.Range(frame.line, 0, frame.line, 50),
             `'architecture' without 'begin'`,
-            vscode.DiagnosticSeverity.Warning
+            vscode.DiagnosticSeverity.Warning,
+            'syntax.arch-no-begin'
         ));
     }
 }
@@ -436,7 +450,8 @@ function checkSemicolon(
     diags.push(makeDiag(
         new vscode.Range(lineNum, line.length - 1, lineNum, line.length),
         `Missing ';'`,
-        vscode.DiagnosticSeverity.Warning
+        vscode.DiagnosticSeverity.Warning,
+        'syntax.missing-semicolon'
     ));
 }
 
@@ -475,7 +490,7 @@ export function validateSyntax(text: string): vscode.Diagnostic[]
                 const msg = /^elsif/i.test(line)
                     ? `'elsif' without matching 'if'`
                     : `'else' without matching 'if'`;
-                diags.push(makeDiag(range, msg, vscode.DiagnosticSeverity.Warning));
+                diags.push(makeDiag(range, msg, vscode.DiagnosticSeverity.Warning, 'syntax.else-without-if'));
             }
             continue;
         }
@@ -489,7 +504,8 @@ export function validateSyntax(text: string): vscode.Diagnostic[]
                 diags.push(makeDiag(
                     new vscode.Range(i, 0, i, line.length),
                     `'when' outside 'case' or 'generate'`,
-                    vscode.DiagnosticSeverity.Warning
+                    vscode.DiagnosticSeverity.Warning,
+                    'syntax.when-outside-case'
                 ));
             }
             continue;
@@ -506,7 +522,8 @@ export function validateSyntax(text: string): vscode.Diagnostic[]
                 diags.push(makeDiag(
                     new vscode.Range(i, 0, i, line.length),
                     `'begin' outside any scope`,
-                    vscode.DiagnosticSeverity.Warning
+                    vscode.DiagnosticSeverity.Warning,
+                    'syntax.begin-outside-scope'
                 ));
             }
             continue;
@@ -539,7 +556,8 @@ export function validateSyntax(text: string): vscode.Diagnostic[]
         diags.push(makeDiag(
             range,
             `Unclosed ${frame.type}${nameNote}`,
-            vscode.DiagnosticSeverity.Warning
+            vscode.DiagnosticSeverity.Warning,
+            'syntax.unclosed-scope'
         ));
     }
 
@@ -551,7 +569,8 @@ export function validateSyntax(text: string): vscode.Diagnostic[]
         diags.push(makeDiag(
             range,
             `Unbalanced parentheses (missing ${parenBalance > 0 ? parenBalance : -parenBalance} '${side}')`,
-            vscode.DiagnosticSeverity.Information
+            vscode.DiagnosticSeverity.Information,
+            'syntax.unbalanced-parens'
         ));
     }
 

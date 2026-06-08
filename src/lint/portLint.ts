@@ -68,13 +68,13 @@ export class TopLevelPortLint
                     const absoluteIndex = text.indexOf(match[0]);
                     const start = document.positionAt(absoluteIndex);
                     const end = start.translate(0, name.length);
-                    diags.push(
-                        new vscode.Diagnostic(
-                            new vscode.Range(start, end),
-                            `No PIN assignment for '${name}'`,
-                            vscode.DiagnosticSeverity.Warning
-                        )
+                    const d = new vscode.Diagnostic(
+                        new vscode.Range(start, end),
+                        `No PIN assignment for '${name}'`,
+                        vscode.DiagnosticSeverity.Warning
                     );
+                    d.code = 'portlinter.unassigned-port';
+                    diags.push(d);
                 }
             }
         }

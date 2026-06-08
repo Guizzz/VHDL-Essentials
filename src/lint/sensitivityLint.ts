@@ -204,6 +204,7 @@ export function checkSensitivityList(text: string): vscode.Diagnostic[]
                 vscode.DiagnosticSeverity.Warning
             );
             d.source = 'VHDL Essentials';
+            d.code = 'sensitivity.missing-signal';
             diags.push(d);
         }
 
@@ -222,6 +223,7 @@ export function checkSensitivityList(text: string): vscode.Diagnostic[]
                         vscode.DiagnosticSeverity.Hint
                     );
                     d.source = 'VHDL Essentials';
+                    d.code = 'sensitivity.unnecessary-signal';
                     d.tags = [vscode.DiagnosticTag.Unnecessary];
                     diags.push(d);
                 }

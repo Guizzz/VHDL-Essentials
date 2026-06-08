@@ -24,6 +24,7 @@ export function findDuplicateSignals(text: string): vscode.Diagnostic[]
                 vscode.DiagnosticSeverity.Error
             );
             diagnostic.source = 'VHDL Essentials';
+            diagnostic.code = 'duplicate-signal';
             diagnostics.push(diagnostic);
         }
         else
