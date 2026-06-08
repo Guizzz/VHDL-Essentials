@@ -36,7 +36,7 @@ export function parseSignals(text: string): ParsedSignalLike[]
             kind: match[1].toLowerCase(),
             name: match[2],
             type: match[3].trim(),
-            offset: match.index
+            offset: match.index + match[0].indexOf(match[2])
         });
     }
 

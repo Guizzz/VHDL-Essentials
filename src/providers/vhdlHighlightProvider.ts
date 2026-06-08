@@ -1,12 +1,14 @@
 
 import * as vscode from 'vscode';
 import { EntityIndexer } from '../services/entityIndexer';
+import { findUnusedSignals } from '../lint/unusedSignalsLint';
 
 export class VhdlHighlightProvider implements vscode.Disposable 
 {
     private entityDecorationType: vscode.TextEditorDecorationType;
     private packageDecorationType: vscode.TextEditorDecorationType;
     private symbolsDecorationType: vscode.TextEditorDecorationType;
+    private unusedDecorationType: vscode.TextEditorDecorationType;
     private disposables: vscode.Disposable[] = [];
 
     private entityRegex = /entity\s+work\.(\w+)/gi;
@@ -17,6 +19,7 @@ export class VhdlHighlightProvider implements vscode.Disposable
         this.entityDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('symbolIcon.classForeground') });
         this.symbolsDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('symbolIcon.variableForeground') });
         this.packageDecorationType = vscode.window.createTextEditorDecorationType({ color: new vscode.ThemeColor('symbolIcon.moduleForeground') });
+        this.unusedDecorationType = vscode.window.createTextEditorDecorationType({ opacity: '0.4' });
     }
 
     activate() 
@@ -134,12 +137,17 @@ export class VhdlHighlightProvider implements vscode.Disposable
         editor.setDecorations(this.entityDecorationType, entityDecorations);
         editor.setDecorations(this.packageDecorationType, packageDecorations);
         editor.setDecorations(this.symbolsDecorationType, symbolsDecorations);
+
+        const unusedDiags = findUnusedSignals(text);
+        const unusedOptions = unusedDiags.map(d => ({ range: d.range }));
+        editor.setDecorations(this.unusedDecorationType, unusedOptions);
     }
 
     dispose() 
     {
         this.entityDecorationType.dispose();
         this.symbolsDecorationType.dispose();
+        this.unusedDecorationType.dispose();
         for (const d of this.disposables) 
         {
             d.dispose();

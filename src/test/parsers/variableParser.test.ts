@@ -123,8 +123,8 @@ suite('variableParser', () =>
         assert.strictEqual(result[0].name, 'tick');
         assert.ok(result[0].offset >= 0);
         assert.strictEqual(
-            text.substring(result[0].offset, result[0].offset + 11),
-            'signal tick'
+            text.substring(result[0].offset, result[0].offset + result[0].name.length),
+            result[0].name
         );
     });
 });

@@ -7,7 +7,6 @@
 
   "patterns": [
     { "include": "#comments" },
-    { "include": "#todo" },
     { "include": "#strings" },
     { "include": "#numbers" },
     { "include": "#library_clause" },
@@ -35,17 +34,15 @@
     "comments": {
       "patterns": [
         {
+          "begin": "--",
+          "end": "$",
           "name": "comment.line.double-dash.vhdl",
-          "match": "--.*$"
-        }
-      ]
-    },
-
-    "todo": {
-      "patterns": [
-        {
-          "name": "keyword.annotation.todo.vhdl",
-          "match": "\\b(TODO|FIXME|BUG|NOTE|HACK|WARNING)\\b"
+          "patterns": [
+            {
+              "match": "\\b(TODO|FIXME|HACK|XXX|NOTE)\\b\\s*:?",
+              "name": "keyword.annotation.todo.vhdl"
+            }
+          ]
         }
       ]
     },

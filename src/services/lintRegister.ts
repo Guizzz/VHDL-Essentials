@@ -6,6 +6,8 @@ import { SyntaxLinter } from '../lint/syntaxLint';
 import { SensitivityLinter } from '../lint/sensitivityLint';
 import { PackageBodyLint } from '../lint/packageBodyLint';
 import { PortMapLinter } from '../lint/portMapLint';
+import { UnusedSignalsLinter } from '../lint/unusedSignalsLint';
+import { TodoCommentLinter } from '../lint/todoCommentLint';
 import { EntityIndexer } from './entityIndexer';
 
 export function registerLintFeature(
@@ -20,6 +22,8 @@ export function registerLintFeature(
     const sensitivityLint = new SensitivityLinter(context);
     const packageBodyLint = new PackageBodyLint(context);
     const portMapLint = new PortMapLinter(indexer, context);
+    const unusedSignalsLint = new UnusedSignalsLinter(context);
+    const todoCommentLint = new TodoCommentLinter(context);
 
     context.subscriptions.push(
         topLevelPortLint,
@@ -28,7 +32,9 @@ export function registerLintFeature(
         syntaxLint,
         sensitivityLint,
         packageBodyLint,
-        portMapLint
+        portMapLint,
+        unusedSignalsLint,
+        todoCommentLint
     );
 
 }

@@ -87,6 +87,18 @@
         }
       }
     },
+    "configurationDefaults": {
+      "editor.tokenColorCustomizations": {
+        "textMateRules": [
+          {
+            "scope": "keyword.annotation.todo.vhdl",
+            "settings": {
+              "foreground": "#FFD700"
+            }
+          }
+        ]
+      }
+    },
     "viewsContainers": {
       "activitybar": [
         {
