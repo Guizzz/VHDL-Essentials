@@ -163,6 +163,32 @@ VHDL Essentials validates your code on multiple levels:
 
 All diagnostics appear in the Problems panel (`Ctrl+Shift+M`) with clear messages.
 
+### 💡 Code Actions (Quick Fixes)
+
+Press `Alt+Enter` on any lint warning to apply an automatic fix:
+
+| Diagnostic | Fix action |
+|---|---|
+| Missing port in port map | Add `portName => open` aligned after the last mapping |
+| Undefined port in port map | Remove the entire mapping line |
+| Duplicate signal/variable/port declaration | Remove the duplicate line |
+| Unused signal/variable/constant | Remove the declaration line |
+| Missing/extra signal in sensitivity list | Add or remove the signal inline |
+| Duplicate QSF pin assignment | Remove the duplicate line |
+| Duplicate QSF signal assignment | QuickPick to choose which line to keep |
+| QSF tab/spaces | Normalize to spaces |
+| Missing semicolon | Add `;` |
+| Wrong `end` keyword / name | Suggest correct keyword and name |
+| Unclosed scope | Add `end <type>;` after the block |
+| `else`/`elsif` without `if` | Wrap in `if ... then ... end if;` |
+| `when` outside `case`/`generate` | Wrap in `case ... is ... end case;` |
+| Package function/procedure stub | Generate stub in package body |
+| Unassigned port without `PIN` | Generate `set_location_assignment` stub |
+
+Not every diagnostic has a fix — purely informational diagnostics (unknown end type, unknown QSF command, TODO markers) signal only.
+
+<img src="resources/screen/autofix.png" width="600" alt="Code Actions (Alt+Enter)">
+
 <img src="resources/screen/body_lint_warning.png" width="600" alt="Package Body Warning">
 
 ### 🚩 Unused declarations & TODO markers
