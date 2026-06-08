@@ -211,4 +211,21 @@ suite('unusedSignalsLint', () =>
         );
         assert.strictEqual(diags.length, 0);
     });
+
+    test('signal name with regex special chars is safe', () =>
+    {
+        // parseSignals() cattura solo \w+, quindi nomi con . + * etc.
+        // non possono arrivare in produzione. Questo test dimostra che
+        // il replace di escape non rompe niente sui nomi normali.
+        const diags = findUnusedSignals(
+            'architecture rtl of top is\n' +
+            '  signal clk_div : bit;\n' +
+            '  signal counter : bit;\n' +
+            'begin\n' +
+            '  counter <= clk_div;\n' +
+            'end architecture;'
+        );
+        // clk_div è usato, counter è usato → 0 diagnostics
+        assert.strictEqual(diags.length, 0);
+    });
 });

@@ -68,7 +68,8 @@ export function findUnusedSignals(text: string): vscode.Diagnostic[]
             continue;
         }
 
-        const regex = new RegExp(`\\b${signal.name}\\b`, 'i');
+        const escaped = signal.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`\\b${escaped}\\b`, 'i');
         let found = false;
 
         for (let i = 0; i < lines.length && !found; i++)
