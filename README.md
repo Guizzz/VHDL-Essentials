@@ -6,7 +6,7 @@
 
 Complete Quartus + VHDL workflow integration for Visual Studio Code.
 
-![Panel View](resources/screen/panel.png)
+<img src="resources/screen/panel.png" width="600" alt="Panel View">
 
 VHDL Essentials brings FPGA development directly into VSCode with:
 
@@ -20,6 +20,8 @@ VHDL Essentials brings FPGA development directly into VSCode with:
 - ✅ VHDL auto-completion (keywords, symbols, entities, packages)
 - ✅ Real-time VHDL syntax & completeness checking
 - 🎨 Semantic highlighting
+- ✅ Unused signal/variable/constant detection
+- ✅ TODO comment markers tracking
 - 📚 Workspace-wide indexing
 
 ---
@@ -42,8 +44,8 @@ Suggested completions:
 
 **Context-aware filtering**: when typing in an entity/component/architecture context, only entity names are shown — VHDL functions like `rising_edge` are excluded.
 
-![Variable Completion](resources/screen/var_drop.png)
-![Entity Completion](resources/screen/entity_drop.png)
+<img src="resources/screen/var_drop.png" width="600" alt="Variable Completion">
+<img src="resources/screen/entity_drop.png" width="600" alt="Entity Completion">
 
 ---
 
@@ -82,7 +84,7 @@ VHDL Essentials understands your `.qsf` constraints and links them directly to V
 
 Hover a top-level signal to instantly see the assigned FPGA pin.
 
-![Pin Hover](resources/screen/hover.png)
+<img src="resources/screen/hover.png" width="600" alt="Pin Hover">
 
 ---
 
@@ -113,7 +115,7 @@ Features:
 * **Right-click** on a testbench → Generate QuestaSim DO
 * **Right-click** on a `.do` file → Run QuestaSim simulation
 
-![Context Menu](resources/screen/right_click.png)
+<img src="resources/screen/right_click.png" width="600" alt="Context Menu">
 
 ---
 
@@ -130,13 +132,13 @@ Supported actions:
 
 Integrated status bar controls:
 
-![Quick Commands](resources/screen/quik_commands.png)
+<img src="resources/screen/quik_commands.png" width="400" alt="Quick Commands">
 
 ### 🏗️ Integrated Build and Flash Output
 
 VHDL Essentials provides integrated build execution and live tool output directly inside VSCode.
 
-![Quartus Build](resources/screen/build_2.png)
+<img src="resources/screen/build_2.png" width="800" alt="Quartus Build">
 
 ---
 
@@ -161,7 +163,16 @@ VHDL Essentials validates your code on multiple levels:
 
 All diagnostics appear in the Problems panel (`Ctrl+Shift+M`) with clear messages.
 
-![Package Body Warning](resources/screen/body_lint_warning.png)
+<img src="resources/screen/body_lint_warning.png" width="600" alt="Package Body Warning">
+
+### 🚩 Unused declarations & TODO markers
+
+Warns when a signal, variable, or constant is declared but never used (unused names are grayed out at 40% opacity).
+Scans for `TODO`, `FIXME`, `HACK`, `XXX`, and `NOTE` markers inside VHDL comments — shown as Info diagnostics with gold (`#FFD700`) highlighting.
+
+Declarations inside VHDL comments (`-- signal foo...`) are correctly ignored by the linter.
+
+<img src="resources/screen/unused_todo.png" width="600" alt="Unused declarations and TODO markers">
 
 ---
 
@@ -178,7 +189,7 @@ Checked patterns:
 * **Function/procedure body** — declaration without `is` does not open a scope
 * **Component instantiation** — `label : entity work.xxx` recognized, no false warnings
 
-![Syntax Check](resources/screen/syntax_check.png)
+<img src="resources/screen/syntax_check.png" width="600" alt="Syntax Check">
 
 Diagnostics appear in the Problems panel (`Ctrl+Shift+M`) with clear messages.
 
@@ -197,7 +208,7 @@ The extension provides semantic highlighting for:
 
 Highlighting only appears when declarations actually exist inside the indexed workspace.
 
-![Qsf Highlighting](resources/screen/qsf_highlighting.png)
+<img src="resources/screen/qsf_highlighting.png" width="800" alt="QSF Highlighting">
 
 ---
 
