@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.12.2] - 2026-06-08
+
+### Added
+- Unused signal/variable/constant lint: warns when a declaration is never used; unused names are grayed out (40% opacity) for visual feedback; declarations inside VHDL comments (`-- signal foo...`) are correctly ignored
+- TODO comment markers tracking: scans for `TODO`, `FIXME`, `HACK`, `XXX`, and `NOTE` inside VHDL comments — shown as Info diagnostics in the Problems panel with gold (`#FFD700`) highlighting
+- `parseSignals` offset now points to variable/signal name instead of declaration keyword (fixes range placement)
+
+### Fixed
+- `findUnusedSignals`: restored original `offsetToLine` + forward-walk column calculation that correctly handles CRLF (`\r\n`) line endings; removed buggy `lineStarts` binary-search approach
+
+### Documentation
+- Updated README with unused declarations & TODO markers sections
+- All screenshots now use uniform `<img width="600">` for consistent layout
+
 ## [0.12.1] - 2026-06-05
 
 ### Added
