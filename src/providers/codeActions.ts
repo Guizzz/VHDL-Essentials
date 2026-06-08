@@ -317,36 +317,74 @@ function fixPortmapMissingPort(
     _token: vscode.CancellationToken
 ): vscode.CodeAction | null
 {
-    // Extract port name from message: "Missing port 'foo' (in std_logic)"
     const m = diag.message.match(/'(\w+)'/);
     if (!m) { return null; }
     const portName = m[1];
 
-    // Find the port map block and add after the last mapping
-    const text = doc.getText();
-    const pmMatch = text.match(/port\s+map\s*\(/i);
-    if (!pmMatch) { return null; }
+    const lines = doc.getText().split(/\r?\n/);
 
-    // Find closing paren by scanning
-    const startIdx = (pmMatch.index ?? 0) + pmMatch[0].length;
-    let depth = 1;
-    let endIdx = startIdx;
-    while (endIdx < text.length && depth > 0)
+    // Scan forward from diagnostic line to find 'port map('
+    let pmLine = -1;
+    for (let i = diag.range.start.line; i < lines.length; i++)
     {
-        if (text[endIdx] === '(') { depth++; }
-        else if (text[endIdx] === ')') { depth--; }
-        if (depth > 0) { endIdx++; }
+        if (/port\s+map\s*\(/i.test(lines[i]))
+        {
+            pmLine = i;
+            break;
+        }
+    }
+    if (pmLine < 0) { return null; }
+
+    // Track paren depth to find the block and last mapping line
+    let depth = 0;
+    let inPm = false;
+    let lastMappingLine = -1;
+    let closeLine = -1;
+
+    for (let i = pmLine; i < lines.length; i++)
+    {
+        const line = lines[i];
+        const trimmed = line.trim();
+
+        for (const ch of line)
+        {
+            if (ch === '(') { depth++; inPm = true; }
+            else if (ch === ')') { depth--; }
+        }
+
+        if (inPm && depth === 1)
+        {
+            if (trimmed.length > 0 && !trimmed.startsWith('--'))
+            {
+                lastMappingLine = i;
+            }
+        }
+        else if (inPm && depth === 0)
+        {
+            closeLine = i;
+            break;
+        }
     }
 
-    // Find the last semicolon before the closing paren
-    const blockText = text.substring(startIdx, endIdx);
-    const lines = blockText.split('\n');
-    const lastMappingLine = lines[lines.length - 1].trim();
-    const insertText = lastMappingLine.endsWith(';') ? '' : ';\n';
-    const insertPos = doc.positionAt(startIdx + blockText.length);
+    if (lastMappingLine < 0 || closeLine < 0) { return null; }
+    if (lastMappingLine === closeLine || lastMappingLine === pmLine) { return null; }
+
+    const mapIndent = indentOf(lines[lastMappingLine]);
+    const lastLineText = lines[lastMappingLine].trimEnd();
 
     const edit = new vscode.WorkspaceEdit();
-    edit.insert(doc.uri, insertPos, `${insertText}${INDENT}${portName} => open`);
+
+    // Add comma to last mapping if missing
+    if (!lastLineText.endsWith(','))
+    {
+        const lastLineEnd = new vscode.Position(lastMappingLine, lines[lastMappingLine].length);
+        edit.insert(doc.uri, lastLineEnd, ',');
+    }
+
+    // Insert new mapping after last mapping line
+    const insertPos = new vscode.Position(lastMappingLine + 1, 0);
+    edit.insert(doc.uri, insertPos, `${mapIndent}${portName} => open\n`);
+
     const action = new vscode.CodeAction(
         `Add '${portName} => open'`,
         vscode.CodeActionKind.QuickFix

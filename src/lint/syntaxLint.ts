@@ -476,7 +476,7 @@ export function validateSyntax(text: string): vscode.Diagnostic[]
             else if (ch === ')') { parenBalance--; }
         }
 
-        if (/^end\s/i.test(line))
+        if (/^end\b/i.test(line))
         {
             checkEnd(line, stack, diags, i);
             continue;
