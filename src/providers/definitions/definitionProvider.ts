@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 
 import { EntityIndexer } from '../../services/entityIndexer';
+import { parseSignals } from '../../parsers/variableParser';
 
 export class VhdlDefinitionProvider implements vscode.DefinitionProvider {
 
@@ -64,6 +65,24 @@ export class VhdlDefinitionProvider implements vscode.DefinitionProvider {
             if (symbolLocation) {
                 return symbolLocation;
             }
+        }
+
+        //
+        // ==================================================== // ENTITY-LOCAL SYMBOLS
+        // signal / variable / constant / port in the same file
+        // ==================================================== //
+
+        const symbol = parseSignals(document.getText())
+            .find(s => s.name.toLowerCase() === word.toLowerCase());
+
+        if (symbol)
+        {
+            const pos = document.positionAt(symbol.offset);
+            const range = new vscode.Range(
+                pos,
+                pos.translate(0, symbol.name.length)
+            );
+            return new vscode.Location(document.uri, range);
         }
 
         return null;
