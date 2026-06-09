@@ -9,6 +9,21 @@ export function findUnusedSignals(text: string): vscode.Diagnostic[]
     const diagnostics: vscode.Diagnostic[] = [];
     const lines = text.split(/\r?\n/);
 
+    // Build package block ranges to skip declarations inside packages
+    const packageRanges: Array<{start: number; end: number}> = [];
+    const pkgRegex = /package\s+\w+\s+is[\s\S]*?end\s+package\s*;?/gi;
+    let pkgMatch: RegExpExecArray | null;
+
+    while ((pkgMatch = pkgRegex.exec(text)) !== null)
+    {
+        packageRanges.push({start: pkgMatch.index, end: pkgMatch.index + pkgMatch[0].length});
+    }
+
+    function isInPackage(offset: number): boolean
+    {
+        return packageRanges.some(r => offset >= r.start && offset < r.end);
+    }
+
     for (const signal of signals)
     {
         if (signal.kind === 'port')
@@ -17,6 +32,11 @@ export function findUnusedSignals(text: string): vscode.Diagnostic[]
         }
 
         if (VHDL_KEYWORDS.has(signal.name.toLowerCase()))
+        {
+            continue;
+        }
+
+        if (isInPackage(signal.offset))
         {
             continue;
         }

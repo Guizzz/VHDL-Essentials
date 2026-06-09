@@ -212,6 +212,63 @@ suite('unusedSignalsLint', () =>
         assert.strictEqual(diags.length, 0);
     });
 
+    test('package with unused constant produces no diagnostic', () =>
+    {
+        const diags = findUnusedSignals(
+            'library ieee;\n' +
+            'use ieee.std_logic_1164.all;\n' +
+            '\n' +
+            'package my_pkg is\n' +
+            '    constant DATA_WIDTH : positive := 16;\n' +
+            '    constant ADDR_WIDTH : positive := 8;\n' +
+            '    signal sys_clk : std_logic;\n' +
+            'end package my_pkg;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('package with unused signal produces no diagnostic', () =>
+    {
+        const diags = findUnusedSignals(
+            'package test_pkg is\n' +
+            '    signal int_sig : integer;\n' +
+            '    signal rst_sig : std_logic;\n' +
+            'end package test_pkg;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('package body with unused local variable produces warning', () =>
+    {
+        const diags = findUnusedSignals(
+            'package body test_pkg is\n' +
+            '    variable local_var : integer;\n' +
+            'end package body;'
+        );
+        // package body has its own scope — local vars should still be checked
+        assert.strictEqual(diags.length, 1);
+        assert.ok(diags[0].message.includes('local_var'));
+    });
+
+    test('mix of package and architecture only flags architecture-level unused', () =>
+    {
+        const diags = findUnusedSignals(
+            'package common_pkg is\n' +
+            '    constant WIDTH : positive := 8;\n' +
+            'end package;\n' +
+            '\n' +
+            'architecture rtl of top is\n' +
+            '    signal unused_local : bit;\n' +
+            '    signal used_local : bit;\n' +
+            'begin\n' +
+            '    used_local <= \'1\';\n' +
+            'end architecture;'
+        );
+        // only unused_local should be flagged (package constant WIDTH skipped)
+        assert.strictEqual(diags.length, 1);
+        assert.ok(diags[0].message.includes('unused_local'));
+    });
+
     test('signal name with regex special chars is safe', () =>
     {
         // parseSignals() cattura solo \w+, quindi nomi con . + * etc.
