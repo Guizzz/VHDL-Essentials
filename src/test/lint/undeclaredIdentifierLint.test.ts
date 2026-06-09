@@ -50,9 +50,10 @@ suite('undeclaredIdentifierLint', () =>
             'architecture rtl of top is\n' +
             'begin\n' +
             '  process\n' +
+            '    variable data : std_logic_vector(7 downto 0);\n' +
             '  begin\n' +
             '    for i in 0 to 7 loop\n' +
-            '      null;\n' +
+            '      data(i) := \'1\';\n' +
             '    end loop;\n' +
             '  end process;\n' +
             'end architecture;'

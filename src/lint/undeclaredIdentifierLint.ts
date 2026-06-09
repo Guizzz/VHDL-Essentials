@@ -36,6 +36,22 @@ export function findUndeclaredIdentifiers(text: string): vscode.Diagnostic[]
         declaredNames.add(pkg.name.toLowerCase());
     }
 
+    // Add for-loop variable names (implicitly declared by "for ident in")
+    const loopVarRegex = /\bfor\s+(\w+)\s+in\b/gi;
+    let loopMatch: RegExpExecArray | null;
+
+    while ((loopMatch = loopVarRegex.exec(text)) !== null)
+    {
+        // Skip if inside a comment
+        const lineStart = text.lastIndexOf('\n', loopMatch.index) + 1;
+        const beforeOnLine = text.substring(lineStart, loopMatch.index);
+
+        if (!beforeOnLine.includes('--'))
+        {
+            declaredNames.add(loopMatch[1].toLowerCase());
+        }
+    }
+
     const identRegex = /\b([a-zA-Z_]\w*)\b/g;
     let match: RegExpExecArray | null;
 
