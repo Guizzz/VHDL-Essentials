@@ -8,6 +8,7 @@ import { PackageBodyLint } from '../lint/packageBodyLint';
 import { PortMapLinter } from '../lint/portMapLint';
 import { UnusedSignalsLinter } from '../lint/unusedSignalsLint';
 import { TodoCommentLinter } from '../lint/todoCommentLint';
+import { UndeclaredIdentifiersLinter } from '../lint/undeclaredIdentifierLint';
 import { EntityIndexer } from './entityIndexer';
 
 export function registerLintFeature(
@@ -24,6 +25,7 @@ export function registerLintFeature(
     const portMapLint = new PortMapLinter(indexer, context);
     const unusedSignalsLint = new UnusedSignalsLinter(context);
     const todoCommentLint = new TodoCommentLinter(context);
+    const undeclaredIdentLint = new UndeclaredIdentifiersLinter(context);
 
     context.subscriptions.push(
         topLevelPortLint,
@@ -34,7 +36,8 @@ export function registerLintFeature(
         packageBodyLint,
         portMapLint,
         unusedSignalsLint,
-        todoCommentLint
+        todoCommentLint,
+        undeclaredIdentLint
     );
 
 }
