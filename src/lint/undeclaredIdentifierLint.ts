@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 import { parseSignals } from '../parsers/variableParser';
+import { parseTypeDeclarations, parseSubtypeDeclarations } from '../parsers/typeParser';
+import { parseEntityGenerics } from '../parsers/entityParser';
 import { VHDL_KEYWORDS } from '../utils/vhdlKeywords';
 import { offsetToPosition } from '../utils/positionUtils';
 
@@ -10,6 +12,22 @@ export function findUndeclaredIdentifiers(text: string): vscode.Diagnostic[]
     const declaredNames = new Set(
         parseSignals(text).map(s => s.name.toLowerCase())
     );
+
+    // Add type names, subtype names, and enum literals
+    for (const t of parseTypeDeclarations(text))
+    {
+        declaredNames.add(t.name.toLowerCase());
+    }
+    for (const st of parseSubtypeDeclarations(text))
+    {
+        declaredNames.add(st.name.toLowerCase());
+    }
+
+    // Add entity generic names
+    for (const g of parseEntityGenerics(text))
+    {
+        declaredNames.add(g.name.toLowerCase());
+    }
 
     const identRegex = /\b([a-zA-Z_]\w*)\b/g;
     let match: RegExpExecArray | null;

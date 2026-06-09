@@ -59,3 +59,43 @@ export function parseEntities(text: string): EntitySymbol[]
 
     return entities;
 }
+
+export function parseEntityGenerics(text: string): Array<{name: string; offset: number}>
+{
+    const result: Array<{name: string; offset: number}> = [];
+
+    const entityRegex = /entity\s+(\w+)\s+is([\s\S]*?)end\s+(?:entity\s+)?(?:\w+)?\s*;/gi;
+    let entityMatch: RegExpExecArray | null;
+
+    while ((entityMatch = entityRegex.exec(text)) !== null)
+    {
+        const entityBody = entityMatch[2];
+
+        const genericBlockMatch = /generic\s*\(((?:[^()]|\([^()]*\))*)\)\s*;/i.exec(entityBody);
+
+        if (genericBlockMatch)
+        {
+            const genericBlock = stripVhdlComments(genericBlockMatch[1]);
+
+            const declRegex = /(\w+(?:\s*,\s*\w+)*)\s*:/gi;
+            let declMatch: RegExpExecArray | null;
+
+            while ((declMatch = declRegex.exec(genericBlock)) !== null)
+            {
+                const names = declMatch[1].split(',').map(n => n.trim()).filter(n => n.length > 0);
+
+                for (const name of names)
+                {
+                    const nameIdxInMatch = declMatch[0].indexOf(name);
+                    const globalOffset = entityMatch.index +
+                        entityMatch[0].indexOf(genericBlockMatch[0]) +
+                        declMatch.index + nameIdxInMatch;
+
+                    result.push({name, offset: globalOffset});
+                }
+            }
+        }
+    }
+
+    return result;
+}

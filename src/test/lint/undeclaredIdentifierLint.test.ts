@@ -147,6 +147,87 @@ suite('undeclaredIdentifierLint', () =>
         assert.strictEqual(diags.length, 0);
     });
 
+    test('entity generic used in signal declaration is not flagged', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'entity top is\n' +
+            '    generic(DATA_WIDTH : positive := 8);\n' +
+            '    port(clk : in std_logic);\n' +
+            'end entity;\n' +
+            'architecture rtl of top is\n' +
+            '    signal data : std_logic_vector(DATA_WIDTH-1 downto 0);\n' +
+            'begin\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('type name used in signal declaration is not flagged', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            '    type state_t is (IDLE, TRANSFER);\n' +
+            '    signal state : state_t;\n' +
+            'begin\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('enum literal used in assignment is not flagged', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            '    type state_t is (IDLE, TRANSFER);\n' +
+            '    signal state : state_t;\n' +
+            'begin\n' +
+            '    state <= IDLE;\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('subtype used in signal declaration is not flagged', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            '    subtype my_int is integer range 0 to 255;\n' +
+            '    signal cnt : my_int;\n' +
+            'begin\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('full spi_master entity with generics types and enum literals produces no diagnostics', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'entity spi_master is\n' +
+            '    generic(\n' +
+            '        DATA_WIDTH : positive := 8\n' +
+            '    );\n' +
+            '    port(\n' +
+            '        clk      : in std_logic;\n' +
+            '        start    : in std_logic;\n' +
+            '        data_tx  : in std_logic_vector(DATA_WIDTH-1 downto 0);\n' +
+            '        SPI_CLK  : out std_logic;\n' +
+            '        SPI_MOSI : out std_logic := \'0\';\n' +
+            '        SPI_SS   : out std_logic := \'1\';\n' +
+            '        busy     : out std_logic := \'0\'\n' +
+            '    );\n' +
+            'end entity;\n' +
+            '\n' +
+            'architecture rtl of spi_master is\n' +
+            '    type state_t is (IDLE, TRANSFER);\n' +
+            '    signal state : state_t := IDLE;\n' +
+            '    signal bit_cnt     : integer range 0 to DATA_WIDTH - 1 := 0;\n' +
+            '    signal shift_reg   : std_logic_vector(DATA_WIDTH-1 downto 0);\n' +
+            'begin\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
     test('empty text produces no diagnostics', () =>
     {
         const diags = findUndeclaredIdentifiers('');
