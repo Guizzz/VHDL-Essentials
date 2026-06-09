@@ -21,7 +21,9 @@ VHDL Essentials brings FPGA development directly into VSCode with:
 - ✅ Real-time VHDL syntax & completeness checking
 - 🎨 Semantic highlighting
 - ✅ Unused signal/variable/constant detection
+- ✅ Undeclared identifier detection
 - ✅ TODO comment markers tracking
+- ✅ Go to Definition for entities, packages, signals, variables, constants
 - 📚 Workspace-wide indexing
 
 ---
@@ -58,6 +60,7 @@ Supported navigation:
 - entities
 - packages
 - package symbols
+- signals, variables, and constants declared in architectures
 - FPGA pin assignments
 
 Example:
@@ -159,6 +162,7 @@ VHDL Essentials validates your code on multiple levels:
 * **Sensitivity list** — signals read inside a process but missing from the sensitivity list
 * **Syntax scopes** — unclosed `if`, `process`, `for`/`while` loops, mismatched `end` labels
 * **Port map validation** — missing ports and undeclared formals detected in direct entity instantiations (`label : entity work.xxx`)
+* **Undeclared identifiers** — identifiers used but never declared (signals, variables, constants, types, generics) are flagged as errors
 * **Package body completeness** — function/procedure declared in a package but not implemented in its body
 
 All diagnostics appear in the Problems panel (`Ctrl+Shift+M`) with clear messages.
@@ -173,6 +177,7 @@ Press `Alt+Enter` on any lint warning to apply an automatic fix:
 | Undefined port in port map | Remove the entire mapping line |
 | Duplicate signal/variable/port declaration | Remove the duplicate line |
 | Unused signal/variable/constant | Remove the declaration line |
+| Undeclared identifier | Add `signal/variable/constant` declaration with the identifier name |
 | Missing/extra signal in sensitivity list | Add or remove the signal inline |
 | Duplicate QSF pin assignment | Remove the duplicate line |
 | Duplicate QSF signal assignment | QuickPick to choose which line to keep |
@@ -191,12 +196,14 @@ Not every diagnostic has a fix — purely informational diagnostics (unknown end
 
 <img src="resources/screen/body_lint_warning.png" width="600" alt="Package Body Warning">
 
-### 🚩 Unused declarations & TODO markers
+### 🚩 Unused declarations, undeclared identifiers & TODO markers
 
 Warns when a signal, variable, or constant is declared but never used (unused names are grayed out at 40% opacity).
+Detects identifiers used in expressions but never declared — flagged as **errors** to catch typos and missing declarations early.
 Scans for `TODO`, `FIXME`, `HACK`, `XXX`, and `NOTE` markers inside VHDL comments — shown as Info diagnostics with gold (`#FFD700`) highlighting.
 
 Declarations inside VHDL comments (`-- signal foo...`) are correctly ignored by the linter.
+Package-scoped declarations are excluded from unused-signal checks (they are consumed cross-file via `use work.pkg.all`).
 
 <img src="resources/screen/unused_todo.png" width="600" alt="Unused declarations and TODO markers">
 
