@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.12.4] - 2026-06-09
+
+### Added
+- Undeclared identifier detection — identifiers used but not declared are flagged as errors; recognizes signals, variables, constants, entity ports, generics, types, subtypes, enumeration literals, package names, and for-loop variables (#64)
+- Go to Definition for entity-local signals, variables, and constants — `Ctrl+Click` jumps from usage to declaration inside the architecture body (#69)
+
+### Fixed
+- Undeclared identifier linter: false positives for time units (`us`, `ms`, etc.), severity levels (`failure`, `note`, `warning`), hex/binary literal prefixes (`x"`, `b"`, `o"`), identifiers inside string literals, and package declaration names
+- Unused-signal linter: no longer flags package-scoped declarations (consumed cross-file via `use work.pkg.all`) (#70)
+
+### Documentation
+- README updated with undeclared identifier detection, Go to Definition for local signals, and updated Code Actions table
+
 ## [0.12.3] - 2026-06-08
 
 ### Added
