@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { parseSignals } from '../parsers/variableParser';
 import { parseTypeDeclarations, parseSubtypeDeclarations } from '../parsers/typeParser';
 import { parseEntityGenerics } from '../parsers/entityParser';
+import { parsePackages } from '../parsers/packageParser';
 import { VHDL_KEYWORDS } from '../utils/vhdlKeywords';
 import { offsetToPosition } from '../utils/positionUtils';
 
@@ -27,6 +28,12 @@ export function findUndeclaredIdentifiers(text: string): vscode.Diagnostic[]
     for (const g of parseEntityGenerics(text))
     {
         declaredNames.add(g.name.toLowerCase());
+    }
+
+    // Add package names
+    for (const pkg of parsePackages(text))
+    {
+        declaredNames.add(pkg.name.toLowerCase());
     }
 
     const identRegex = /\b([a-zA-Z_]\w*)\b/g;
@@ -57,7 +64,7 @@ export function findUndeclaredIdentifiers(text: string): vscode.Diagnostic[]
         const lineEnd = text.indexOf('\n', idx);
         const wholeLine = text.substring(lineStart, lineEnd >= 0 ? lineEnd : text.length).trim();
 
-        if (/^(use|library|entity|configuration|component|architecture)\s/i.test(wholeLine))
+        if (/^(use|library|entity|configuration|component|architecture|package)\s/i.test(wholeLine))
         {
             continue;
         }
@@ -72,6 +79,13 @@ export function findUndeclaredIdentifiers(text: string): vscode.Diagnostic[]
         // After entity/configuration keyword (entity work.xxx)
         if (/entity\s+$/i.test(contextBefore) ||
             /configuration\s+$/i.test(contextBefore))
+        {
+            continue;
+        }
+
+        // After "package" keyword (package name / end package name)
+        if (/package\s+$/i.test(contextBefore) ||
+            /package\s+body\s+$/i.test(contextBefore))
         {
             continue;
         }

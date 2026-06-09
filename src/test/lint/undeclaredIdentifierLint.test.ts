@@ -228,6 +228,26 @@ suite('undeclaredIdentifierLint', () =>
         assert.strictEqual(diags.length, 0);
     });
 
+    test('package name in declaration and end line is not flagged', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'package pulse_pkg is\n' +
+            '    constant WIDTH : positive := 16;\n' +
+            'end package pulse_pkg;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('package body name is not flagged', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'package body pulse_pkg is\n' +
+            '    constant WIDTH : positive := 16;\n' +
+            'end package body pulse_pkg;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
     test('empty text produces no diagnostics', () =>
     {
         const diags = findUndeclaredIdentifiers('');
