@@ -55,10 +55,12 @@ export function findUndeclaredIdentifiers(text: string): vscode.Diagnostic[]
         if (wordLower === 'work' || wordLower === 'ieee' || wordLower === 'std' ||
             wordLower === 'true' || wordLower === 'false') { continue; }
 
-        // 4. Check if inside a comment
+        // 4. Check if inside a comment or string literal
         const lineStart = text.lastIndexOf('\n', idx) + 1;
         const textBeforeOnLine = text.substring(lineStart, idx);
         if (textBeforeOnLine.includes('--')) { continue; }
+        const quotesBefore = (textBeforeOnLine.match(/"/g) || []).length;
+        if (quotesBefore % 2 === 1) { continue; }
 
         // 5. Check full line context for special VHDL constructs
         const lineEnd = text.indexOf('\n', idx);
@@ -116,6 +118,13 @@ export function findUndeclaredIdentifiers(text: string): vscode.Diagnostic[]
 
         // Attribute name: "signal'ident" — skip identifier after apostrophe
         if (idx > 0 && text[idx - 1] === "'")
+        {
+            continue;
+        }
+
+        // Literal prefix: x"", b"", o"", d""
+        if ((wordLower === 'x' || wordLower === 'b' || wordLower === 'o' || wordLower === 'd') &&
+            idx + word.length < text.length && text[idx + word.length] === '"')
         {
             continue;
         }

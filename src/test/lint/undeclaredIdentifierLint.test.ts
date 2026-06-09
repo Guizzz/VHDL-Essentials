@@ -248,6 +248,59 @@ suite('undeclaredIdentifierLint', () =>
         assert.strictEqual(diags.length, 0);
     });
 
+    test('time units (us, ns, ms) in wait for are not flagged', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture sim of tb is\n' +
+            'begin\n' +
+            '  wait for 1000 us;\n' +
+            '  wait for 500 ns;\n' +
+            '  wait for 1 ms;\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('severity level (failure, note, warning) in assert are not flagged', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'entity tb is end entity;\n' +
+            'architecture sim of tb is\n' +
+            'begin\n' +
+            '  assert false severity failure;\n' +
+            '  assert true severity note;\n' +
+            '  assert false severity warning;\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('hex literal prefix (x") is not flagged', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            '  signal tx_data : std_logic_vector(7 downto 0);\n' +
+            'begin\n' +
+            '  tx_data <= x"3C";\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('binary and octal literal prefixes (b", o") are not flagged', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            '  signal bin_data : std_logic_vector(3 downto 0);\n' +
+            '  signal oct_data : std_logic_vector(5 downto 0);\n' +
+            'begin\n' +
+            '  bin_data <= b"1100";\n' +
+            '  oct_data <= o"77";\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
     test('empty text produces no diagnostics', () =>
     {
         const diags = findUndeclaredIdentifiers('');

@@ -16,4 +16,8 @@ export const VHDL_KEYWORDS = new Set([
     'positive', 'bit', 'bit_vector', 'character', 'string', 'time',
     'real', 'signed', 'unsigned',
     'rising_edge', 'falling_edge', 'now',
+    // Time units
+    'fs', 'ps', 'ns', 'us', 'ms', 'sec', 'min', 'hr',
+    // Severity levels
+    'note', 'warning', 'error', 'failure',
 ]);
