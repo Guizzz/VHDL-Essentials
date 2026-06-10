@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.13.0] - 2026-06-10
+
+### Added
+- VHDL Document Symbols (Outline) — `Ctrl+Shift+O` shows file structure: entities with ports/generics, architectures with signals/constants/types/processes/component declarations/entity instantiations/component instantiations, packages with symbols (#20)
+- Compilation error navigation — quartus build errors parsed from `msg_tcl_post_message` and raw `Error (NNNN):` format; squiggly underlines on source lines in VHDL files; Ctrl+clickable paths in the output channel (#44)
+- Live transcript output — `vsim` stdout piped in real time to a dedicated `'Questa Transcript'` LogOutputChannel (#35)
+
+### Changed
+- Build/flash output channel converted to `LogOutputChannel` — native severity-aware coloring via `.info()` / `.warn()` / `.error()` instead of ANSI escape codes (more reliable on Windows)
+
+### Fixed
+- `runQuartusTask` now returns a `Promise<number | null>` that resolves only on process `close` event — `await runQuartusTask()` reliably waits for build completion before proceeding
+- File path resolution in compile errors: uses `RelativePattern(projectDir, '**/*.vhd')` pre-build scan to build a `basename → full path` map for instant lookups during `parseChunk`
+
 ## [0.12.4] - 2026-06-09
 
 ### Added

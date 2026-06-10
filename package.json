@@ -2,7 +2,7 @@
   "name": "quartus-assistant",
   "displayName": "VHDL Essentials",
   "description": "VHDL language support, Quartus integration, hover, syntax highlighting and lightweight IntelliSense.",
-  "version": "0.12.4",
+  "version": "0.13.0",
   "publisher": "Guizzz",
   "icon": "resources/icon.png",
   "galleryBanner": {
