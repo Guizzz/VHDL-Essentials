@@ -1,14 +1,14 @@
 import * as vscode from 'vscode';
-import { extractMessage, formatMessage } from './outputParser';
+import { type QuartusSeverity, type QuartusMessage, extractMessage } from './outputParser';
 
-export const quartusOutput = vscode.window.createOutputChannel('Quartus Assistant');
+export const quartusOutput = vscode.window.createOutputChannel('Quartus Assistant', { log: true });
 
 export class QuartusLogger
 {
     private warnings = 0;
     private errors = 0;
 
-    constructor(private output: vscode.OutputChannel) {}
+    constructor(private output: vscode.LogOutputChannel) {}
 
     appendLine(line: string)
     {
@@ -31,9 +31,9 @@ export class QuartusLogger
         this.output.appendLine('━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
         if (success) {
-            this.output.appendLine('✅ BUILD SUCCESSFUL');
+            this.output.appendLine('BUILD SUCCESSFUL');
         } else {
-            this.output.appendLine('❌ BUILD FAILED');
+            this.output.appendLine('BUILD FAILED');
         }
 
         this.output.appendLine(
@@ -76,12 +76,60 @@ export class QuartusLogger
                 this.errors++;
             }
 
-            const log = formatMessage(msg);
+            const text = this._formatText(msg);
 
-            if (log !== '')
+            if (text !== '')
             {
-                this.output.appendLine(log);
+                this._log(msg.severity, text);
             }
+        }
+    }
+
+    private _formatText(msg: QuartusMessage): string
+    {
+        if (msg.code === 'IQEXE_ERROR_COUNT')
+        {
+            if (msg.text.includes('successful')) {
+                return msg.text;
+            }
+
+            return msg.text;
+        }
+
+        if (
+            msg.text.includes('Processing started') ||
+            msg.text.includes('Peak virtual memory') ||
+            msg.text.includes('Total CPU time') ||
+            msg.text.includes('elapsed time') ||
+            msg.text.includes('Parallel compilation') ||
+            msg.text.includes('qfit2_default_script') ||
+            msg.text.includes('qsta_default_script')
+        ) {
+            return '';
+        }
+
+        if (msg.text.startsWith('Running Quartus'))
+        {
+            return `[${msg.text}]`;
+        }
+
+        return msg.text;
+    }
+
+    private _log(severity: QuartusSeverity, text: string): void
+    {
+        switch (severity)
+        {
+            case 'warning':
+            case 'critical':
+                this.output.warn(text);
+                break;
+            case 'error':
+                this.output.error(text);
+                break;
+            default:
+                this.output.info(text);
+                break;
         }
     }
 }
