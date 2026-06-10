@@ -3,7 +3,7 @@ import * as path from 'path';
 
 import { spawn } from 'child_process';
 
-import { QuartusLogger, quartusOutput } from './logger';
+import { QuartusLogger, quartusOutput, TranscriptWatcher, transcriptOutput } from './logger';
 
 import {
     getProjectDir,
@@ -134,10 +134,12 @@ export async function runSimulation(options: QuestaSimOption) {
         }
     );
 
-    proc.unref();
+    const watcher = new TranscriptWatcher();
 
     proc.on("spawn", () => {
         logger.appendLine("🧪 Simulation started 🔬");
+        transcriptOutput.show(true);
+        watcher.start(workspaceRoot);
     });
 
     proc.on('error', err => {
@@ -146,6 +148,7 @@ export async function runSimulation(options: QuestaSimOption) {
     });
 
     proc.on('close', code => {
+        watcher.stop();
 
         const success = code === 0;
 
