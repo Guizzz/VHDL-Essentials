@@ -1,5 +1,5 @@
 import * as assert from 'node:assert';
-import { extractMessage, formatMessage } from '../../quartus/logger/outputParser';
+import { extractMessage, formatMessage, parseRawLine } from '../../quartus/logger/outputParser';
 
 suite('outputParser', () =>
 {
@@ -152,6 +152,79 @@ suite('outputParser', () =>
                 text: 'Some informational text'
             };
             assert.strictEqual(formatMessage(msg), 'Some informational text');
+        });
+    });
+
+    suite('parseRawLine', () =>
+    {
+        test('parse "Error (NNNN): msg" format', () =>
+        {
+            const result = parseRawLine('Error (125095): Part name 5M40ZE64C4N is invalid');
+            assert.ok(result !== null);
+            assert.strictEqual(result.severity, 'error');
+            assert.strictEqual(result.code, '125095');
+            assert.strictEqual(result.text, 'Part name 5M40ZE64C4N is invalid');
+            assert.strictEqual(result.stage, 'Quartus');
+        });
+
+        test('parse "Error: msg" format (no code)', () =>
+        {
+            const result = parseRawLine('Error: Quartus Prime Analysis & Synthesis was unsuccessful. 2 errors, 0 warnings');
+            assert.ok(result !== null);
+            assert.strictEqual(result.severity, 'error');
+            assert.strictEqual(result.code, 'UNKNOWN');
+            assert.strictEqual(result.text, 'Quartus Prime Analysis & Synthesis was unsuccessful. 2 errors, 0 warnings');
+        });
+
+        test('parse "Info: msg" format (no code)', () =>
+        {
+            const result = parseRawLine('Info: Running Quartus Prime Shell');
+            assert.ok(result !== null);
+            assert.strictEqual(result.severity, 'info');
+            assert.strictEqual(result.code, 'UNKNOWN');
+            assert.strictEqual(result.text, 'Running Quartus Prime Shell');
+        });
+
+        test('parse "Warning (NNNN): msg" format', () =>
+        {
+            const result = parseRawLine('Warning (10036): Design has unconstrained input ports');
+            assert.ok(result !== null);
+            assert.strictEqual(result.severity, 'warning');
+            assert.strictEqual(result.code, '10036');
+            assert.strictEqual(result.text, 'Design has unconstrained input ports');
+        });
+
+        test('parse "Critical Warning (NNNN): msg" format', () =>
+        {
+            const result = parseRawLine('Critical Warning (20001): No SDC constraints file found');
+            assert.ok(result !== null);
+            assert.strictEqual(result.severity, 'critical');
+            assert.strictEqual(result.code, '20001');
+        });
+
+        test('return null for non-Quartus line', () =>
+        {
+            const result = parseRawLine('This is just a normal log line');
+            assert.strictEqual(result, null);
+        });
+
+        test('return null for empty string', () =>
+        {
+            const result = parseRawLine('');
+            assert.strictEqual(result, null);
+        });
+
+        test('return null for indented continuation lines', () =>
+        {
+            const result = parseRawLine('    Info: Version 25.1std.0 Build 1129');
+            assert.strictEqual(result, null);
+        });
+
+        test('return null for report_status lines', () =>
+        {
+            // These are filtered by parseChunk, but parseRawLine should also not match
+            const result = parseRawLine('report_status "passed"');
+            assert.strictEqual(result, null);
         });
     });
 });

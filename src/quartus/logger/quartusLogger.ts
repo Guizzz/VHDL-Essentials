@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { type QuartusSeverity, type QuartusMessage, extractMessage } from './outputParser';
+import { type QuartusSeverity, type QuartusMessage, extractMessage, parseRawLine } from './outputParser';
 
 export const quartusOutput = vscode.window.createOutputChannel('Quartus Assistant', { log: true });
 
@@ -47,7 +47,10 @@ export class QuartusLogger
         this.errors = 0;
     }
 
-    parseChunk(chunk: string)
+    parseChunk(
+        chunk: string,
+        onMessage?: (msg: QuartusMessage) => void
+    )
     {
         const lines = chunk.split(/\r?\n/);
 
@@ -62,9 +65,13 @@ export class QuartusLogger
                 continue;
             }
 
-            const msg = extractMessage(line);
+            let msg = extractMessage(line);
+
+            if (!msg) { msg = parseRawLine(line); }
 
             if (!msg) { continue; }
+
+            onMessage?.(msg);
 
             if (msg.severity === 'warning' || msg.severity === 'critical')
             {

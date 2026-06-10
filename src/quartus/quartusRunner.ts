@@ -4,6 +4,7 @@ import * as path from 'path';
 import { spawn } from 'child_process';
 
 import { QuartusLogger, quartusOutput, TranscriptWatcher, transcriptOutput } from './logger';
+import { type QuartusMessage } from './logger/outputParser';
 
 import {
     getProjectDir,
@@ -27,6 +28,8 @@ export interface QuartusTaskOptions
 
     successMessage: (project: string) => string;
     failMessage: (project: string) => string;
+
+    onMessage?: (msg: QuartusMessage) => void;
 }
 
 export interface QuestaSimOption
@@ -36,7 +39,7 @@ export interface QuestaSimOption
     label: string
 }
 
-export async function runQuartusTask(options: QuartusTaskOptions) 
+export async function runQuartusTask(options: QuartusTaskOptions): Promise<number | null>
 {
     const [projectName, projectDir] = await Promise.all([
         getProjectName(),
@@ -45,14 +48,14 @@ export async function runQuartusTask(options: QuartusTaskOptions)
 
     if (!projectName || !projectDir) {
         vscode.window.showErrorMessage('No Quartus project found');
-        return;
+        return null;
     }
 
     const binPath = getQuartusBin(options.tool);
 
     if (!binPath) {
         vscode.window.showErrorMessage('Quartus path not configured or invalid');
-        return;
+        return null;
     }
 
     taskStatus.text = `$(sync~spin) ${options.statusRunning}`;
@@ -81,34 +84,41 @@ export async function runQuartusTask(options: QuartusTaskOptions)
         const msg = err instanceof Error ? err.message : String(err);
         vscode.window.showErrorMessage(`Failed to start ${options.command}: ${msg}`);
         taskStatus.text = `$(error) ${options.statusFail}`;
-        return;
+        return null;
     }
 
+    const onMsg = options.onMessage;
+
     proc.stdout.on('data', d => {
-        logger.parseChunk(d.toString());
+        logger.parseChunk(d.toString(), onMsg);
     });
 
     proc.stderr.on('data', d => {
-        logger.parseChunk(d.toString());
+        logger.parseChunk(d.toString(), onMsg);
     });
 
-    proc.on('error', err => {
-        vscode.window.showErrorMessage(`Failed to start ${options.command}: ${err.message}`);
-        taskStatus.text = `$(error) ${options.statusFail}`;
-    });
-
-    proc.on('close', code => {
-
-        const success = code === 0;
-        logger.finishBuild(success);
-
-        if (success) {
-            taskStatus.text = `$(check) ${options.statusSuccess}`;
-            vscode.window.showInformationMessage(options.successMessage(projectName));
-        } else {
+    return new Promise<number | null>(resolve =>
+    {
+        proc.on('error', err => {
+            vscode.window.showErrorMessage(`Failed to start ${options.command}: ${err.message}`);
             taskStatus.text = `$(error) ${options.statusFail}`;
-            vscode.window.showErrorMessage(options.failMessage(projectName));
-        }
+            resolve(null);
+        });
+
+        proc.on('close', code => {
+            const success = code === 0;
+            logger.finishBuild(success);
+
+            if (success) {
+                taskStatus.text = `$(check) ${options.statusSuccess}`;
+                vscode.window.showInformationMessage(options.successMessage(projectName));
+            } else {
+                taskStatus.text = `$(error) ${options.statusFail}`;
+                vscode.window.showErrorMessage(options.failMessage(projectName));
+            }
+
+            resolve(code);
+        });
     });
 }
 

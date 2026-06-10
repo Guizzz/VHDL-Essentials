@@ -67,6 +67,26 @@ function mapSeverity(s: string): QuartusSeverity
     }
 }
 
+const RAW_LINE_RE = /^(Error|Warning|Critical\s+Warning|Info)(?:\s*\((\d+)\))?:\s*(.+)$/i;
+
+export function parseRawLine(line: string): QuartusMessage | null
+{
+    const match = line.match(RAW_LINE_RE);
+
+    if (!match) { return null; }
+
+    const rawSeverity = match[1].toLowerCase();
+    const code = match[2] ?? 'UNKNOWN';
+    const text = match[3].trim();
+
+    return {
+        stage: 'Quartus',
+        severity: mapSeverity(rawSeverity),
+        code,
+        text
+    };
+}
+
 export function formatMessage(msg: QuartusMessage): string
 {
     if (msg.code === 'WSTA_TIMING_NOT_MET') {
