@@ -24,6 +24,7 @@ VHDL Essentials brings FPGA development directly into VSCode with:
 - ✅ Undeclared identifier detection
 - ✅ TODO comment markers tracking
 - ✅ Go to Definition for entities, packages, signals, variables, constants
+- 📋 VHDL Outline (Document Symbols) — entities with ports/generics, architectures with signals/processes/instantiations, packages
 - 📚 Workspace-wide indexing
 
 ---
@@ -76,6 +77,32 @@ use work.pulse_pkg.all;
 ```
 
 Jump directly to the declaration.
+
+### 📋 VHDL Outline (Document Symbols)
+
+View the structure of your VHDL file in the Outline panel (`Ctrl+Shift+O`) or editor breadcrumb:
+
+```
+counter.vhd
+├── entity counter
+│   ├── clk   : in std_logic
+│   ├── rst   : in std_logic
+│   ├── data  : out std_logic_vector(7 downto 0)
+│   └── WIDTH : integer (generic)
+├── architecture rtl of counter
+│   ├── signal count : unsigned(7 downto 0)
+│   ├── constant MAX : integer := 255
+│   ├── type state_t is (idle, active, done)
+│   ├── component pll
+│   ├── proc_main : process(clk, rst)
+│   ├── spi_slave_in : entity work.spi_slave
+│   └── pll_inst : pll port map(...)
+└── package utils
+    ├── constant VERSION : string
+    └── type color_t is (red, green, blue)
+```
+
+Supports: entities, architectures, packages, ports, generics, signals, constants, types, labelled processes, component declarations, direct entity instantiations, component instantiations.
 
 ---
 
