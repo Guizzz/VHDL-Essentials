@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.13.1] - 2026-06-11
+
+### Fixed
+- `parseQuartusError` e test cross-platform: rilevamento path assoluti Windows su CI Linux tramite regex `WIN_ABS_RE`, normalizzazione separator backslash/forward-slash, confronti path indipendenti dalla piattaforma nei test
+
 ## [0.13.0] - 2026-06-10
 
 ### Added
