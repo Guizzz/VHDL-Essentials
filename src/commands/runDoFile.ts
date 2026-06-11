@@ -20,6 +20,8 @@ export function registerRunSimulationUnit(context: vscode.ExtensionContext)
                         return;
                     }
 
+                    quartusOutput.clear();
+
                     const projectName = await getProjectName();
                     
 
