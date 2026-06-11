@@ -25,7 +25,7 @@ export function registerLintFeature(
     const portMapLint = new PortMapLinter(indexer, context);
     const unusedSignalsLint = new UnusedSignalsLinter(context);
     const todoCommentLint = new TodoCommentLinter(context);
-    const undeclaredIdentLint = new UndeclaredIdentifiersLinter(context);
+    const undeclaredIdentLint = new UndeclaredIdentifiersLinter(context, indexer);
 
     context.subscriptions.push(
         topLevelPortLint,

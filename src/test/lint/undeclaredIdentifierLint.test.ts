@@ -320,4 +320,94 @@ suite('undeclaredIdentifierLint', () =>
         // data (riga 1), result (riga 2), data (riga 2) = 3 usi
         assert.strictEqual(diags.length, 3);
     });
+
+    test('to_signed is not flagged via keywords', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            '  signal result : signed(7 downto 0);\n' +
+            'begin\n' +
+            '  result <= to_signed(42, 8);\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('to_unsigned and resize are not flagged via keywords', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            '  signal a : unsigned(7 downto 0);\n' +
+            '  signal b : unsigned(15 downto 0);\n' +
+            'begin\n' +
+            '  b <= resize(a, 16);\n' +
+            '  a <= to_unsigned(100, 8);\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('resolveSymbol callback skips identifier found by external resolver', () =>
+    {
+        const registeredSymbols = new Set(['width', 'my_const', 'my_func']);
+        const resolver = (name: string) => registeredSymbols.has(name.toLowerCase());
+
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            'begin\n' +
+            '  result <= width;\n' +
+            '  result <= my_const;\n' +
+            '  result <= my_func;\n' +
+            'end architecture;',
+            resolver
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('resolveSymbol callback does not hide truly undeclared identifiers', () =>
+    {
+        const registeredSymbols = new Set(['width']);
+        const resolver = (name: string) => registeredSymbols.has(name.toLowerCase());
+
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            'begin\n' +
+            '  result <= width + unknown_sig;\n' +
+            'end architecture;',
+            resolver
+        );
+        // width è risolto, unknown_sig no
+        assert.strictEqual(diags.length, 1);
+        assert.ok(diags[0].message.includes('unknown_sig'));
+    });
+
+    test('conv_integer and conv_std_logic_vector are not flagged via keywords', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            '  signal slv : std_logic_vector(7 downto 0);\n' +
+            '  signal int_val : integer;\n' +
+            'begin\n' +
+            '  int_val <= conv_integer(slv);\n' +
+            '  slv <= conv_std_logic_vector(42, 8);\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('shift_left shift_right rotate_left rotate_right are not flagged via keywords', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            '  signal a : unsigned(7 downto 0);\n' +
+            '  signal b : unsigned(7 downto 0);\n' +
+            'begin\n' +
+            '  b <= shift_left(a, 1);\n' +
+            '  b <= shift_right(a, 2);\n' +
+            '  b <= rotate_left(a, 3);\n' +
+            '  b <= rotate_right(a, 4);\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0);
+    });
 });

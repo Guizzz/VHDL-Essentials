@@ -16,6 +16,17 @@ export const VHDL_KEYWORDS = new Set([
     'positive', 'bit', 'bit_vector', 'character', 'string', 'time',
     'real', 'signed', 'unsigned',
     'rising_edge', 'falling_edge', 'now',
+    // IEEE numeric_std functions
+    'to_signed', 'to_unsigned', 'to_integer', 'resize', 'std_match',
+    'shift_left', 'shift_right', 'rotate_left', 'rotate_right',
+    // IEEE std_logic_1164 additional functions
+    'to_stdlogicvector', 'to_stdulogicvector', 'is_x',
+    // Legacy Synopsys functions
+    'conv_integer', 'conv_unsigned', 'conv_signed', 'conv_std_logic_vector',
+    // VHDL-2008 predefined functions in std.standard
+    'maximum', 'minimum',
+    // VHDL keyword missing from list
+    'abs',
     // Time units
     'fs', 'ps', 'ns', 'us', 'ms', 'sec', 'min', 'hr',
     // Severity levels

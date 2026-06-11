@@ -5,8 +5,12 @@ import { parseEntityGenerics } from '../parsers/entityParser';
 import { parsePackages } from '../parsers/packageParser';
 import { VHDL_KEYWORDS } from '../utils/vhdlKeywords';
 import { offsetToPosition } from '../utils/positionUtils';
+import { EntityIndexer } from '../services/entityIndexer';
 
-export function findUndeclaredIdentifiers(text: string): vscode.Diagnostic[]
+export function findUndeclaredIdentifiers(
+    text: string,
+    resolveSymbol?: (name: string) => boolean
+): vscode.Diagnostic[]
 {
     const diagnostics: vscode.Diagnostic[] = [];
 
@@ -151,6 +155,12 @@ export function findUndeclaredIdentifiers(text: string): vscode.Diagnostic[]
             continue;
         }
 
+        // 15. Check via external resolver (e.g. cross-file package symbols)
+        if (resolveSymbol && resolveSymbol(word))
+        {
+            continue;
+        }
+
         // === UNDECLARED IDENTIFIER ===
         const pos = offsetToPosition(text, idx);
         const range = new vscode.Range(pos, pos.translate(0, word.length));
@@ -169,9 +179,15 @@ export class UndeclaredIdentifiersLinter
 {
     private diagnostics = vscode.languages.createDiagnosticCollection('vhdl-undeclared');
     private debounceTimer: ReturnType<typeof setTimeout> | undefined;
+    private indexer: EntityIndexer | undefined;
 
-    constructor(context: vscode.ExtensionContext)
+    constructor(
+        context: vscode.ExtensionContext,
+        indexer?: EntityIndexer
+    )
     {
+        this.indexer = indexer;
+
         if (vscode.window.activeTextEditor)
         {
             this.validate(vscode.window.activeTextEditor.document);
@@ -200,7 +216,11 @@ export class UndeclaredIdentifiersLinter
         if (document.languageId !== 'vhdl') { return; }
         if (document.uri.scheme !== 'file') { return; }
 
-        const diags = findUndeclaredIdentifiers(document.getText());
+        const resolveSymbol = this.indexer
+            ? (name: string) => this.indexer!.getSymbol(name) !== undefined
+            : undefined;
+
+        const diags = findUndeclaredIdentifiers(document.getText(), resolveSymbol);
         this.diagnostics.set(document.uri, diags);
     }
 
