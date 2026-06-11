@@ -16,6 +16,10 @@ export class QuartusCompileLinter implements vscode.Disposable
 
         for (const err of errors)
         {
+            // Skip non-error messages — they are shown in the output for
+            // context/clickability but must not generate editor diagnostics
+            if (err.severity !== 'error') { continue; }
+
             const key = err.uri.toString();
             const entry = byUri.get(key);
 
