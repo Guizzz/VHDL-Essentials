@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import { type QuartusMessage } from '../quartus/logger/outputParser';
 
+const WIN_ABS_RE = /^[a-zA-Z]:[/\\]/;
+
 export interface QuartusCompileError
 {
     uri: vscode.Uri;
@@ -22,14 +24,16 @@ export function parseQuartusError(
 
     if (!match) { return null; }
 
-    const fileName = match[1];
+    let fileName = match[1];
     const line = Math.max(0, parseInt(match[2], 10) - 1);
     const col = match[3] ? Math.max(0, parseInt(match[3], 10) - 1) : 0;
 
-    const isAbs = path.isAbsolute(fileName);
-    const uri = isAbs
-        ? vscode.Uri.file(fileName)
-        : vscode.Uri.file(path.join(workspaceRoot, fileName));
+    fileName = fileName.replace(/\\/g, '/');
+    const isAbs = path.isAbsolute(fileName) || WIN_ABS_RE.test(fileName);
+
+    const root = workspaceRoot.replace(/\\/g, '/');
+    const filePath = isAbs ? fileName : path.posix.join(root, fileName);
+    const uri = vscode.Uri.file(filePath);
 
     const range = new vscode.Range(line, col, line, col + 1);
 

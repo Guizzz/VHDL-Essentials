@@ -5,6 +5,11 @@ import { type QuartusMessage } from '../../quartus/logger/outputParser';
 
 const WORKSPACE_ROOT = 'C:\\test\\workspace';
 
+function normalizePath(p: string): string
+{
+    return p.replace(/\\/g, '/').toLowerCase();
+}
+
 function makeMsg(text: string, severity: QuartusMessage['severity'] = 'error'): QuartusMessage
 {
     return {
@@ -24,7 +29,10 @@ suite('quartusErrorParser', () =>
 
         assert.ok(result !== null);
         assert.strictEqual(result.severity, 'error');
-        assert.strictEqual(result.uri.fsPath, path.join(WORKSPACE_ROOT, 'counter.vhd'));
+        assert.strictEqual(
+            normalizePath(result.uri.fsPath),
+            normalizePath(path.join(WORKSPACE_ROOT, 'counter.vhd'))
+        );
         assert.strictEqual(result.range.start.line, 11);
         assert.strictEqual(result.range.start.character, 0);
         assert.ok(
@@ -39,7 +47,10 @@ suite('quartusErrorParser', () =>
         const result = parseQuartusError(msg, WORKSPACE_ROOT);
 
         assert.ok(result !== null);
-        assert.strictEqual(result.uri.fsPath, path.join(WORKSPACE_ROOT, 'src', 'counter.vhd'));
+        assert.strictEqual(
+            normalizePath(result.uri.fsPath),
+            normalizePath(path.join(WORKSPACE_ROOT, 'src', 'counter.vhd'))
+        );
         assert.strictEqual(result.range.start.line, 33);
         assert.ok(
             result.message.includes('src/counter.vhd(34)'),
@@ -53,7 +64,10 @@ suite('quartusErrorParser', () =>
         const result = parseQuartusError(msg, WORKSPACE_ROOT);
 
         assert.ok(result !== null);
-        assert.strictEqual(result.uri.fsPath, 'C:\\projects\\vhdl\\counter.vhd');
+        assert.strictEqual(
+            normalizePath(result.uri.fsPath),
+            normalizePath('C:\\projects\\vhdl\\counter.vhd')
+        );
         assert.strictEqual(result.range.start.line, 4);
         assert.ok(
             result.message.includes('C:\\projects\\vhdl\\counter.vhd(5)'),
@@ -67,7 +81,10 @@ suite('quartusErrorParser', () =>
         const result = parseQuartusError(msg, WORKSPACE_ROOT);
 
         assert.ok(result !== null);
-        assert.strictEqual(result.uri.fsPath.toLowerCase(), 'c:\\projects\\vhdl\\counter.vhd');
+        assert.strictEqual(
+            normalizePath(result.uri.fsPath),
+            normalizePath('c:\\projects\\vhdl\\counter.vhd')
+        );
         assert.strictEqual(result.range.start.line, 7);
         assert.ok(
             result.message.includes('C:/projects/vhdl/counter.vhd(8)'),
@@ -108,7 +125,10 @@ suite('quartusErrorParser', () =>
         const result = parseQuartusError(msg, WORKSPACE_ROOT);
 
         assert.ok(result !== null);
-        assert.strictEqual(result.uri.fsPath, path.join(WORKSPACE_ROOT, 'counter.vhd'));
+        assert.strictEqual(
+            normalizePath(result.uri.fsPath),
+            normalizePath(path.join(WORKSPACE_ROOT, 'counter.vhd'))
+        );
         assert.strictEqual(result.range.start.line, 21);
     });
 
