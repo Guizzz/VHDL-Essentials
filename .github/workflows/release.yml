@@ -39,9 +39,23 @@ jobs:
           retry_wait_seconds: 60
           command: vsce publish -p ${{ secrets.VSCE_PAT }}
 
+      - name: Extract changelog section
+        id: changelog
+        shell: bash
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          awk '
+            /^## \[/ { if (flag) exit; if ($0 ~ "^## \\[" ver "\\]") flag=1 }
+            flag { print }
+          ' ver="$VERSION" CHANGELOG.md > release_body.md
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          cat release_body.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2.2.2
         with:
           files: "*.vsix"
+          body: ${{ steps.changelog.outputs.body }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
