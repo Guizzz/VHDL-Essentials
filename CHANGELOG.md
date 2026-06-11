@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.13.2] - 2026-06-12
+
+### Added
+- Cross-file package symbol resolution for undeclared identifier lint — symbols exported by a `package` in any open file are resolved via the `EntityIndexer`, eliminating false positives for identifiers consumed via `use work.pkg.all` (#71)
+- IEEE and Synopsys function keywords (`to_signed`, `to_unsigned`, `resize`, `conv_integer`, `conv_std_logic_vector`, `shift_left`, `shift_right`, etc.) added to VHDL keywords whitelist — no more spurious undeclared-identifier errors for common numeric_std routines (#72)
+
+### Fixed
+- Quartus compile output channel is cleared before each simulation run, so stale messages from previous runs are no longer visible
+- Non-error messages from Quartus compile diagnostics (`info`/`warning` severity) are skipped when generating editor diagnostics — they remain visible in the output channel but no longer produce squiggly underlines
+- `info` severity added to `QuartusCompileError` type for proper severity categorization
+
 ## [0.13.1] - 2026-06-11
 
 ### Fixed
