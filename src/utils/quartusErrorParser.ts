@@ -9,7 +9,7 @@ export interface QuartusCompileError
     uri: vscode.Uri;
     range: vscode.Range;
     message: string;
-    severity: 'error' | 'warning';
+    severity: 'error' | 'warning' | 'info';
     fileName: string;
 }
 
@@ -37,13 +37,26 @@ export function parseQuartusError(
 
     const range = new vscode.Range(line, col, line, col + 1);
 
+    let severity: 'error' | 'warning' | 'info';
+
+    if (msg.severity === 'info')
+    {
+        severity = 'info';
+    }
+    else if (msg.severity === 'warning' || msg.severity === 'critical')
+    {
+        severity = 'warning';
+    }
+    else
+    {
+        severity = 'error';
+    }
+
     return {
         uri,
         range,
         message: msg.text,
-        severity: msg.severity === 'warning' || msg.severity === 'critical'
-            ? 'warning'
-            : 'error',
+        severity,
         fileName
     };
 }
