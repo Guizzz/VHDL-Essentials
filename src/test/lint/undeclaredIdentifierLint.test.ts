@@ -354,6 +354,7 @@ suite('undeclaredIdentifierLint', () =>
 
         const diags = findUndeclaredIdentifiers(
             'architecture rtl of top is\n' +
+            '  signal result : std_logic;\n' +
             'begin\n' +
             '  result <= width;\n' +
             '  result <= my_const;\n' +
@@ -371,6 +372,7 @@ suite('undeclaredIdentifierLint', () =>
 
         const diags = findUndeclaredIdentifiers(
             'architecture rtl of top is\n' +
+            '  signal result : std_logic;\n' +
             'begin\n' +
             '  result <= width + unknown_sig;\n' +
             'end architecture;',
