@@ -5,6 +5,9 @@ hero:
   name: VHDL Essentials
   text: Complete Quartus + VHDL workflow for VS Code
   tagline: FPGA development integration — build, flash, simulate, and navigate your VHDL projects
+  image:
+    src: /screenshots/panel.png
+    alt: VHDL Essentials Panel
   actions:
     - theme: brand
       text: Get Started
@@ -35,6 +38,4 @@ features:
     details: Automatic cross-file indexing of entities, packages, and symbols.
   - title: 💡 Code Actions
     details: Quick fixes for diagnostics — Alt+Enter to auto-fix port maps, duplicates, missing semicolons, and more.
----
 
-![VHDL Essentials Panel](/screenshots/panel.png)

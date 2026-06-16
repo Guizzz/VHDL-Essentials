@@ -77,3 +77,16 @@
   height: 28px;
   border-radius: 4px;
 }
+
+.VPHomeHero .image-container .image-src {
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(79, 195, 247, 0.15);
+  max-height: 400px;
+  object-fit: contain;
+}
+
+.VPHomeHero .image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
