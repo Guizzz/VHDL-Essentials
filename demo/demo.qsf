@@ -9,6 +9,11 @@ set_global_assignment -name VHDL_FILE src/demo_pkg.vhd
 set_global_assignment -name VHDL_FILE src/counter.vhd
 set_global_assignment -name VHDL_FILE src/uart_rx.vhd
 set_global_assignment -name VHDL_FILE src/common_pkg.vhd
+set_global_assignment -name VHDL_FILE src/shift_reg.vhd
+set_global_assignment -name VHDL_FILE src/mux_gen.vhd
+set_global_assignment -name VHDL_FILE src/block_demo.vhd
+set_global_assignment -name VHDL_FILE src/attr_demo.vhd
+set_global_assignment -name VHDL_FILE src/ctx_demo.vhd
 set_global_assignment -name VHDL_FILE test/blinky_tb.vhd
 
 set_location_assignment PIN_1 -to clk

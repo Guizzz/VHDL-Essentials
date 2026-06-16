@@ -7,6 +7,101 @@ import { VHDL_KEYWORDS } from '../utils/vhdlKeywords';
 import { offsetToPosition } from '../utils/positionUtils';
 import { EntityIndexer } from '../services/entityIndexer';
 
+function parseComponentDeclarations(text: string): string[]
+{
+    const names: string[] = [];
+    const regex = /component\s+(\w+)\s+is/gi;
+    let match: RegExpExecArray | null;
+
+    while ((match = regex.exec(text)) !== null)
+    {
+        const lineStart = text.lastIndexOf('\n', match.index) + 1;
+        const beforeOnLine = text.substring(lineStart, match.index);
+
+        if (!beforeOnLine.includes('--'))
+        {
+            names.push(match[1]);
+        }
+    }
+
+    return names;
+}
+
+function parseFunctionParameters(text: string): string[]
+{
+    const names: string[] = [];
+    const regex = /(?:(?:impure|pure)\s+)?(?:function|procedure)\s+\w+\s*\(/gi;
+    let match: RegExpExecArray | null;
+
+    while ((match = regex.exec(text)) !== null)
+    {
+        const lineStart = text.lastIndexOf('\n', match.index) + 1;
+        const beforeOnLine = text.substring(lineStart, match.index);
+
+        if (beforeOnLine.includes('--')) { continue; }
+
+        let depth = 1;
+        let pos = match.index + match[0].length;
+
+        while (pos < text.length && depth > 0)
+        {
+            if (text[pos] === '(') { depth++; }
+            else if (text[pos] === ')') { depth--; }
+            if (depth > 0) { pos++; }
+        }
+
+        if (depth !== 0) { continue; }
+
+        const paramsText = text.substring(
+            match.index + match[0].length,
+            pos
+        );
+
+        const paramDecls = paramsText.split(';');
+
+        for (const decl of paramDecls)
+        {
+            const trimmed = decl.trim();
+            if (!trimmed) { continue; }
+
+            const paramRegex = /(?:(?:signal|variable|constant|file)\s+)?(\w+(?:\s*,\s*\w+)*)\s*:/;
+            const paramMatch = paramRegex.exec(trimmed);
+
+            if (paramMatch)
+            {
+                const namesList = paramMatch[1].split(',').map(n => n.trim());
+
+                for (const n of namesList)
+                {
+                    if (n) { names.push(n); }
+                }
+            }
+        }
+    }
+
+    return names;
+}
+
+function parseAliasDeclarations(text: string): string[]
+{
+    const names: string[] = [];
+    const regex = /alias\s+(\w+)\s+is/gi;
+    let match: RegExpExecArray | null;
+
+    while ((match = regex.exec(text)) !== null)
+    {
+        const lineStart = text.lastIndexOf('\n', match.index) + 1;
+        const beforeOnLine = text.substring(lineStart, match.index);
+
+        if (!beforeOnLine.includes('--'))
+        {
+            names.push(match[1]);
+        }
+    }
+
+    return names;
+}
+
 export function findUndeclaredIdentifiers(
     text: string,
     resolveSymbol?: (name: string) => boolean
@@ -38,6 +133,24 @@ export function findUndeclaredIdentifiers(
     for (const pkg of parsePackages(text))
     {
         declaredNames.add(pkg.name.toLowerCase());
+    }
+
+    // Add component declaration names (e.g. "component clk_div is")
+    for (const compName of parseComponentDeclarations(text))
+    {
+        declaredNames.add(compName.toLowerCase());
+    }
+
+    // Add alias declaration names (e.g. "alias new_name is original")
+    for (const aliasName of parseAliasDeclarations(text))
+    {
+        declaredNames.add(aliasName.toLowerCase());
+    }
+
+    // Add function/procedure parameter names
+    for (const paramName of parseFunctionParameters(text))
+    {
+        declaredNames.add(paramName.toLowerCase());
     }
 
     // Add for-loop variable names (implicitly declared by "for ident in")
@@ -86,7 +199,7 @@ export function findUndeclaredIdentifiers(
         const lineEnd = text.indexOf('\n', idx);
         const wholeLine = text.substring(lineStart, lineEnd >= 0 ? lineEnd : text.length).trim();
 
-        if (/^(use|library|entity|configuration|component|architecture|package)\s/i.test(wholeLine))
+        if (/^(use|library|entity|configuration|component|architecture|package|function|procedure|context)\s/i.test(wholeLine))
         {
             continue;
         }
@@ -108,6 +221,20 @@ export function findUndeclaredIdentifiers(
         // After "package" keyword (package name / end package name)
         if (/package\s+$/i.test(contextBefore) ||
             /package\s+body\s+$/i.test(contextBefore))
+        {
+            continue;
+        }
+
+        // After architecture keyword (end architecture name)
+        if (/\barchitecture\s+$/i.test(contextBefore))
+        {
+            continue;
+        }
+
+        // After other VHDL construct keywords (end process label, end generate label,
+        // end block label, end for label, end function/procedure name, component name,
+        // end if/case label, etc.)
+        if (/\b(component|process|for|generate|block|if|case|function|procedure|attribute|alias|context)\s+$/i.test(contextBefore))
         {
             continue;
         }
@@ -151,6 +278,13 @@ export function findUndeclaredIdentifiers(
 
         // Label: "ident : entity" / "ident : component" / "ident : process" / "ident : for"
         if (/^\s*:\s*(entity|component|process|for)\s/i.test(contextAfter))
+        {
+            continue;
+        }
+
+        // Declaration/instantiation label: "ident : <word>" (covers component ports
+        // inside component blocks, instance labels, attribute/group/file declarations)
+        if (/^\s*:\s+\w+/i.test(contextAfter))
         {
             continue;
         }
@@ -217,7 +351,7 @@ export class UndeclaredIdentifiersLinter
         if (document.uri.scheme !== 'file') { return; }
 
         const resolveSymbol = this.indexer
-            ? (name: string) => this.indexer!.getSymbol(name) !== undefined
+            ? (name: string) => this.indexer!.getSymbol(name) !== undefined || this.indexer!.hasEntity(name)
             : undefined;
 
         const diags = findUndeclaredIdentifiers(document.getText(), resolveSymbol);

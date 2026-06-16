@@ -25,6 +25,7 @@ const END_KINDS: Record<string, string> =
     procedure: 'procedure',
     block: 'block',
     record: 'record',
+    context: 'context',
 };
 
 function makeDiag(
@@ -200,6 +201,13 @@ function tryOpenScope(
         if (!/\bis\b/i.test(line) && line.endsWith(';')) { return false; }
 
         stack.push({ type: 'procedure', name: m[1], line: lineNum, hasIs: false, hasBegin: false });
+        return true;
+    }
+
+    m = tryMatch(/^context\s+(\w+)\s+is\b/i);
+    if (m)
+    {
+        stack.push({ type: 'context', name: m[1], line: lineNum, hasIs: true, hasBegin: false });
         return true;
     }
 

@@ -26,7 +26,11 @@ export const VHDL_KEYWORDS = new Set([
     // VHDL-2008 predefined functions in std.standard
     'maximum', 'minimum',
     // VHDL keyword missing from list
-    'abs',
+    'abs', 'alias',
+    // VHDL-2008 context keyword
+    'context',
+    // Predefined file open kinds
+    'read_mode', 'write_mode', 'append_mode',
     // Time units
     'fs', 'ps', 'ns', 'us', 'ms', 'sec', 'min', 'hr',
     // Severity levels
