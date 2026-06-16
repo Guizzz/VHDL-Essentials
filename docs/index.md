@@ -39,3 +39,29 @@ features:
   - title: 💡 Code Actions
     details: Quick fixes for diagnostics — Alt+Enter to auto-fix port maps, duplicates, missing semicolons, and more.
 
+---
+
+<div class="screenshot-gallery">
+
+  <div class="screenshot-card">
+    <img src="/screenshots/hover.png" alt="FPGA Pin Diagnostics" loading="lazy" />
+    <span class="screenshot-label">FPGA Pin Diagnostics</span>
+  </div>
+
+  <div class="screenshot-card">
+    <img src="/screenshots/build_2.png" alt="Quartus Build Output" loading="lazy" />
+    <span class="screenshot-label">Quartus Build Output</span>
+  </div>
+
+  <div class="screenshot-card">
+    <img src="/screenshots/autofix.png" alt="Quick-Fix Code Actions" loading="lazy" />
+    <span class="screenshot-label">Quick-Fix Code Actions</span>
+  </div>
+
+  <div class="screenshot-card">
+    <img src="/screenshots/entity_drop.png" alt="VHDL Entity Navigation" loading="lazy" />
+    <span class="screenshot-label">VHDL Entity Navigation</span>
+  </div>
+
+</div>
+
