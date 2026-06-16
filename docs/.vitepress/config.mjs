@@ -5,7 +5,7 @@ export default defineConfig({
   title: 'VHDL Essentials',
   description: 'Complete Quartus + VHDL workflow integration for Visual Studio Code',
   themeConfig: {
-    logo: '/screenshots/panel.png',
+    logo: '/icon.svg',
     siteTitle: 'VHDL Essentials',
     nav: [
       { text: 'Guide', link: '/guide/getting-started' },
