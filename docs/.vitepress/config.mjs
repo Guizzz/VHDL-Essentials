@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
+  base: '/VHDL-Essentials/',
   title: 'VHDL Essentials',
   description: 'Complete Quartus + VHDL workflow integration for Visual Studio Code',
   themeConfig: {
