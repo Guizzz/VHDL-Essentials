@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.14.0] - 2026-06-16
+
+### Added
+- VitePress documentation site at https://guizzz.github.io/VHDL-Essentials/ with full guide, features, troubleshooting, and configuration pages (#58)
+- GitHub Actions deploy workflow for automatic Pages publishing on push to master (#61)
+- Custom dark theme (#0f0f23 background, #4fc3f7 cyan accent) with VitePress branding throughout (#62)
+- SVG logo with sine/square wave oscilloscope design, 5-pin symmetrical layout, rounded corners
+- Screenshot gallery on landing page (2×2 grid with hover glow) showing key features: pin diagnostics, build output, code actions, entity navigation
+- Hero image layout: extension screenshot displayed next to title in the VitePress hero section
+- Simplified README (~100 lines) with docs badge, link to VitePress site, and cleaned-up feature listing
+
+### Changed
+- Extension icon (`resources/icon.png`) resynchronised with the new SVG logo design
+- `docs/public/screenshots/build_2.png` optimised (107 KB → 34 KB)
+
+### Removed
+- `resources/screen/` directory (duplicate screenshot location — all assets now live under `docs/public/screenshots/`)
+
+### Documentation
+- Full VitePress documentation: Getting Started, Features, Troubleshooting, Commands, Configuration, and Changelog pages (#59)
+- 15 feature screenshots reorganised under `docs/public/screenshots/` (#60)
+
+
 ## [0.13.2] - 2026-06-12
 
 ### Added
