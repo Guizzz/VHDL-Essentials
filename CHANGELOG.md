@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.14.1] - 2026-06-17
+
+### Fixed
+- False positive "Undeclared identifier 'alias'" on alias declarations (`alias name is target`)
+- False positive "Missing ';'" / "'end' without matching scope" on context declarations (`context name is ... end context name`)
+- False positive "Undeclared identifier" on alias target and context name identifiers in `undeclaredIdentifierLint`
+- Missing syntax highlighting for `alias` and `context` keywords
+
+### Added
+- Syntax highlighting for alias declaration names (pattern `alias <name> is`)
+
+
 ## [0.14.0] - 2026-06-16
 
 ### Added
