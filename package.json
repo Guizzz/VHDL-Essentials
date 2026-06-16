@@ -167,7 +167,10 @@
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
@@ -181,6 +184,7 @@
     "serialize-javascript": ">=7.0.5",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.61.0",
+    "vitepress": "^1.6.4",
     "vscode-textmate": "^9.0.0",
     "yaml": "^2.9.0"
   },

@@ -1,5 +1,6 @@
 demo
 demo/**
+docs/**
 .github
 .github/**
 .vscode/**
