@@ -352,4 +352,122 @@ suite('VhdlDocumentSymbolProvider', () =>
         assert.ok(instSym, 'entity instantiation should exist');
         assert.strictEqual(instSym.kind, vscode.SymbolKind.Object);
     });
+
+    test('should extract local variables inside a process', async () =>
+    {
+        const doc = await vscode.workspace.openTextDocument({
+            content: [
+                'architecture rtl of counter is',
+                '  signal cnt : unsigned(7 downto 0);',
+                'begin',
+                '  proc_main : process(clk, rst)',
+                '    variable tmp : std_logic_vector(7 downto 0);',
+                '    constant DELAY : integer := 5;',
+                '  begin',
+                '    if rising_edge(clk) then',
+                '      cnt <= cnt + 1;',
+                '    end if;',
+                '  end process;',
+                'end architecture rtl;'
+            ].join('\n'),
+            language: 'vhdl'
+        });
+
+        const provider = new VhdlDocumentSymbolProvider();
+        const symbols = await provider.provideDocumentSymbols(doc);
+
+        assert.strictEqual(symbols.length, 1);
+
+        const children = symbols[0].children;
+        const procSym = children.find(c => c.name === 'proc_main');
+        assert.ok(procSym, 'proc_main process should exist');
+        assert.strictEqual(procSym.kind, vscode.SymbolKind.Function);
+
+        const procChildren = procSym.children;
+        assert.ok(procChildren, 'process should have children');
+        assert.strictEqual(procChildren.length, 2, 'should have 2 local declarations');
+
+        const tmpSym = procChildren.find(c => c.name === 'tmp');
+        assert.ok(tmpSym, 'variable tmp should exist');
+        assert.strictEqual(tmpSym.kind, vscode.SymbolKind.Variable);
+
+        const delaySym = procChildren.find(c => c.name === 'DELAY');
+        assert.ok(delaySym, 'constant DELAY should exist');
+        assert.strictEqual(delaySym.kind, vscode.SymbolKind.Constant);
+
+        // Architecture-level signal should still be a sibling, not child of process
+        const cntSym = children.find(c => c.name === 'cnt');
+        assert.ok(cntSym, 'signal cnt should exist at architecture level');
+    });
+
+    test('should extract function parameters in package', async () =>
+    {
+        const doc = await vscode.workspace.openTextDocument({
+            content: [
+                'package utils is',
+                '  function to_string(val : integer) return string;',
+                '  function max(a : integer; b : integer) return integer;',
+                'end package utils;'
+            ].join('\n'),
+            language: 'vhdl'
+        });
+
+        const provider = new VhdlDocumentSymbolProvider();
+        const symbols = await provider.provideDocumentSymbols(doc);
+
+        assert.strictEqual(symbols.length, 1);
+
+        const children = symbols[0].children;
+
+        const toStrSym = children.find(c => c.name === 'to_string');
+        assert.ok(toStrSym, 'function to_string should exist');
+        assert.strictEqual(toStrSym.kind, vscode.SymbolKind.Function);
+        assert.ok(toStrSym.detail?.includes('return string'), 'should show return type');
+
+        // to_string has one parameter
+        const toStrParams = toStrSym.children;
+        assert.ok(toStrParams, 'to_string should have parameter children');
+        assert.strictEqual(toStrParams.length, 1, 'to_string should have 1 parameter');
+        assert.strictEqual(toStrParams[0].name, 'val');
+        assert.strictEqual(toStrParams[0].kind, vscode.SymbolKind.Field);
+
+        // max has two parameters
+        const maxSym = children.find(c => c.name === 'max');
+        assert.ok(maxSym, 'function max should exist');
+        const maxParams = maxSym.children;
+        assert.strictEqual(maxParams.length, 2, 'max should have 2 parameters');
+        assert.strictEqual(maxParams[0].name, 'a');
+        assert.strictEqual(maxParams[1].name, 'b');
+    });
+
+    test('should extract procedure parameters in package', async () =>
+    {
+        const doc = await vscode.workspace.openTextDocument({
+            content: [
+                'package utils is',
+                '  procedure reset_all(signal rst : out std_logic; constant cycles : integer);',
+                'end package utils;'
+            ].join('\n'),
+            language: 'vhdl'
+        });
+
+        const provider = new VhdlDocumentSymbolProvider();
+        const symbols = await provider.provideDocumentSymbols(doc);
+
+        assert.strictEqual(symbols.length, 1);
+
+        const resetProc = symbols[0].children.find(c => c.name === 'reset_all');
+        assert.ok(resetProc, 'procedure reset_all should exist');
+        assert.strictEqual(resetProc.kind, vscode.SymbolKind.Method);
+
+        const params = resetProc.children;
+        assert.strictEqual(params.length, 2, 'reset_all should have 2 parameters');
+
+        const rstParam = params.find(p => p.name === 'rst');
+        assert.ok(rstParam, 'param rst should exist');
+        assert.ok(rstParam.detail?.includes('out'), 'rst should show direction');
+
+        const cyclesParam = params.find(p => p.name === 'cycles');
+        assert.ok(cyclesParam, 'param cycles should exist');
+    });
 });

@@ -316,20 +316,71 @@ export class VhdlDocumentSymbolProvider implements vscode.DocumentSymbolProvider
         }
 
         // Process statements (inside architecture body, after begin)
-        const procRe = /(\w+)\s*:\s*process\s*\(([^)]*)\)/gi;
+        const procRe = /(\w+)\s*:\s*process\s*(?:\(([^)]*)\))?\s*(?:is\b)?/gi;
 
         while ((m = procRe.exec(procText)) !== null)
         {
             const label = m[1];
-            const sensitivity = m[2].trim();
+            const sensitivity = (m[2] || '').trim();
             const detail = sensitivity ? `(${sensitivity})` : '';
-            const offset = baseOffset + bodyStartMatch.index + m.index + m[0].indexOf(m[1]);
+
+            // Find end of this process to delimit its body
+            const procEnd = this._findProcessEnd(procText, m.index + m[0].length);
+
+            if (procEnd < 0) { continue; }
+
+            const procFullText = procText.substring(m.index, procEnd);
+            const procBeginRe = /\bbegin\b/i;
+            const beginM = procBeginRe.exec(procFullText);
+
+            const procChildren: vscode.DocumentSymbol[] = [];
+
+            if (beginM)
+            {
+                const procDeclText = procFullText.substring(m[0].length, beginM.index);
+                const procDeclRe = /\b(variable|constant)\s+(\w+)\s*:\s*([^;]+)/gi;
+                let dm: RegExpExecArray | null;
+
+                while ((dm = procDeclRe.exec(procDeclText)) !== null)
+                {
+                    const dKind = dm[1].toLowerCase();
+                    const dName = dm[2];
+                    const dType = dm[3].trim();
+                    const dKindMap: Record<string, vscode.SymbolKind> = {
+                        variable: vscode.SymbolKind.Variable,
+                        constant: vscode.SymbolKind.Constant
+                    };
+                    const dOffset = baseOffset + bodyStartMatch.index + m.index + m[0].length
+                        + dm.index + dm[0].indexOf(dName);
+                    const dPos = document.positionAt(dOffset);
+                    const dRange = new vscode.Range(dPos, dPos.translate(0, Math.max(dName.length, 1)));
+
+                    procChildren.push(
+                        new vscode.DocumentSymbol(
+                            dName,
+                            dType,
+                            dKindMap[dKind] ?? vscode.SymbolKind.Variable,
+                            dRange,
+                            dRange
+                        )
+                    );
+                }
+            }
+
+            const offset = baseOffset + bodyStartMatch.index + m.index + m[0].indexOf(label);
             const pos = document.positionAt(offset);
             const range = new vscode.Range(pos, pos.translate(0, Math.max(label.length, 1)));
 
-            symbols.push(
-                new vscode.DocumentSymbol(label, detail, vscode.SymbolKind.Function, range, range)
+            const procSym = new vscode.DocumentSymbol(
+                label,
+                detail,
+                vscode.SymbolKind.Function,
+                range,
+                range
             );
+
+            procSym.children = procChildren;
+            symbols.push(procSym);
         }
 
         // Component declarations
@@ -358,8 +409,8 @@ export class VhdlDocumentSymbolProvider implements vscode.DocumentSymbolProvider
     {
         const symbols: vscode.DocumentSymbol[] = [];
 
-        // constant / signal / type / subtype / function / procedure
-        const declRe = /\b(constant|signal|type|subtype|function|procedure)\s+(\w+)/gi;
+        // constant / signal / type / subtype (not function/procedure, handled separately)
+        const declRe = /\b(constant|signal|type|subtype)\s+(\w+)/gi;
         let m: RegExpExecArray | null;
 
         while ((m = declRe.exec(clean)) !== null)
@@ -370,9 +421,7 @@ export class VhdlDocumentSymbolProvider implements vscode.DocumentSymbolProvider
                 constant: vscode.SymbolKind.Constant,
                 signal: vscode.SymbolKind.Variable,
                 type: vscode.SymbolKind.Interface,
-                subtype: vscode.SymbolKind.Interface,
-                function: vscode.SymbolKind.Function,
-                procedure: vscode.SymbolKind.Method
+                subtype: vscode.SymbolKind.Interface
             };
             const offset = baseOffset + m.index + m[0].indexOf(name);
             const pos = document.positionAt(offset);
@@ -383,7 +432,122 @@ export class VhdlDocumentSymbolProvider implements vscode.DocumentSymbolProvider
             );
         }
 
+        // Function declarations with parameters and optional return type
+        const funcRe = /(\bfunction)\s+(\w+)\s*(?:\(([^)]*)\))?\s*(?:return\s+(\w+(?:\s+\w+)*))?/gi;
+        let fm: RegExpExecArray | null;
+
+        while ((fm = funcRe.exec(clean)) !== null)
+        {
+            const name = fm[2];
+            const params = (fm[3] || '').trim();
+            const returnType = (fm[4] || '').trim();
+            const detail = returnType ? `return ${returnType}` : '';
+
+            const fnChildren: vscode.DocumentSymbol[] = [];
+
+            if (params)
+            {
+                const paramRe = /(\w+(?:\s*,\s*\w+)*)\s*:\s*(?:(in|out|inout)\s+)?(\w+(?:\s+\w+)*)/gi;
+                let pm: RegExpExecArray | null;
+
+                while ((pm = paramRe.exec(params)) !== null)
+                {
+                    const pNames = pm[1].split(',').map((n: string) => n.trim());
+                    const direction = (pm[2] || '').trim();
+                    const pType = pm[3].trim();
+                    const pDetail = direction ? `${direction} : ${pType}` : pType;
+                    const pNameOffsetInParam = pm[0].indexOf(pm[1]);
+                    const paramOffsetInClean = fm.index + fm[0].indexOf(fm[3] ?? '');
+
+                    for (const pName of pNames)
+                    {
+                        const pOffset = baseOffset + paramOffsetInClean + pNameOffsetInParam
+                            + pm[1].indexOf(pName);
+                        const pPos = document.positionAt(pOffset);
+                        const pRange = new vscode.Range(pPos, pPos.translate(0, Math.max(pName.length, 1)));
+
+                        fnChildren.push(
+                            new vscode.DocumentSymbol(pName, pDetail, vscode.SymbolKind.Field, pRange, pRange)
+                        );
+                    }
+                }
+            }
+
+            const offset = baseOffset + fm.index + fm[0].indexOf(name);
+            const pos = document.positionAt(offset);
+            const range = new vscode.Range(pos, pos.translate(0, Math.max(name.length, 1)));
+
+            const fnSym = new vscode.DocumentSymbol(name, detail, vscode.SymbolKind.Function, range, range);
+            fnSym.children = fnChildren;
+            symbols.push(fnSym);
+        }
+
+        // Procedure declarations with parameters
+        const procRe_proc = /\b(procedure)\s+(\w+)\s*(?:\(([^)]*)\))?/gi;
+        let pmProc: RegExpExecArray | null;
+
+        while ((pmProc = procRe_proc.exec(clean)) !== null)
+        {
+            const name = pmProc[2];
+            const params = (pmProc[3] || '').trim();
+            const detail = params ? `(${params})` : '';
+
+            const procChildren: vscode.DocumentSymbol[] = [];
+
+            if (params)
+            {
+                const paramRe = /(\w+(?:\s*,\s*\w+)*)\s*:\s*(?:(in|out|inout)\s+)?(\w+(?:\s+\w+)*)/gi;
+                let pm: RegExpExecArray | null;
+
+                while ((pm = paramRe.exec(params)) !== null)
+                {
+                    const pNames = pm[1].split(',').map((n: string) => n.trim());
+                    const direction = (pm[2] || '').trim();
+                    const pType = pm[3].trim();
+                    const pDetail = direction ? `${direction} : ${pType}` : pType;
+                    const paramOffsetInClean = pmProc.index + pmProc[0].indexOf(pmProc[3] ?? '');
+
+                    for (const pName of pNames)
+                    {
+                        const pOffset = baseOffset + paramOffsetInClean + pm[0].indexOf(pm[1])
+                            + pm[1].indexOf(pName);
+                        const pPos = document.positionAt(pOffset);
+                        const pRange = new vscode.Range(pPos, pPos.translate(0, Math.max(pName.length, 1)));
+
+                        procChildren.push(
+                            new vscode.DocumentSymbol(pName, pDetail, vscode.SymbolKind.Field, pRange, pRange)
+                        );
+                    }
+                }
+            }
+
+            const offset = baseOffset + pmProc.index + pmProc[0].indexOf(name);
+            const pos = document.positionAt(offset);
+            const range = new vscode.Range(pos, pos.translate(0, Math.max(name.length, 1)));
+
+            const procSym = new vscode.DocumentSymbol(name, detail, vscode.SymbolKind.Method, range, range);
+            procSym.children = procChildren;
+            symbols.push(procSym);
+        }
+
         return symbols;
+    }
+
+    private _findProcessEnd(text: string, fromIdx: number): number
+    {
+        const endRe = /\bend\s+process\s*(?:\w+)?\s*;/gi;
+        let match: RegExpExecArray | null;
+
+        while ((match = endRe.exec(text)) !== null)
+        {
+            if (this._isInsideComment(text, match.index)) { continue; }
+
+            if (match.index <= fromIdx) { continue; }
+
+            return match.index + match[0].length;
+        }
+
+        return -1;
     }
 
     private _isInsideComment(text: string, offset: number): boolean
