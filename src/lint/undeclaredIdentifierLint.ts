@@ -234,7 +234,7 @@ export function findUndeclaredIdentifiers(
         // After other VHDL construct keywords (end process label, end generate label,
         // end block label, end for label, end function/procedure name, component name,
         // end if/case label, etc.)
-        if (/\b(component|process|for|generate|block|if|case|function|procedure|attribute|alias|context)\s+$/i.test(contextBefore))
+        if (/\b(component|process|for|generate|block|if|case|function|procedure|attribute|alias|context|loop|guarded)\s+$/i.test(contextBefore))
         {
             continue;
         }
