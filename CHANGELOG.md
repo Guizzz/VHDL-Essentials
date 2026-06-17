@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.14.2] - 2026-06-17
+
+### Fixed
+- False positive "Undeclared identifier" on identifiers after `guarded` keyword (e.g. `q <= guarded d;`)
+- False positive "Undeclared identifier" on loop label after `end loop` (e.g. `end loop loop_label;`)
+
 ## [0.14.1] - 2026-06-17
 
 ### Fixed
