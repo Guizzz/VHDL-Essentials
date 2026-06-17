@@ -24,7 +24,7 @@ export function parseSignals(text: string): ParsedSignalLike[]
         return componentRanges.some(r => offset >= r.start && offset < r.end);
     }
 
-    const regex = /\b(signal|variable|constant)\s+(\w+)\s*:\s*([\w\s\(\)\d<>:=\-']+)/gi;
+    const regex = /\b(signal|variable|constant)\s+(\w+(?:\s*,\s*\w+)*)\s*:\s*([\w\s\(\)\d<>:=\-']+)/gi;
 
     let match: RegExpExecArray | null;
 
@@ -32,20 +32,29 @@ export function parseSignals(text: string): ParsedSignalLike[]
     {
         if (isInsideComponent(match.index)) { continue; }
 
-        symbols.push({
-            kind: match[1].toLowerCase(),
-            name: match[2],
-            type: match[3].trim(),
-            offset: match.index + match[0].indexOf(match[2])
-        });
+        const names = match[2].split(',').map(n => n.trim());
+        const typeText = match[3].trim();
+
+        for (const name of names)
+        {
+            symbols.push({
+                kind: match[1].toLowerCase(),
+                name,
+                type: typeText,
+                offset: match.index + match[0].indexOf(name)
+            });
+        }
     }
 
     // entity ports
-    const portRegex = /\b(\w+)\s*:\s*(in|out|inout|buffer)\s+([^;]+)/gi;
+    const portRegex = /\b(\w+(?:\s*,\s*\w+)*)\s*:\s*(in|out|inout|buffer)\s+([^;]+)/gi;
 
     while ((match = portRegex.exec(text)) !== null)
     {
         if (isInsideComponent(match.index)) { continue; }
+
+        const names = match[1].split(',').map(n => n.trim());
+        const direction = match[2];
 
         let type = match[3].trim();
 
@@ -62,13 +71,16 @@ export function parseSignals(text: string): ParsedSignalLike[]
             }
         }
 
-        symbols.push({
-            kind: 'port',
-            name: match[1],
-            direction: match[2],
-            type,
-            offset: match.index
-        });
+        for (const name of names)
+        {
+            symbols.push({
+                kind: 'port',
+                name,
+                direction,
+                type,
+                offset: match.index + match[0].indexOf(name)
+            });
+        }
     }
 
     return symbols;

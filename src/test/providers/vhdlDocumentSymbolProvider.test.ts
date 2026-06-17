@@ -30,7 +30,7 @@ suite('VhdlDocumentSymbolProvider', () =>
         assert.ok(symbols);
         assert.strictEqual(symbols.length, 1);
         assert.strictEqual(symbols[0].name, 'counter');
-        assert.strictEqual(symbols[0].kind, vscode.SymbolKind.Struct);
+        assert.strictEqual(symbols[0].kind, vscode.SymbolKind.Class);
 
         const children = symbols[0].children;
 
@@ -281,7 +281,7 @@ suite('VhdlDocumentSymbolProvider', () =>
 
         const instSym = symbols[0].children.find(c => c.name === 'spi_slave_in');
         assert.ok(instSym, 'entity instantiation should exist');
-        assert.strictEqual(instSym.kind, vscode.SymbolKind.Object);
+        assert.strictEqual(instSym.kind, vscode.SymbolKind.Class);
         assert.ok(instSym.detail?.includes('spi_slave'), 'detail should mention entity name');
     });
 
@@ -350,7 +350,7 @@ suite('VhdlDocumentSymbolProvider', () =>
 
         const instSym = children.find(c => c.name === 'spi_inst');
         assert.ok(instSym, 'entity instantiation should exist');
-        assert.strictEqual(instSym.kind, vscode.SymbolKind.Object);
+        assert.strictEqual(instSym.kind, vscode.SymbolKind.Class);
     });
 
     test('should extract local variables inside a process', async () =>

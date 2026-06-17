@@ -127,4 +127,80 @@ suite('variableParser', () =>
             result[0].name
         );
     });
+
+    test('parse comma-separated signal declarations', () =>
+    {
+        const result = parseSignals(`
+            signal dv_sync_0, dv_sync_1 : std_logic;
+        `);
+
+        assert.strictEqual(result.length, 2);
+        assert.strictEqual(result[0].name, 'dv_sync_0');
+        assert.strictEqual(result[0].kind, 'signal');
+        assert.strictEqual(result[0].type, 'std_logic');
+        assert.strictEqual(result[1].name, 'dv_sync_1');
+        assert.strictEqual(result[1].kind, 'signal');
+        assert.strictEqual(result[1].type, 'std_logic');
+    });
+
+    test('parse comma-separated port declarations', () =>
+    {
+        const result = parseSignals(`
+            entity ports is
+                port (
+                    clk, rst : in std_logic;
+                    a, b, c  : out std_logic
+                );
+            end entity;
+        `);
+
+        const ports = result.filter(s => s.kind === 'port');
+        assert.strictEqual(ports.length, 5);
+        assert.strictEqual(ports[0].name, 'clk');
+        assert.strictEqual(ports[1].name, 'rst');
+        assert.strictEqual(ports[2].name, 'a');
+        assert.strictEqual(ports[3].name, 'b');
+        assert.strictEqual(ports[4].name, 'c');
+    });
+
+    test('parse comma-separated variable declarations', () =>
+    {
+        const result = parseSignals(`
+            variable x, y, z : integer;
+        `);
+
+        assert.strictEqual(result.length, 3);
+        assert.strictEqual(result[0].name, 'x');
+        assert.strictEqual(result[1].name, 'y');
+        assert.strictEqual(result[2].name, 'z');
+    });
+
+    test('parse comma-separated constant declarations', () =>
+    {
+        const result = parseSignals(`
+            constant MIN, MAX : positive := 1;
+        `);
+
+        assert.strictEqual(result.length, 2);
+        assert.strictEqual(result[0].name, 'MIN');
+        assert.strictEqual(result[0].kind, 'constant');
+        assert.strictEqual(result[1].name, 'MAX');
+        assert.strictEqual(result[1].kind, 'constant');
+    });
+
+    test('mixed single and comma-separated declarations', () =>
+    {
+        const result = parseSignals(`
+            signal single_sig : std_logic;
+            signal multi_a, multi_b : std_logic_vector(7 downto 0);
+            variable v1, v2 : integer;
+        `);
+
+        assert.strictEqual(result.length, 5);
+        assert.strictEqual(result[0].name, 'single_sig');
+        assert.strictEqual(result[1].name, 'multi_a');
+        assert.strictEqual(result[2].name, 'multi_b');
+        assert.strictEqual(result[3].name, 'v1');
+        assert.strictEqual(result[4].name, 'v2');
+    });
 });
