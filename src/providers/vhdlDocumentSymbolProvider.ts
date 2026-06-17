@@ -293,7 +293,7 @@ export class VhdlDocumentSymbolProvider implements vscode.DocumentSymbolProvider
             const range = new vscode.Range(pos, pos.translate(0, Math.max(label.length, 1)));
 
             symbols.push(
-                new vscode.DocumentSymbol(label, detail, vscode.SymbolKind.Object, range, range)
+                new vscode.DocumentSymbol(label, detail, vscode.SymbolKind.Class, range, range)
             );
         }
 
@@ -577,7 +577,7 @@ export class VhdlDocumentSymbolProvider implements vscode.DocumentSymbolProvider
         switch (type)
         {
             case 'entity':
-                return vscode.SymbolKind.Struct;
+                return vscode.SymbolKind.Class;
             case 'architecture':
                 return vscode.SymbolKind.Module;
             case 'package':

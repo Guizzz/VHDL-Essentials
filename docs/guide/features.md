@@ -46,25 +46,9 @@ Jump directly to the declaration.
 
 View the structure of your VHDL file in the Outline panel (`Ctrl+Shift+O`) or editor breadcrumb:
 
-```
-counter.vhd
-├── entity counter
-│   ├── clk   : in std_logic
-│   ├── rst   : in std_logic
-│   ├── data  : out std_logic_vector(7 downto 0)
-│   └── WIDTH : integer (generic)
-├── architecture rtl of counter
-│   ├── signal count : unsigned(7 downto 0)
-│   ├── constant MAX : integer := 255
-│   ├── type state_t is (idle, active, done)
-│   ├── component pll
-│   ├── proc_main : process(clk, rst)
-│   ├── spi_slave_in : entity work.spi_slave
-│   └── pll_inst : pll port map(...)
-└── package utils
-    ├── constant VERSION : string
-    └── type color_t is (red, green, blue)
-```
+![VHDL Outline](/screenshots/outline.png)
+
+_Entities use the **Class** (orange diamond) icon. Architecture-local signals, variables, constants, processes, and instantiations appear as children under the architecture block._
 
 Supports: entities, architectures, packages, ports, generics, signals, constants, types, labelled processes, component declarations, direct entity instantiations, component instantiations.
 
