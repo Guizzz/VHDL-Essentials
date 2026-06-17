@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.14.3] - 2026-06-17
+
+### Added
+- Hierarchical VHDL Outline — process symbols now contain local `variable`/`constant` declarations as children
+- Function and procedure symbols in packages now show their parameters as children in the Outline
+- Entity symbols now use the **Class** (orange diamond) icon instead of `{}` braces
+- Entity instantiations (`label : entity work.xxx`) now also use the **Class** icon for consistency
+- Outline screenshot in documentation
+
+### Fixed
+- False positive "Undeclared identifier" and missing unused-signal warnings for comma-separated declarations (`signal a, b : std_logic;`) — both names are now recognized
+
 ## [0.14.2] - 2026-06-17
 
 ### Fixed
