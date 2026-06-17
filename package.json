@@ -168,8 +168,9 @@
     "check-types": "tsc --noEmit",
     "lint": "eslint src",
     "test": "vscode-test",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
+    "docs:prebuild": "node scripts/generate-changelog.mjs",
+    "docs:dev": "npm run docs:prebuild && vitepress dev docs",
+    "docs:build": "npm run docs:prebuild && vitepress build docs",
     "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
