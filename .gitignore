@@ -2,7 +2,8 @@ out
 dist
 node_modules
 .vscode-test/
-*.vsix
-opencode.json
 docs/.vitepress/dist
 docs/.vitepress/cache
+*.vsix
+opencode.json
+opencode.jsonc
