@@ -92,7 +92,8 @@ function tryOpenScope(
     m = tryMatch(/^process\s*(?:\([^)]*\))?\s*(is\b)?/i);
     if (m)
     {
-        stack.push({ type: 'process', name: '', line: lineNum, hasIs: !!m[1], hasBegin: false });
+        const hasBegin = /\bbegin\b/i.test(stripCommentLine(line));
+        stack.push({ type: 'process', name: '', line: lineNum, hasIs: !!m[1], hasBegin });
         return true;
     }
 

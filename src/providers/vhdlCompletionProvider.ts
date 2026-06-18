@@ -236,7 +236,7 @@ export class VhdlCompletionProvider implements vscode.CompletionItemProvider
         for (const fn of FUNC_ITEMS)
         {
             const label = fn.label as string;
-            if (label.toLowerCase().startsWith(prefix))
+            if (label.toLowerCase().includes(prefix))
             {
                 items.push(fn);
             }

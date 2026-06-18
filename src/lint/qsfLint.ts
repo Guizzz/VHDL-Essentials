@@ -153,7 +153,16 @@ export class QsfLint
     {
         this.diagnostics = vscode.languages.createDiagnosticCollection('qsf');
 
+        if (vscode.window.activeTextEditor)
+        {
+            this.lint(vscode.window.activeTextEditor.document);
+        }
+
         context.subscriptions.push(
+            vscode.window.onDidChangeActiveTextEditor(editor =>
+            {
+                if (editor) { this.lint(editor.document); }
+            }),
             vscode.workspace.onDidOpenTextDocument(document => this.lint(document)),
             vscode.workspace.onDidChangeTextDocument(event => this.lint(event.document)),
             vscode.workspace.onDidCloseTextDocument(document => this.diagnostics.delete(document.uri))
@@ -162,7 +171,7 @@ export class QsfLint
 
     public lint(document: vscode.TextDocument): void
     {
-        if (document.languageId !== 'qsf') { return; }
+        if (document.languageId !== 'quartus') { return; }
 
         const diagnostics = lintQsfText(document.getText());
         this.diagnostics.set(document.uri, diagnostics);

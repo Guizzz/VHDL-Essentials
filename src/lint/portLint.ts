@@ -54,11 +54,16 @@ export class TopLevelPortLint
         }
 
         const portBlock = portBlockMatch[1];
+        const portBlockOffset = portBlockMatch.index! + portBlockMatch[0].indexOf(portBlock);
         const portRegex = /(\w+(?:\s*,\s*\w+)*)\s*:\s*(in|out|inout)/gi;
 
         let match: RegExpExecArray | null;
         while ((match = portRegex.exec(portBlock)) !== null)
         {
+            const absoluteOffset = portBlockOffset + match.index;
+            const lineStart = text.lastIndexOf('\n', absoluteOffset) + 1;
+            if (text.substring(lineStart, absoluteOffset).includes('--')) { continue; }
+
             const names = match[1].split(',').map(s => s.trim());
             for (const name of names)
             {

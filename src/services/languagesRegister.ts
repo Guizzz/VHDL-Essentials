@@ -69,7 +69,7 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
     );
 
     const qsfCodeActionProvider = vscode.languages.registerCodeActionsProvider(
-        'qsf',
+        'quartus',
         new VhdlCodeActionProvider()
     );
 

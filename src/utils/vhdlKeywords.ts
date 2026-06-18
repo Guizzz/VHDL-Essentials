@@ -25,8 +25,8 @@ export const VHDL_KEYWORDS = new Set([
     'conv_integer', 'conv_unsigned', 'conv_signed', 'conv_std_logic_vector',
     // VHDL-2008 predefined functions in std.standard
     'maximum', 'minimum',
-    // VHDL keyword missing from list
-    'abs', 'alias',
+    // VHDL keywords missing from list
+    'abs', 'alias', 'after',
     // VHDL-2008 context keyword
     'context',
     // Predefined file open kinds

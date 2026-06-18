@@ -24,6 +24,13 @@ export function parseSignals(text: string): ParsedSignalLike[]
         return componentRanges.some(r => offset >= r.start && offset < r.end);
     }
 
+    function isCommentLine(text: string, offset: number): boolean
+    {
+        const lineStart = text.lastIndexOf('\n', offset) + 1;
+        const beforeOnLine = text.substring(lineStart, offset);
+        return beforeOnLine.includes('--');
+    }
+
     const regex = /\b(signal|variable|constant)\s+(\w+(?:\s*,\s*\w+)*)\s*:\s*([\w\s\(\)\d<>:=\-']+)/gi;
 
     let match: RegExpExecArray | null;
@@ -31,6 +38,7 @@ export function parseSignals(text: string): ParsedSignalLike[]
     while ((match = regex.exec(text)) !== null)
     {
         if (isInsideComponent(match.index)) { continue; }
+        if (isCommentLine(text, match.index)) { continue; }
 
         const names = match[2].split(',').map(n => n.trim());
         const typeText = match[3].trim();
@@ -52,6 +60,7 @@ export function parseSignals(text: string): ParsedSignalLike[]
     while ((match = portRegex.exec(text)) !== null)
     {
         if (isInsideComponent(match.index)) { continue; }
+        if (isCommentLine(text, match.index)) { continue; }
 
         const names = match[1].split(',').map(n => n.trim());
         const direction = match[2];
