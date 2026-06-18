@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.14.4] - 2026-06-18
+
+### Added
+
+- Find All References provider for VHDL — right-click any symbol (signal, variable, constant, port, entity, etc.) and pick **Find All References** for cross-file navigation (#21)
+
+### Fixed
+
+- False positive "Undeclared identifier" on `after` keyword
+- Syntax linter now correctly detects `begin` on the same line as `process`
+- QSF lint not firing — language ID corrected from `qsf` to `quartus`; linter now runs on open editor as well
+- Port lint no longer flags commented-out port declarations
+- `parseSignals` now skips declarations inside VHDL comments
+- Function completion (`rising_edge`/`falling_edge` etc.) now works with partial prefix — changed from `startsWith` to `includes`
+
+### Changed
+
+- Moved build scripts (`esbuild.js`, `.vscode-test.mjs`) to `scripts/` directory
+- Moved `opencode.jsonc` to `.opencode/` directory
+
 ## [0.14.3] - 2026-06-17
 
 ### Added
