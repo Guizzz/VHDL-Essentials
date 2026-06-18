@@ -6,4 +6,4 @@ docs/.vitepress/dist
 docs/.vitepress/cache
 *.vsix
 opencode.json
-opencode.jsonc
+secrets/
