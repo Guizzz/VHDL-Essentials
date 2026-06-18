@@ -11,6 +11,7 @@ import { VarEntityHoverProvider } from '../providers/hover/varEntityHoverProvide
 import { EntityHoverProvider } from '../providers/hover/entityHoverProvider';
 import { VhdlCodeActionProvider } from '../providers/codeActions';
 import { VhdlDocumentSymbolProvider } from '../providers/vhdlDocumentSymbolProvider';
+import { VhdlReferenceProvider } from '../providers/definitions/referenceProvider';
 
 export function registerLanguageFeatures(context: vscode.ExtensionContext, indexer: EntityIndexer) 
 {
@@ -60,6 +61,11 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
     const codeActionProvider = vscode.languages.registerCodeActionsProvider(
         'vhdl',
         new VhdlCodeActionProvider()
+    );
+
+    const referenceProvider = vscode.languages.registerReferenceProvider(
+        'vhdl',
+        new VhdlReferenceProvider(indexer)
     );
 
     const qsfCodeActionProvider = vscode.languages.registerCodeActionsProvider(
@@ -125,6 +131,7 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
 
     context.subscriptions.push(
         definitionProvider,
+        referenceProvider,
         docSymbolProvider,
         completionProvider,
         varPackHoverProvider,
