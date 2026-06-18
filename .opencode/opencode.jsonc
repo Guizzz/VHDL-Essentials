@@ -1,8 +1,8 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "skills": {
-    "paths": [".opencode/skills"]
-  },  
+    "paths": ["./skills"]
+  },
   "plugin": [
     "opencode-conductor",
     "opencode-type-inject",
@@ -13,7 +13,7 @@
       "type": "local",
       "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
       "environment": {
-        "GITHUB_TOKEN": "{file:secrets/github-token.txt}"
+        "GITHUB_TOKEN": "{file:../secrets/github-token.txt}"
       }
     }
   }
