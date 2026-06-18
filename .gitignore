@@ -7,3 +7,4 @@ docs/.vitepress/cache
 *.vsix
 opencode.json
 secrets/
+**DS_STORE
