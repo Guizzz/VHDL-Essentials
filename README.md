@@ -6,7 +6,13 @@
 
 Complete Quartus + VHDL workflow integration for Visual Studio Code.
 
-<img src="resources/screen/entity_drop.png" width="600" alt="Entity drop">
+<p align="center">
+  <img src="resources/screen/entity_drop.png" width="380" alt="Entity navigation">
+  <img src="resources/screen/hover.png" width="380" alt="Hover information">
+  <br>
+  <img src="resources/screen/syntax_check.png" width="380" alt="Real-time linting">
+  <img src="resources/screen/panel.png" width="380" alt="Build output">
+</p>
 
 VHDL Essentials brings FPGA development directly into VSCode with Quartus build/flash integration, QuestaSim workflow support, VHDL entity/package navigation, FPGA pin diagnostics, QSF integration, real-time linting, semantic highlighting, and workspace-wide indexing.
 
