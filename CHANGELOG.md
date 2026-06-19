@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.14.5] - 2026-06-19
+
+### Added
+
+- Signature help for VHDL entity instantiations — when typing inside a `port map(...)`, VS Code now shows the entity's port names and types as you type (#21)
+- Quick Fix for undeclared identifiers — `Ctrl+.` on an undeclared identifier offers to declare it as a `signal` in the architecture body
+
+### Changed
+
+- Entity completion now triggers only after typing `work.` prefix instead of on bare entity/component/architecture/end keywords, reducing noise in autocompletion
+
 ## [0.14.4] - 2026-06-18
 
 ### Added

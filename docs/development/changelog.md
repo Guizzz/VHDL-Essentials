@@ -10,6 +10,89 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.14.5" target="_blank">v0.14.5</a>
+      <span class="tl-date">2026-06-19</span>
+    </div>
+    <div class="tl-section tl-added">
+      <div class="tl-heading">Added</div>
+      <ul>
+        <li>Signature help for VHDL entity instantiations — when typing inside a <code>port map(...)</code>, VS Code now shows the entity's port names and types as you type <a href="https://github.com/Guizzz/VHDL-Essentials/issues/21" target="_blank">#21</a></li>
+        <li>Quick Fix for undeclared identifiers — <code>Ctrl+.</code> on an undeclared identifier offers to declare it as a <code>signal</code> in the architecture body</li>
+      </ul>
+    </div>
+    <div class="tl-section tl-changed">
+      <div class="tl-heading">Changed</div>
+      <ul>
+        <li>Entity completion now triggers only after typing <code>work.</code> prefix instead of on bare entity/component/architecture/end keywords, reducing noise in autocompletion</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.14.4" target="_blank">v0.14.4</a>
+      <span class="tl-date">2026-06-18</span>
+    </div>
+    <div class="tl-section tl-added">
+      <div class="tl-heading">Added</div>
+      <ul>
+        <li>Find All References provider for VHDL — right-click any symbol (signal, variable, constant, port, entity, etc.) and pick **Find All References** for cross-file navigation <a href="https://github.com/Guizzz/VHDL-Essentials/issues/21" target="_blank">#21</a></li>
+      </ul>
+    </div>
+    <div class="tl-section tl-fixed">
+      <div class="tl-heading">Fixed</div>
+      <ul>
+        <li>False positive "Undeclared identifier" on <code>after</code> keyword</li>
+        <li>Syntax linter now correctly detects <code>begin</code> on the same line as <code>process</code></li>
+        <li>QSF lint not firing — language ID corrected from <code>qsf</code> to <code>quartus</code>; linter now runs on open editor as well</li>
+        <li>Port lint no longer flags commented-out port declarations</li>
+        <li><code>parseSignals</code> now skips declarations inside VHDL comments</li>
+        <li>Function completion (<code>rising_edge</code>/<code>falling_edge</code> etc.) now works with partial prefix — changed from <code>startsWith</code> to <code>includes</code></li>
+      </ul>
+    </div>
+    <div class="tl-section tl-changed">
+      <div class="tl-heading">Changed</div>
+      <ul>
+        <li>Moved build scripts (<code>esbuild.js</code>, <code>.vscode-test.mjs</code>) to <code>scripts/</code> directory</li>
+        <li>Moved <code>opencode.jsonc</code> to <code>.opencode/</code> directory</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.14.3" target="_blank">v0.14.3</a>
+      <span class="tl-date">2026-06-17</span>
+    </div>
+    <div class="tl-section tl-added">
+      <div class="tl-heading">Added</div>
+      <ul>
+        <li>Hierarchical VHDL Outline — process symbols now contain local <code>variable</code>/<code>constant</code> declarations as children</li>
+        <li>Function and procedure symbols in packages now show their parameters as children in the Outline</li>
+        <li>Entity symbols now use the **Class** (orange diamond) icon instead of <code>{}</code> braces</li>
+        <li>Entity instantiations (<code>label : entity work.xxx</code>) now also use the **Class** icon for consistency</li>
+        <li>Outline screenshot in documentation</li>
+      </ul>
+    </div>
+    <div class="tl-section tl-fixed">
+      <div class="tl-heading">Fixed</div>
+      <ul>
+        <li>False positive "Undeclared identifier" and missing unused-signal warnings for comma-separated declarations (<code>signal a, b : std_logic;</code>) — both names are now recognized</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.14.2" target="_blank">v0.14.2</a>
       <span class="tl-date">2026-06-17</span>
     </div>
