@@ -46,9 +46,10 @@ When closing a GitHub issue, **always link the relevant commit** in the closing 
 - **CHANGELOG.md is OFF-LIMITS** — never touch the changelog. Only the user decides when and how to update it. The only exception is the `crea versione v#.#.#` workflow below, and only when explicitly requested.
 - **Version creation (`crea versione v#.#.#`)** — on request "crea versione v#.#.#":
   1. Generate a new changelog section (CHANGELOG.md) for the given version
-  2. Update version in package.json (and package-lock.json if present)
-  3. Create a commit with **only** those two files (CHANGELOG.md, package.json)
-  4. The commit message must be exactly the version (e.g. `v1.2.3`)
+  2. Run `npm run docs:prebuild` to regenerate `docs/development/changelog.md` from CHANGELOG.md
+  3. Update version in package.json (and package-lock.json if present)
+  4. Create a commit with **only** those three files (CHANGELOG.md, docs/development/changelog.md, package.json)
+  5. The commit message must be exactly the version (e.g. `v1.2.3`)
   Assumes all other project changes have already been committed separately.
 
 ## Key constraints
