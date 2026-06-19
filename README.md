@@ -11,8 +11,6 @@ Complete Quartus + VHDL workflow integration for Visual Studio Code.
   <img src="resources/screen/hover.png" width="380" alt="Hover information">
   <br>
   <img src="resources/screen/syntax_check.png" width="380" alt="Real-time linting">
-  <img src="resources/screen/panel.png" width="380" alt="Build output">
-  <br>
   <img src="resources/screen/summary.png" width="380" alt="Fit resource summary">
 </p>
 

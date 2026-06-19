@@ -49,8 +49,8 @@ features:
   </div>
 
   <div class="screenshot-card">
-    <img src="/screenshots/build_2.png" alt="Quartus Build Output" loading="lazy" />
-    <span class="screenshot-label">Quartus Build Output</span>
+    <img src="/screenshots/summary.png" alt="Fit Resource Summary" loading="lazy" />
+    <span class="screenshot-label">Fit Resource Summary</span>
   </div>
 
   <div class="screenshot-card">
@@ -61,11 +61,6 @@ features:
   <div class="screenshot-card">
     <img src="/screenshots/entity_drop.png" alt="VHDL Entity Navigation" loading="lazy" />
     <span class="screenshot-label">VHDL Entity Navigation</span>
-  </div>
-
-  <div class="screenshot-card">
-    <img src="/screenshots/summary.png" alt="Fit Resource Summary" loading="lazy" />
-    <span class="screenshot-label">Fit Resource Summary</span>
   </div>
 
 </div>
