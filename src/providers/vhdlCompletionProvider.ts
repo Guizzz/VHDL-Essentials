@@ -71,7 +71,6 @@ export class VhdlCompletionProvider implements vscode.CompletionItemProvider
         this.addMatchingKeywords(prefix, items);
         this.addMatchingFunctions(prefix, items);
         this.addMatchingSymbols(document, prefix, items);
-        this.addMatchingEntities(prefix, items);
 
         return items;
     }
@@ -84,52 +83,15 @@ export class VhdlCompletionProvider implements vscode.CompletionItemProvider
         const textBefore = lineText.substring(0, position.character);
         const trimmed = textBefore.trimEnd();
 
-        let inEntityName = false;
-        let filter = '';
+        // Only trigger on work. (e.g. "entity work.", "architecture rtl of work.", "uut : entity work.")
+        // Package completions via "use work." are handled by tryPackageCompletions.
+        const workMatch = trimmed.match(/work\.(\w*)$/i);
+        if (!workMatch) { return null; }
 
-        const entityMatch = trimmed.match(
-            /entity\s+(?:work\.)?(\w*)$/i
-        );
-        if (entityMatch)
-        {
-            inEntityName = true;
-            filter = (entityMatch[1] || '').toLowerCase();
-        }
-
-        const componentMatch = trimmed.match(
-            /component\s+(\w*)$/i
-        );
-        if (componentMatch)
-        {
-            inEntityName = true;
-            filter = (componentMatch[1] || '').toLowerCase();
-        }
-
-        const archMatch = trimmed.match(
-            /architecture\s+\w+\s+of\s+(?:work\.)?(\w*)$/i
-        );
-        if (archMatch)
-        {
-            inEntityName = true;
-            filter = (archMatch[1] || '').toLowerCase();
-        }
-
-        const endMatch = trimmed.match(
-            /end\s+(entity|component)\s+(\w*)$/i
-        );
-        if (endMatch)
-        {
-            inEntityName = true;
-            filter = (endMatch[2] || '').toLowerCase();
-        }
-
-        if (!inEntityName)
-        {
-            return null;
-        }
-
+        const filter = (workMatch[1] || '').toLowerCase();
         const prefixLen = filter.length;
         const items: vscode.CompletionItem[] = [];
+
         for (const name of this.indexer.getAllEntities())
         {
             if (name.length >= prefixLen &&
@@ -277,24 +239,7 @@ export class VhdlCompletionProvider implements vscode.CompletionItemProvider
         }
     }
 
-    private addMatchingEntities(
-        prefix: string,
-        items: vscode.CompletionItem[]
-    ): void
-    {
-        for (const name of this.indexer.getAllEntities())
-        {
-            if (name.toLowerCase().startsWith(prefix))
-            {
-                const item = new vscode.CompletionItem(
-                    name,
-                    vscode.CompletionItemKind.Class
-                );
-                item.detail = 'entity';
-                items.push(item);
-            }
-        }
-    }
+
 
     private kindFromSignalKind(kind: string): vscode.CompletionItemKind
     {

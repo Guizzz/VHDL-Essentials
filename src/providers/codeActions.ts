@@ -579,6 +579,75 @@ function fixPortlinterUnassigned(
     return action;
 }
 
+function fixUndeclaredIdentifier(
+    doc: vscode.TextDocument,
+    diag: vscode.Diagnostic,
+    _token: vscode.CancellationToken
+): vscode.CodeAction | null
+{
+    const m = diag.message.match(/'(\w+)'/);
+    if (!m) { return null; }
+    const name = m[1];
+
+    const text = doc.getText();
+    const lines = text.split(/\r?\n/);
+    const diagLine = diag.range.start.line;
+
+    // Scan backward to find containing architecture header
+    let archIsLine = -1;
+    for (let i = diagLine; i >= 0; i--)
+    {
+        const line = lines[i].trim();
+        if (line.startsWith('--')) { continue; }
+        if (/^architecture\s+\w+\s+of\s+\w+\s+is/i.test(line))
+        {
+            archIsLine = i;
+            break;
+        }
+    }
+    if (archIsLine < 0) { return null; }
+
+    // Scan forward from architecture header to find its 'begin'
+    let beginLine = -1;
+    for (let i = archIsLine + 1; i < lines.length; i++)
+    {
+        const trimmed = lines[i].trim();
+        if (trimmed.startsWith('--')) { continue; }
+        if (/^begin\b/i.test(trimmed))
+        {
+            beginLine = i;
+            break;
+        }
+    }
+    if (beginLine < 0) { return null; }
+
+    const indent = indentOf(lines[beginLine]);
+
+    // Find insertion point: after the last non-comment declaration line before begin
+    let insertLine = beginLine;
+    for (let i = beginLine - 1; i > archIsLine; i--)
+    {
+        const trimmed = lines[i].trim();
+        if (trimmed && !trimmed.startsWith('--'))
+        {
+            insertLine = i + 1;
+            break;
+        }
+    }
+
+    const edit = new vscode.WorkspaceEdit();
+    edit.insert(doc.uri, new vscode.Position(insertLine, 0),
+        `${indent}signal ${name} : std_logic;\n`);
+
+    const action = new vscode.CodeAction(
+        `Declare '${name}' as signal`,
+        vscode.CodeActionKind.QuickFix
+    );
+    action.edit = edit;
+    action.diagnostics = [diag];
+    return action;
+}
+
 // ── Map from diagnostic code to builder ──
 
 const ACTION_MAP: Record<string, ActionBuilder> =
@@ -604,6 +673,7 @@ const ACTION_MAP: Record<string, ActionBuilder> =
     'qsf.duplicate-signal':          fixQsfDuplicateSignal,
     'packagebody.missing-impl':      fixPackageBodyMissing,
     'portlinter.unassigned-port':    fixPortlinterUnassigned,
+    'undeclared-identifier':         fixUndeclaredIdentifier,
 };
 
 // ── Provider class ──

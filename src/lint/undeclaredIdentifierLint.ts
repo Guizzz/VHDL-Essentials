@@ -299,11 +299,13 @@ export function findUndeclaredIdentifiers(
         const pos = offsetToPosition(text, idx);
         const range = new vscode.Range(pos, pos.translate(0, word.length));
 
-        diagnostics.push(new vscode.Diagnostic(
+        const d = new vscode.Diagnostic(
             range,
             `Undeclared identifier '${word}'`,
             vscode.DiagnosticSeverity.Error
-        ));
+        );
+        d.code = 'undeclared-identifier';
+        diagnostics.push(d);
     }
 
     return diagnostics;

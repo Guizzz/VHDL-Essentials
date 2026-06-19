@@ -12,6 +12,7 @@ import { EntityHoverProvider } from '../providers/hover/entityHoverProvider';
 import { VhdlCodeActionProvider } from '../providers/codeActions';
 import { VhdlDocumentSymbolProvider } from '../providers/vhdlDocumentSymbolProvider';
 import { VhdlReferenceProvider } from '../providers/definitions/referenceProvider';
+import { VhdlSignatureProvider } from '../providers/vhdlSignatureProvider';
 
 export function registerLanguageFeatures(context: vscode.ExtensionContext, indexer: EntityIndexer) 
 {
@@ -47,7 +48,8 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
     
     const completionProvider = vscode.languages.registerCompletionItemProvider(
         'vhdl',
-        new VhdlCompletionProvider(indexer)
+        new VhdlCompletionProvider(indexer),
+        '.'
     );
 
     const highlightProvider = new VhdlHighlightProvider(indexer);
@@ -66,6 +68,13 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
     const referenceProvider = vscode.languages.registerReferenceProvider(
         'vhdl',
         new VhdlReferenceProvider(indexer)
+    );
+
+    const signatureProvider = vscode.languages.registerSignatureHelpProvider(
+        'vhdl',
+        new VhdlSignatureProvider(indexer),
+        '(',
+        ','
     );
 
     const qsfCodeActionProvider = vscode.languages.registerCodeActionsProvider(
@@ -141,6 +150,7 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
         pinDefinitionProvider,
         highlightProvider,
         codeActionProvider,
+        signatureProvider,
         qsfCodeActionProvider,
         choosePinCmd
     );
