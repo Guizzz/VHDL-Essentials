@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.15.0] - 2026-06-19
+
+### Added
+
+- **Fit Resource Summary** — after a Quartus build, the QSF Tree View now displays a live **Fit Summary** section parsed from `<project>.fit.summary`. Each resource (logic elements, pins, registers, PLLs, memory bits, etc.) is shown with color-coded usage:
+  - 🟢 Green — below 70%
+  - 🟡 Orange — 70%–90%
+  - 🔴 Red — ≥90%
+- Summary entries are sorted by usage descending (most critical first), and the parent node shows `$(pass)`/`$(error)` depending on Fitter status
+- Automatic watcher on `*.fit.summary` files — the tree view refreshes as soon as Quartus finishes a build
+
+### Changed
+
+- Landing page and README screenshot gallery — "Build output" replaced with "Fit Resource Summary"
+
 ## [0.14.5] - 2026-06-19
 
 ### Added

@@ -10,6 +10,33 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.0" target="_blank">v0.15.0</a>
+      <span class="tl-date">2026-06-19</span>
+    </div>
+    <div class="tl-section tl-added">
+      <div class="tl-heading">Added</div>
+      <ul>
+        <li>**Fit Resource Summary** — after a Quartus build, the QSF Tree View now displays a live **Fit Summary** section parsed from <code>&lt;project&gt;.fit.summary</code>. Each resource (logic elements, pins, registers, PLLs, memory bits, etc.) is shown with color-coded usage:</li>
+        <li>🟢 Green — below 70%</li>
+        <li>🟡 Orange — 70%–90%</li>
+        <li>🔴 Red — ≥90%</li>
+        <li>Summary entries are sorted by usage descending (most critical first), and the parent node shows <code>$(pass)</code>/<code>$(error)</code> depending on Fitter status</li>
+        <li>Automatic watcher on <code>*.fit.summary</code> files — the tree view refreshes as soon as Quartus finishes a build</li>
+      </ul>
+    </div>
+    <div class="tl-section tl-changed">
+      <div class="tl-heading">Changed</div>
+      <ul>
+        <li>Landing page and README screenshot gallery — "Build output" replaced with "Fit Resource Summary"</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.14.5" target="_blank">v0.14.5</a>
       <span class="tl-date">2026-06-19</span>
     </div>
