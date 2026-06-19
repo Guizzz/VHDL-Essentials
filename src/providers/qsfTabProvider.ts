@@ -1,8 +1,11 @@
 import * as vscode from 'vscode';
-import { getQuestaFile, getSettingsFile, getWorkspace } from '../quartus/quartusProject';
+import * as path from 'path';
+import { getProjectFile, getQuestaFile, getSettingsFile, getWorkspace } from '../quartus/quartusProject';
 import { parseQsf, ProjectInfo } from '../parsers/qsfParser';
+import { parseFitSummary } from '../parsers/fitSummaryParser';
+import { FitSummaryData } from '../types/types';
 import { scanSimulationUnits } from '../utils/simulationScanner';
-import { PinAssignmentsNode, TestBenchesNode, QuestaScriptsNode } from './treeNodes';
+import { FitSummaryNode, PinAssignmentsNode, TestBenchesNode, QuestaScriptsNode } from './treeNodes';
 
 export class QsfProvider implements vscode.TreeDataProvider<vscode.TreeItem>
 {
@@ -10,6 +13,7 @@ export class QsfProvider implements vscode.TreeDataProvider<vscode.TreeItem>
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
     private qsfData: ProjectInfo | undefined;
+    private fitSummaryData: FitSummaryData | undefined;
     private questaFiles: vscode.Uri[] = [];
     private testBenchFiles: vscode.Uri[] = [];
     private loading = false;
@@ -32,16 +36,44 @@ export class QsfProvider implements vscode.TreeDataProvider<vscode.TreeItem>
             if (!file)
             {
                 this.qsfData = undefined;
+                this.fitSummaryData = undefined;
                 this.refresh();
                 return;
             }
 
             this.qsfData = await parseQsf(file);
+            await this.loadFitSummary();
             this.refresh();
         }
         finally
         {
             this.loading = false;
+        }
+    }
+
+    private async loadFitSummary()
+    {
+        const projectFile = await getProjectFile();
+
+        if (!projectFile)
+        {
+            this.fitSummaryData = undefined;
+            return;
+        }
+
+        const projectDir = path.dirname(projectFile.fsPath);
+        const projectName = path.basename(projectFile.fsPath, '.qpf');
+        const fitSummaryPath = path.join(projectDir, 'output_files', `${projectName}.fit.summary`);
+        const fitSummaryUri = vscode.Uri.file(fitSummaryPath);
+
+        try
+        {
+            await vscode.workspace.fs.stat(fitSummaryUri);
+            this.fitSummaryData = await parseFitSummary(fitSummaryUri);
+        }
+        catch
+        {
+            this.fitSummaryData = undefined;
         }
     }
 
@@ -110,6 +142,14 @@ export class QsfProvider implements vscode.TreeDataProvider<vscode.TreeItem>
                 items.push(item);
             }
 
+            if (this.fitSummaryData)
+            {
+                items.push(new FitSummaryNode(
+                    this.fitSummaryData.entries,
+                    this.fitSummaryData.status
+                ));
+            }
+
             items.push(new QuestaScriptsNode(this.questaFiles));
             items.push(new TestBenchesNode(this.testBenchFiles));
             items.push(new PinAssignmentsNode(this.qsfData.pins));
@@ -120,6 +160,7 @@ export class QsfProvider implements vscode.TreeDataProvider<vscode.TreeItem>
         if (element instanceof PinAssignmentsNode) { return element.getChildren(); }
         if (element instanceof TestBenchesNode) { return element.getChildren(); }
         if (element instanceof QuestaScriptsNode) { return element.getChildren(); }
+        if (element instanceof FitSummaryNode) { return element.getChildren(); }
 
         return [];
     }

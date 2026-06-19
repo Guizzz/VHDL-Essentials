@@ -84,6 +84,7 @@ Dedicated FPGA project TreeView integrated inside VSCode.
 **Features:**
 - Top-level entity detection
 - Pin assignment explorer (each pin shows blue plug icon)
+- Fit resource summary (logic elements, pins, registers, etc. with color-coded usage)
 - QuestaSim scripts explorer
 - Testbench management
 - **Left-click** on any file → opens it
@@ -92,6 +93,18 @@ Dedicated FPGA project TreeView integrated inside VSCode.
 - **Right-click** on a `.do` file → Run QuestaSim simulation
 
 ![Context Menu](/screenshots/right_click.png)
+
+### Fit Resource Summary
+
+After a successful (or failed) Quartus build, the tree view displays a **Fit Summary** section parsed from `<output_dir>/<project>.fit.summary`. Each resource (logic elements, pins, registers, PLLs, memory bits, etc.) is shown with its usage:
+
+- 🟢 **Green check** — usage below 70%
+- 🟡 **Orange warning** — usage between 70% and 90%
+- 🔴 **Red error** — usage at or above 90%
+
+The summary is ordered by usage descending (most critical first), and the parent node shows `$(pass)` or `$(error)` depending on the Fitter status.
+
+![Fit Resource Summary](/screenshots/summary.png)
 
 ---
 

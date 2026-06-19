@@ -17,8 +17,14 @@ export async function registerQsfView(context: vscode.ExtensionContext)
     watcher.onDidChange(() => tabView.loadData());
     watcher.onDidDelete(() => tabView.loadData());
 
+    const fitWatcher = vscode.workspace.createFileSystemWatcher('**/*.fit.summary');
+    fitWatcher.onDidCreate(() => tabView.loadData());
+    fitWatcher.onDidChange(() => tabView.loadData());
+    fitWatcher.onDidDelete(() => tabView.loadData());
+
     context.subscriptions.push(
         treeProvider,
-        watcher
+        watcher,
+        fitWatcher
     );
 }

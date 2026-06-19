@@ -53,6 +53,20 @@ export interface PackageInfo {
     symbols: Map<string, PackageSymbolInfo>;
 }
 
+export interface FitSummaryEntry
+{
+    label: string
+    used: number
+    total: number
+    percent: number
+}
+
+export interface FitSummaryData
+{
+    status?: string
+    entries: FitSummaryEntry[]
+}
+
 export interface ParsedSignalLike
 {
     kind: string;

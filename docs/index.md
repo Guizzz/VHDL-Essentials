@@ -63,5 +63,10 @@ features:
     <span class="screenshot-label">VHDL Entity Navigation</span>
   </div>
 
+  <div class="screenshot-card">
+    <img src="/screenshots/summary.png" alt="Fit Resource Summary" loading="lazy" />
+    <span class="screenshot-label">Fit Resource Summary</span>
+  </div>
+
 </div>
 
