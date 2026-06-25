@@ -13,6 +13,7 @@ import { VhdlCodeActionProvider } from '../providers/codeActions';
 import { VhdlDocumentSymbolProvider } from '../providers/vhdlDocumentSymbolProvider';
 import { VhdlReferenceProvider } from '../providers/definitions/referenceProvider';
 import { VhdlSignatureProvider } from '../providers/vhdlSignatureProvider';
+import { VhdlRenameProvider } from '../providers/renameProvider';
 
 export function registerLanguageFeatures(context: vscode.ExtensionContext, indexer: EntityIndexer) 
 {
@@ -75,6 +76,11 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
         new VhdlSignatureProvider(indexer),
         '(',
         ','
+    );
+
+    const renameProvider = vscode.languages.registerRenameProvider(
+        'vhdl',
+        new VhdlRenameProvider(indexer)
     );
 
     const qsfCodeActionProvider = vscode.languages.registerCodeActionsProvider(
@@ -141,6 +147,7 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
     context.subscriptions.push(
         definitionProvider,
         referenceProvider,
+        renameProvider,
         docSymbolProvider,
         completionProvider,
         varPackHoverProvider,
