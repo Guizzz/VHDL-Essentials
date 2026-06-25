@@ -10,6 +10,28 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.1" target="_blank">v0.15.1</a>
+      <span class="tl-date">2026-06-25</span>
+    </div>
+    <div class="tl-section tl-added">
+      <div class="tl-heading">Added</div>
+      <ul>
+        <li>**Rename Provider** — <code>F2</code> (Rename Symbol) now works on VHDL entity names, architecture names, signal names, port names, and variable names. Renaming an entity declaration also renames all its instantiations, and vice-versa <a href="https://github.com/Guizzz/VHDL-Essentials/issues/40" target="_blank">#40</a></li>
+      </ul>
+    </div>
+    <div class="tl-section tl-changed">
+      <div class="tl-heading">Changed</div>
+      <ul>
+        <li>Bumped dev dependencies (<code>@types/node</code>, <code>typescript-eslint</code>, <code>serialize-javascript</code>, <code>@vscode/test-cli</code>)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.0" target="_blank">v0.15.0</a>
       <span class="tl-date">2026-06-19</span>
     </div>

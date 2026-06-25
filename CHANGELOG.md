@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.15.1] - 2026-06-25
+
+### Added
+
+- **Rename Provider** — `F2` (Rename Symbol) now works on VHDL entity names, architecture names, signal names, port names, and variable names. Renaming an entity declaration also renames all its instantiations, and vice-versa (#40)
+
+### Changed
+
+- Bumped dev dependencies (`@types/node`, `typescript-eslint`, `serialize-javascript`, `@vscode/test-cli`)
+
 ## [0.15.0] - 2026-06-19
 
 ### Added
