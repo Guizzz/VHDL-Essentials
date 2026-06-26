@@ -14,6 +14,7 @@ import { VhdlDocumentSymbolProvider } from '../providers/vhdlDocumentSymbolProvi
 import { VhdlReferenceProvider } from '../providers/definitions/referenceProvider';
 import { VhdlSignatureProvider } from '../providers/vhdlSignatureProvider';
 import { VhdlRenameProvider } from '../providers/renameProvider';
+import { VhdlDocumentFormatter } from '../providers/vhdlFormatter';
 
 export function registerLanguageFeatures(context: vscode.ExtensionContext, indexer: EntityIndexer) 
 {
@@ -81,6 +82,11 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
     const renameProvider = vscode.languages.registerRenameProvider(
         'vhdl',
         new VhdlRenameProvider(indexer)
+    );
+
+    const vhdlFormatter = vscode.languages.registerDocumentFormattingEditProvider(
+        'vhdl',
+        new VhdlDocumentFormatter()
     );
 
     const qsfCodeActionProvider = vscode.languages.registerCodeActionsProvider(
@@ -158,6 +164,7 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
         highlightProvider,
         codeActionProvider,
         signatureProvider,
+        vhdlFormatter,
         qsfCodeActionProvider,
         choosePinCmd
     );

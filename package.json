@@ -84,6 +84,16 @@
           "type": "string",
           "default": "C:\\altera_lite\\25.1std",
           "description": "Path to Quartus installation folder (e.g. C:\\intelFPGA\\25.1std)"
+        },
+        "vhdl.formatter.indentSize": {
+          "type": "number",
+          "default": 4,
+          "description": "Spaces per indent level"
+        },
+        "vhdl.formatter.insertSpaces": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use spaces instead of tabs for indentation"
         }
       }
     },
