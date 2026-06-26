@@ -10,6 +10,25 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.2" target="_blank">v0.15.2</a>
+      <span class="tl-date">2026-06-26</span>
+    </div>
+    <div class="tl-section tl-added">
+      <div class="tl-heading">Added</div>
+      <ul>
+        <li>**VHDL Formatter** — <code>Shift+Alt+F</code> (Format Document) now indents VHDL files correctly <a href="https://github.com/Guizzz/VHDL-Essentials/issues/45" target="_blank">#45</a></li>
+        <li>Line-based state machine indentation for: entity, architecture, process, if/elsif, case/when, for loops, generate, comments</li>
+        <li>Configurable via <code>vhdl.formatter.indentSize</code> and <code>vhdl.formatter.insertSpaces</code></li>
+        <li>18 unit tests covering all constructs</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.1" target="_blank">v0.15.1</a>
       <span class="tl-date">2026-06-25</span>
     </div>

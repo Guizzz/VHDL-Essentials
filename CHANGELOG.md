@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.15.2] - 2026-06-26
+
+### Added
+
+- **VHDL Formatter** — `Shift+Alt+F` (Format Document) now indents VHDL files correctly (#45)
+  - Line-based state machine indentation for: entity, architecture, process, if/elsif, case/when, for loops, generate, comments
+  - Configurable via `vhdl.formatter.indentSize` and `vhdl.formatter.insertSpaces`
+  - 18 unit tests covering all constructs
+
 ## [0.15.1] - 2026-06-25
 
 ### Added
