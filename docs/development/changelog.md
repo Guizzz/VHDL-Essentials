@@ -10,6 +10,22 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.3" target="_blank">v0.15.3</a>
+      <span class="tl-date">2026-06-30</span>
+    </div>
+    <div class="tl-section tl-added">
+      <div class="tl-heading">Added</div>
+      <ul>
+        <li>**QSF auto-completamento** — scrivendo <code>set_global_assignment -name VHDL_FILE </code> in un file <code>.qsf</code>, la tendina mostra i file <code>.vhd</code>/<code>.vhdl</code> con navigazione drill-down per cartelle <a href="https://github.com/Guizzz/VHDL-Essentials/issues/80" target="_blank">#80</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.2" target="_blank">v0.15.2</a>
       <span class="tl-date">2026-06-26</span>
     </div>

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.15.3] - 2026-06-30
+
+### Added
+
+- **QSF auto-completamento** — scrivendo `set_global_assignment -name VHDL_FILE ` in un file `.qsf`, la tendina mostra i file `.vhd`/`.vhdl` con navigazione drill-down per cartelle (#80)
+
 ## [0.15.2] - 2026-06-26
 
 ### Added
