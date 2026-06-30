@@ -15,6 +15,7 @@ import { VhdlReferenceProvider } from '../providers/definitions/referenceProvide
 import { VhdlSignatureProvider } from '../providers/vhdlSignatureProvider';
 import { VhdlRenameProvider } from '../providers/renameProvider';
 import { VhdlDocumentFormatter } from '../providers/vhdlFormatter';
+import { QsfCompletionProvider } from '../providers/qsfCompletionProvider';
 
 export function registerLanguageFeatures(context: vscode.ExtensionContext, indexer: EntityIndexer) 
 {
@@ -94,6 +95,11 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
         new VhdlCodeActionProvider()
     );
 
+    const qsfCompletionProvider = vscode.languages.registerCompletionItemProvider(
+        'quartus',
+        new QsfCompletionProvider()
+    );
+
     const choosePinCmd = vscode.commands.registerCommand(
         '_vhdl.chooseDuplicatePin',
         async (uri: vscode.Uri, line: number) =>
@@ -166,6 +172,7 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
         signatureProvider,
         vhdlFormatter,
         qsfCodeActionProvider,
+        qsfCompletionProvider,
         choosePinCmd
     );
 }
