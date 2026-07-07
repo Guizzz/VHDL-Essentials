@@ -5,6 +5,7 @@ import { setupMaterialIcons } from './ui/setIcon';
 import { createStatusBar, updateButtonsVisibility } from './ui/statusBar';
 import { registerGenSimulationUnit } from './commands/genDoFile';
 import { registerRunSimulationUnit } from './commands/runDoFile';
+import { registerNewProjectCommand } from './commands/newProject';
 import { EntityIndexer } from './services/entityIndexer';
 import { registerWorkspaceWatchers } from './services/workspaceWatcher';
 import { registerLanguageFeatures } from './services/languagesRegister';
@@ -27,6 +28,7 @@ export async function activate(context: vscode.ExtensionContext)
     registerFlashCommand(context);
     registerGenSimulationUnit(context);
     registerRunSimulationUnit(context);
+    registerNewProjectCommand(context);
 
     // Tree View
     await registerQsfView(context);

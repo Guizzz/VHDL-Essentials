@@ -40,6 +40,10 @@
       {
         "command": "quartus-assistant.runDo",
         "title": "Quartus: Run QuestaSim simulation"
+      },
+      {
+        "command": "quartus-assistant.newProject",
+        "title": "Quartus: New Project"
       }
     ],
     "languages": [

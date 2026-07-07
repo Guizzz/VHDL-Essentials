@@ -2,50 +2,8 @@ import * as vscode from 'vscode';
 
 import {scanSimulationUnits} from '../utils/simulationScanner';
 import { generateDoFile } from '../utils/doGenerator';
+import { writeFileWithConfirmOverwrite } from '../utils/fileUtils';
 import { getWorkspace } from '../quartus/quartusProject';
-
-async function writeFileWithConfirmOverwrite( uri: vscode.Uri, content: string, fileLabel?: string ): Promise<boolean> 
-{
-    let exists = false;
-
-    try {
-        await vscode.workspace.fs.stat(uri);
-        exists = true;
-    } catch {
-        exists = false;
-    }
-
-    if (!exists) 
-    {
-        await vscode.workspace.fs.writeFile(uri, Buffer.from(content));
-        return true; // scritto
-    }
-    
-    const name = fileLabel ?? uri.path.split('/').pop();
-
-    const choice = await vscode.window.showQuickPick(
-        [
-            {
-                label: "Overwrite",
-                description: "Replace the existing file"
-            },
-            {
-                label: "Cancel",
-                description: "Keep the existing file"
-            }
-        ],
-        {
-            placeHolder: `The file ${name} already exists. What do you want to do?`
-        }
-    );
-
-    if (!choice || choice.label !== "Overwrite") {
-        return false;
-    }
-
-    await vscode.workspace.fs.writeFile(uri, Buffer.from(content));
-    return true; // written
-}
 
 export function registerGenSimulationUnit(context: vscode.ExtensionContext) 
 {
