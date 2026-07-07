@@ -10,6 +10,22 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.4" target="_blank">v0.15.4</a>
+      <span class="tl-date">2026-07-07</span>
+    </div>
+    <div class="tl-section tl-added">
+      <div class="tl-heading">Added</div>
+      <ul>
+        <li>**Quartus: New Project** — <code>Quartus: New Project</code> command (<code>quartus-assistant.newProject</code>) scaffolds a complete Quartus project with guided prompts for device family, part number, entity name, and editable path; generates QPF, QSF, VHDL entity, testbench, and DO file <a href="https://github.com/Guizzz/VHDL-Essentials/issues/86" target="_blank">#86</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.3" target="_blank">v0.15.3</a>
       <span class="tl-date">2026-06-30</span>
     </div>

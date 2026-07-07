@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.15.4] - 2026-07-07
+
+### Added
+
+- **Quartus: New Project** — `Quartus: New Project` command (`quartus-assistant.newProject`) scaffolds a complete Quartus project with guided prompts for device family, part number, entity name, and editable path; generates QPF, QSF, VHDL entity, testbench, and DO file (#86)
+
 ## [0.15.3] - 2026-06-30
 
 ### Added
