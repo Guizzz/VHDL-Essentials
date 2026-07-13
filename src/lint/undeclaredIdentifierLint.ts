@@ -104,7 +104,8 @@ function parseAliasDeclarations(text: string): string[]
 
 export function findUndeclaredIdentifiers(
     text: string,
-    resolveSymbol?: (name: string) => boolean
+    resolveSymbol?: (name: string) => boolean,
+    resolvePackageSymbol?: (name: string) => { packageName: string } | undefined
 ): vscode.Diagnostic[]
 {
     const diagnostics: vscode.Diagnostic[] = [];
@@ -295,6 +296,25 @@ export function findUndeclaredIdentifiers(
             continue;
         }
 
+        // 16. Check if symbol exists in a package but isn't imported
+        if (resolvePackageSymbol)
+        {
+            const pkgResult = resolvePackageSymbol(word);
+            if (pkgResult)
+            {
+                const pos = offsetToPosition(text, idx);
+                const range = new vscode.Range(pos, pos.translate(0, word.length));
+                const d = new vscode.Diagnostic(
+                    range,
+                    `'${word}' requires 'use work.${pkgResult.packageName}.all'`,
+                    vscode.DiagnosticSeverity.Error
+                );
+                d.code = 'unimported-package-symbol';
+                diagnostics.push(d);
+                continue;
+            }
+        }
+
         // === UNDECLARED IDENTIFIER ===
         const pos = offsetToPosition(text, idx);
         const range = new vscode.Range(pos, pos.translate(0, word.length));
@@ -356,7 +376,11 @@ export class UndeclaredIdentifiersLinter
             ? (name: string) => this.indexer!.getSymbol(name) !== undefined || this.indexer!.hasEntity(name)
             : undefined;
 
-        const diags = findUndeclaredIdentifiers(document.getText(), resolveSymbol);
+        const resolvePackageSymbol = this.indexer
+            ? (name: string) => this.indexer!.getSymbol(name)
+            : undefined;
+
+        const diags = findUndeclaredIdentifiers(document.getText(), resolveSymbol, resolvePackageSymbol);
         this.diagnostics.set(document.uri, diags);
     }
 

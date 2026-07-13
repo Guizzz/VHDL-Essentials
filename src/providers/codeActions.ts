@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
+import { EntityIndexer } from '../services/entityIndexer';
 
 type ActionBuilder = (
     doc: vscode.TextDocument,
     diag: vscode.Diagnostic,
-    token: vscode.CancellationToken
+    token: vscode.CancellationToken,
+    indexer?: EntityIndexer
 ) => vscode.CodeAction | vscode.CodeAction[] | null;
 
 const INDENT = '    ';
@@ -30,6 +32,13 @@ function frameTypeFromUnclosed(msg: string): string | null
     return m ? m[1] : null;
 }
 
+function constructTypeFromMsg(msg: string): string | null
+{
+    // "'entity' missing 'is'" → "entity"
+    const m = msg.match(/^'(\w+(?:\s+\w+)?)'\s+missing\s+'is'/i);
+    return m ? m[1] : null;
+}
+
 // ── Code action builders ──
 
 function fixMissingSemicolon(
@@ -43,6 +52,27 @@ function fixMissingSemicolon(
     edit.insert(doc.uri, line.range.end, ';');
     const action = new vscode.CodeAction(
         'Add missing semicolon',
+        vscode.CodeActionKind.QuickFix
+    );
+    action.edit = edit;
+    action.diagnostics = [diag];
+    return action;
+}
+
+function fixMissingIs(
+    doc: vscode.TextDocument,
+    diag: vscode.Diagnostic,
+    _token: vscode.CancellationToken
+): vscode.CodeAction | null
+{
+    const type = constructTypeFromMsg(diag.message);
+    if (!type) { return null; }
+
+    const line = doc.lineAt(diag.range.start.line);
+    const edit = new vscode.WorkspaceEdit();
+    edit.insert(doc.uri, line.range.end, ' is');
+    const action = new vscode.CodeAction(
+        `Add missing 'is'`,
         vscode.CodeActionKind.QuickFix
     );
     action.edit = edit;
@@ -648,10 +678,54 @@ function fixUndeclaredIdentifier(
     return action;
 }
 
+function fixUnimportedPackageSymbol(
+    doc: vscode.TextDocument,
+    diag: vscode.Diagnostic,
+    _token: vscode.CancellationToken,
+    indexer?: EntityIndexer
+): vscode.CodeAction | null
+{
+    if (!indexer) { return null; }
+
+    const nameMatch = diag.message.match(/^'(\w+)'/);
+    const pkgMatch = diag.message.match(/use work\.(\w+)/);
+    if (!nameMatch || !pkgMatch) { return null; }
+
+    const name = nameMatch[1];
+    const pkgName = pkgMatch[1];
+
+    const text = doc.getText();
+    const lines = text.split(/\r?\n/);
+
+    // Find last 'use work...' or 'library work' line
+    let insertLine = 0;
+    for (let i = 0; i < lines.length; i++)
+    {
+        const trimmed = lines[i].trim();
+        if (/^use\s+work\./i.test(trimmed) || /^library\s+work/i.test(trimmed))
+        {
+            insertLine = i + 1;
+        }
+    }
+
+    const edit = new vscode.WorkspaceEdit();
+    edit.insert(doc.uri, new vscode.Position(insertLine, 0),
+        `use work.${pkgName}.all;\n`);
+
+    const action = new vscode.CodeAction(
+        `Import '${name}' from '${pkgName}'`,
+        vscode.CodeActionKind.QuickFix
+    );
+    action.edit = edit;
+    action.diagnostics = [diag];
+    return action;
+}
+
 // ── Map from diagnostic code to builder ──
 
 const ACTION_MAP: Record<string, ActionBuilder> =
 {
+    'syntax.missing-is':           fixMissingIs,
     'syntax.missing-semicolon':      fixMissingSemicolon,
     'syntax.unclosed-scope':         fixUnclosedScope,
     'syntax.end-mismatch':           fixEndMismatch,
@@ -674,6 +748,7 @@ const ACTION_MAP: Record<string, ActionBuilder> =
     'packagebody.missing-impl':      fixPackageBodyMissing,
     'portlinter.unassigned-port':    fixPortlinterUnassigned,
     'undeclared-identifier':         fixUndeclaredIdentifier,
+    'unimported-package-symbol':     fixUnimportedPackageSymbol,
 };
 
 // ── Provider class ──
@@ -681,6 +756,13 @@ const ACTION_MAP: Record<string, ActionBuilder> =
 export class VhdlCodeActionProvider implements vscode.CodeActionProvider
 {
     public static readonly providedCodeActionKinds = [vscode.CodeActionKind.QuickFix];
+
+    private indexer?: EntityIndexer;
+
+    constructor(indexer?: EntityIndexer)
+    {
+        this.indexer = indexer;
+    }
 
     provideCodeActions(
         document: vscode.TextDocument,
@@ -698,7 +780,7 @@ export class VhdlCodeActionProvider implements vscode.CodeActionProvider
             const builder = ACTION_MAP[diag.code];
             if (!builder) { continue; }
 
-            const result = builder(document, diag, token);
+            const result = builder(document, diag, token, this.indexer);
             if (!result) { continue; }
 
             if (Array.isArray(result))

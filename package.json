@@ -1,7 +1,7 @@
 {
   "name": "quartus-assistant",
   "displayName": "VHDL Essentials",
-  "description": "VHDL language support, Quartus integration, hover, syntax highlighting and lightweight IntelliSense.",
+  "description": "Complete Quartus workflow: build, flash, simulate. VHDL linting, navigation, pin diagnostics, QSF integration.",
   "version": "0.15.4",
   "publisher": "Guizzz",
   "icon": "resources/icon.png",

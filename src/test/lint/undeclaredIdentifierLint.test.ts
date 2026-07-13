@@ -688,4 +688,75 @@ suite('undeclaredIdentifierLint', () =>
         );
         assert.strictEqual(diags.length, 0);
     });
+
+    // ── resolvePackageSymbol tests ──
+
+    const mockResolveSymbol = (name: string) =>
+        name === 'my_pkg_const' || name === 'my_pkg_type';
+
+    const mockResolvePackageSymbol = (name: string) =>
+    {
+        if (name === 'my_pkg_const') { return { packageName: 'my_pkg' }; }
+        if (name === 'my_pkg_type') { return { packageName: 'my_pkg' }; }
+        return undefined;
+    };
+
+    test('symbol in package without use clause produces unimported-package-symbol', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            'begin\n' +
+            '  x <= my_pkg_const;\n' +
+            'end architecture;',
+            mockResolveSymbol,
+            mockResolvePackageSymbol
+        );
+        const unimported = diags.filter(d => d.code === 'unimported-package-symbol');
+        assert.strictEqual(unimported.length, 1);
+        assert.ok(unimported[0].message.includes('my_pkg_const'));
+        assert.ok(unimported[0].message.includes('use work.my_pkg.all'));
+    });
+
+    test('symbol in package with use clause produces no diagnostic', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'use work.my_pkg.all;\n' +
+            'architecture rtl of top is\n' +
+            'begin\n' +
+            '  x <= my_pkg_const;\n' +
+            'end architecture;',
+            mockResolveSymbol,
+            mockResolvePackageSymbol
+        );
+        assert.strictEqual(diags.length, 0);
+    });
+
+    test('unknown symbol produces undeclared-identifier (not unimported)', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            'begin\n' +
+            '  x <= unknown_sym;\n' +
+            'end architecture;',
+            mockResolveSymbol,
+            mockResolvePackageSymbol
+        );
+        const undeclared = diags.filter(d => d.code === 'undeclared-identifier');
+        const unimported = diags.filter(d => d.code === 'unimported-package-symbol');
+        assert.strictEqual(undeclared.length, 1);
+        assert.strictEqual(unimported.length, 0);
+    });
+
+    test('without resolvePackageSymbol, unimported diagnostic is not emitted', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            'begin\n' +
+            '  x <= my_pkg_const;\n' +
+            'end architecture;',
+            mockResolveSymbol
+        );
+        // resolveSymbol says it's known, so no diagnostic at all
+        assert.strictEqual(diags.length, 0);
+    });
 });

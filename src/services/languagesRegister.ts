@@ -65,7 +65,7 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
 
     const codeActionProvider = vscode.languages.registerCodeActionsProvider(
         'vhdl',
-        new VhdlCodeActionProvider()
+        new VhdlCodeActionProvider(indexer)
     );
 
     const referenceProvider = vscode.languages.registerReferenceProvider(
