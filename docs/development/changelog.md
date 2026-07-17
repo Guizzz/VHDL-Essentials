@@ -10,6 +10,30 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.5" target="_blank">v0.15.5</a>
+      <span class="tl-date">2026-07-17</span>
+    </div>
+    <div class="tl-section tl-added">
+      <div class="tl-heading">Added</div>
+      <ul>
+        <li>**Quick-fix per <code>is</code> mancante** — <code>Ctrl+.</code> su dichiarazioni VHDL che mancano della keyword <code>is</code> propone l'inserimento automatico</li>
+        <li>**Diagnostica simboli di package non importati** — quando un identificatore esiste in un package <code>work</code> ma non è stato importato, viene segnalato con un diagnostic e proposto l'import automatico con <code>use work.&lt;pkg&gt;.all;</code></li>
+      </ul>
+    </div>
+    <div class="tl-section tl-changed">
+      <div class="tl-heading">Changed</div>
+      <ul>
+        <li>README riscritto con galleria espansa, quick start e changelog aggiornato</li>
+        <li>Aggiornate dipendenze di sviluppo (<code>typescript-eslint</code> 8.63.0, <code>@types/node</code> 26.1.1)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.4" target="_blank">v0.15.4</a>
       <span class="tl-date">2026-07-07</span>
     </div>

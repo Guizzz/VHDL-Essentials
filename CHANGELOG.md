@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.15.5] - 2026-07-17
+
+### Added
+
+- **Quick-fix per `is` mancante** — `Ctrl+.` su dichiarazioni VHDL che mancano della keyword `is` propone l'inserimento automatico
+- **Diagnostica simboli di package non importati** — quando un identificatore esiste in un package `work` ma non è stato importato, viene segnalato con un diagnostic e proposto l'import automatico con `use work.<pkg>.all;`
+
+### Changed
+
+- README riscritto con galleria espansa, quick start e changelog aggiornato
+- Aggiornate dipendenze di sviluppo (`typescript-eslint` 8.63.0, `@types/node` 26.1.1)
+
 ## [0.15.4] - 2026-07-07
 
 ### Added
