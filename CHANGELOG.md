@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.15.6] - 2026-07-27
+
+### Changed
+
+- Sostituito `npm-run-all` (abbandonato) con `npm-run-all2` (fork mantenuta)
+- Risolte 6 vulnerabilità Dependabot: `shell-quote`, `js-yaml`, `brace-expansion`, `postcss`
+
 ## [0.15.5] - 2026-07-17
 
 ### Added

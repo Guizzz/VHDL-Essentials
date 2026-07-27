@@ -10,6 +10,23 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.6" target="_blank">v0.15.6</a>
+      <span class="tl-date">2026-07-27</span>
+    </div>
+    <div class="tl-section tl-changed">
+      <div class="tl-heading">Changed</div>
+      <ul>
+        <li>Sostituito <code>npm-run-all</code> (abbandonato) con <code>npm-run-all2</code> (fork mantenuta)</li>
+        <li>Risolte 6 vulnerabilità Dependabot: <code>shell-quote</code>, <code>js-yaml</code>, <code>brace-expansion</code>, <code>postcss</code></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.5" target="_blank">v0.15.5</a>
       <span class="tl-date">2026-07-17</span>
     </div>
