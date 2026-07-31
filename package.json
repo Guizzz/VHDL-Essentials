@@ -193,7 +193,7 @@
     "@types/node": "^26.1.2",
     "@types/vscode": "^1.125.0",
     "@vscode/test-cli": "^0.0.15",
-    "@vscode/test-electron": "^3.0.0",
+    "@vscode/test-electron": "^3.1.0",
     "esbuild": "^0.28.1",
     "eslint": "^10.7.0",
     "npm-run-all2": "^9.0.3",
