@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { type QuartusSeverity, type QuartusMessage, extractMessage, parseRawLine } from './outputParser';
+import { LineBuffer } from './lineBuffer';
 
 export const quartusOutput = vscode.window.createOutputChannel('Quartus Assistant', { log: true });
 
@@ -7,6 +8,7 @@ export class QuartusLogger
 {
     private warnings = 0;
     private errors = 0;
+    private lineBuffer = new LineBuffer();
 
     constructor(private output: vscode.LogOutputChannel) {}
 
@@ -27,6 +29,8 @@ export class QuartusLogger
 
     finishBuild(success: boolean)
     {
+        this.flush();
+
         this.output.appendLine('');
         this.output.appendLine('━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
@@ -52,43 +56,57 @@ export class QuartusLogger
         onMessage?: (msg: QuartusMessage) => void
     )
     {
-        const lines = chunk.split(/\r?\n/);
-
-        for (const line of lines)
+        for (const line of this.lineBuffer.push(chunk))
         {
-            if (!line.trim()) { continue; }
+            this._handleLine(line, onMessage);
+        }
+    }
 
-            if (
-                line.startsWith('report_status') ||
-                line.startsWith('refresh_report')
-            ) {
-                continue;
-            }
+    flush(onMessage?: (msg: QuartusMessage) => void)
+    {
+        for (const line of this.lineBuffer.flush())
+        {
+            this._handleLine(line, onMessage);
+        }
+    }
 
-            let msg = extractMessage(line);
+    private _handleLine(
+        line: string,
+        onMessage?: (msg: QuartusMessage) => void
+    )
+    {
+        if (!line.trim()) { return; }
 
-            if (!msg) { msg = parseRawLine(line); }
+        if (
+            line.startsWith('report_status') ||
+            line.startsWith('refresh_report')
+        ) {
+            return;
+        }
 
-            if (!msg) { continue; }
+        let msg = extractMessage(line);
 
-            onMessage?.(msg);
+        if (!msg) { msg = parseRawLine(line); }
 
-            if (msg.severity === 'warning' || msg.severity === 'critical')
-            {
-                this.warnings++;
-            }
+        if (!msg) { return; }
 
-            if (msg.severity === 'error')
-            {
-                this.errors++;
-            }
+        onMessage?.(msg);
 
-            const text = this._formatText(msg);
+        if (msg.severity === 'warning' || msg.severity === 'critical')
+        {
+            this.warnings++;
+        }
 
-            if (text !== '')
-            {
-                this._log(msg.severity, text);
-            }
+        if (msg.severity === 'error')
+        {
+            this.errors++;
+        }
+
+        const text = this._formatText(msg);
+
+        if (text !== '')
+        {
+            this._log(msg.severity, text);
         }
     }
 

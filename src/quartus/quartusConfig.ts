@@ -18,7 +18,21 @@ export function getQuartusBin(tool: string): string | null {
         return null;
     }
 
-    return path.join(quartusPath, tool, 'bin64');
+    return resolveQuartusBinDir(quartusPath, tool);
+}
+
+export function resolveQuartusBinDir(quartusPath: string, tool: string): string
+{
+    const toolDir = path.join(quartusPath, tool);
+    const bin64 = path.join(toolDir, 'bin64');
+
+    if (fs.existsSync(bin64)) { return bin64; }
+
+    const bin = path.join(toolDir, 'bin');
+
+    if (fs.existsSync(bin)) { return bin; }
+
+    return bin64;
 }
 
 export function getQuestaPath(): string

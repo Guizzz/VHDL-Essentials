@@ -30,6 +30,10 @@ export function extractMessage(line: string): QuartusMessage | null
         );
 
     if (strings.length < 4) {
+        if (strings.length === 2) {
+            return parseShortPostMessage(strings[0], strings[1]);
+        }
+
         return null;
     }
 
@@ -49,6 +53,20 @@ export function extractMessage(line: string): QuartusMessage | null
         severity: mapSeverity(rawSeverity),
         code,
         text
+    };
+}
+
+function parseShortPostMessage(rawSeverity: string, combined: string): QuartusMessage | null
+{
+    const cleaned = combined.replace(/\s+/g, ' ').trim();
+
+    const codeMatch = cleaned.match(/^(?:[^:(]*)\s*(?:\((\d+)\))?:\s*(.+)$/i);
+
+    return {
+        stage: 'Quartus',
+        severity: mapSeverity(rawSeverity),
+        code: codeMatch?.[1] ?? 'UNKNOWN',
+        text: codeMatch?.[2] ?? cleaned
     };
 }
 

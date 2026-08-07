@@ -39,6 +39,14 @@ export interface QuestaSimOption
     label: string
 }
 
+export function buildRunEnv(binPath: string, env: NodeJS.ProcessEnv): NodeJS.ProcessEnv
+{
+    return {
+        ...env,
+        PATH: `${binPath}${path.delimiter}${env.PATH ?? ''}`
+    };
+}
+
 export async function runQuartusTask(options: QuartusTaskOptions): Promise<number | null>
 {
     const [projectName, projectDir] = await Promise.all([
@@ -72,11 +80,8 @@ export async function runQuartusTask(options: QuartusTaskOptions): Promise<numbe
             executable,
             options.args,
             {
-                cwd: projectDir,
-                env: {
-                    ...process.env,
-                    PATH: `${binPath};${process.env.PATH}`
-                }
+            cwd: projectDir,
+            env: buildRunEnv(binPath, process.env)
             }
         );
     }

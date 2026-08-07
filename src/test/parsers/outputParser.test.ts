@@ -71,6 +71,47 @@ suite('outputParser', () =>
             assert.ok(result !== null);
             assert.ok(result.text.includes('Cyclone IV'));
         });
+
+        test('parse short severity + message form with code', () =>
+        {
+            const result = extractMessage(
+                'msg_tcl_post_message "Error" "Error (10028): Top-level design entity \\"foo\\" is undefined"'
+            );
+
+            assert.ok(result !== null);
+            assert.strictEqual(result.stage, 'Quartus');
+            assert.strictEqual(result.severity, 'error');
+            assert.strictEqual(result.code, '10028');
+            assert.strictEqual(result.text, 'Top-level design entity "foo" is undefined');
+        });
+
+        test('parse short severity + message form without code', () =>
+        {
+            const result = extractMessage(
+                'msg_tcl_post_message "Warning" "Design has unconstrained input ports"'
+            );
+
+            assert.ok(result !== null);
+            assert.strictEqual(result.severity, 'warning');
+            assert.strictEqual(result.code, 'UNKNOWN');
+            assert.strictEqual(result.text, 'Design has unconstrained input ports');
+        });
+
+        test('parse short critical warning form', () =>
+        {
+            const result = extractMessage(
+                'msg_tcl_post_message "Critical Warning" "No SDC constraints file found"'
+            );
+
+            assert.ok(result !== null);
+            assert.strictEqual(result.severity, 'critical');
+        });
+
+        test('return null for short form with a single string', () =>
+        {
+            const result = extractMessage('msg_tcl_post_message "Info"');
+            assert.strictEqual(result, null);
+        });
     });
 
     suite('formatMessage', () =>
