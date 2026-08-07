@@ -7,10 +7,36 @@ import { FitSummaryData } from '../types/types';
 import { scanSimulationUnits } from '../utils/simulationScanner';
 import { FitSummaryNode, PinAssignmentsNode, TestBenchesNode, QuestaScriptsNode } from './treeNodes';
 
+export interface QsfProviderDeps
+{
+    getWorkspace(): vscode.Uri | undefined;
+    getQuestaFile(): Promise<vscode.Uri[]>;
+    getSettingsFile(): Promise<vscode.Uri | undefined>;
+    parseQsf(file: vscode.Uri): Promise<ProjectInfo>;
+    scanSimulationUnits(workspace: vscode.Uri): Promise<Array<{ uriFile: vscode.Uri }>>;
+    getProjectFile(): Promise<vscode.Uri | undefined>;
+    parseFitSummary(uri: vscode.Uri): Promise<FitSummaryData>;
+}
+
+export function createDefaultQsfProviderDeps(): QsfProviderDeps
+{
+    return {
+        getWorkspace,
+        getQuestaFile,
+        getSettingsFile,
+        parseQsf,
+        scanSimulationUnits,
+        getProjectFile,
+        parseFitSummary
+    };
+}
+
 export class QsfProvider implements vscode.TreeDataProvider<vscode.TreeItem>
 {
     private _onDidChangeTreeData = new vscode.EventEmitter<void>();
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
+
+    private deps: QsfProviderDeps;
 
     private qsfData: ProjectInfo | undefined;
     private fitSummaryData: FitSummaryData | undefined;
@@ -18,31 +44,54 @@ export class QsfProvider implements vscode.TreeDataProvider<vscode.TreeItem>
     private testBenchFiles: vscode.Uri[] = [];
     private loading = false;
 
+    constructor(deps?: QsfProviderDeps)
+    {
+        this.deps = deps ?? createDefaultQsfProviderDeps();
+    }
+
     async loadData()
     {
         if (this.loading) { return; }
         this.loading = true;
 
-        const workspace = getWorkspace();
-        if (!workspace) { return; }
-
         try
         {
-            this.questaFiles = await getQuestaFile();
-            this.testBenchFiles = (await scanSimulationUnits(workspace)).map(i => i.uriFile);
+            const workspace = this.deps.getWorkspace();
 
-            const file = await getSettingsFile();
+            if (workspace)
+            {
+                this.questaFiles = await this.deps.getQuestaFile();
+                this.testBenchFiles = (await this.deps.scanSimulationUnits(workspace)).map(i => i.uriFile);
 
-            if (!file)
+                const file = await this.deps.getSettingsFile();
+
+                if (file)
+                {
+                    this.qsfData = await this.deps.parseQsf(file);
+                    await this.loadFitSummary();
+                }
+                else
+                {
+                    this.qsfData = undefined;
+                    this.fitSummaryData = undefined;
+                }
+            }
+            else
             {
                 this.qsfData = undefined;
                 this.fitSummaryData = undefined;
-                this.refresh();
-                return;
+                this.questaFiles = [];
+                this.testBenchFiles = [];
             }
 
-            this.qsfData = await parseQsf(file);
-            await this.loadFitSummary();
+            this.refresh();
+        }
+        catch
+        {
+            this.qsfData = undefined;
+            this.fitSummaryData = undefined;
+            this.questaFiles = [];
+            this.testBenchFiles = [];
             this.refresh();
         }
         finally
@@ -53,7 +102,7 @@ export class QsfProvider implements vscode.TreeDataProvider<vscode.TreeItem>
 
     private async loadFitSummary()
     {
-        const projectFile = await getProjectFile();
+        const projectFile = await this.deps.getProjectFile();
 
         if (!projectFile)
         {
@@ -69,7 +118,7 @@ export class QsfProvider implements vscode.TreeDataProvider<vscode.TreeItem>
         try
         {
             await vscode.workspace.fs.stat(fitSummaryUri);
-            this.fitSummaryData = await parseFitSummary(fitSummaryUri);
+            this.fitSummaryData = await this.deps.parseFitSummary(fitSummaryUri);
         }
         catch
         {
