@@ -258,4 +258,69 @@ suite('sensitivityLint', () =>
             assert.strictEqual(warnings.length, 0);
         });
     });
+
+    suite('attribute expressions and character literals', () =>
+    {
+        test('attribute target/name (integer\'image) is not treated as a signal read', () =>
+        {
+            const diags = checkSensitivityList(
+                'entity tb is end entity;\n' +
+                'architecture sim of tb is\n' +
+                '  signal cnt : integer;\n' +
+                '  signal out_str : string;\n' +
+                'begin\n' +
+                '  process()\n' +
+                '  begin\n' +
+                '    out_str <= integer\'image(cnt);\n' +
+                '  end process;\n' +
+                'end architecture;'
+            );
+            const missing = diags.map(d => d.message);
+            assert.ok(missing.some(m => m.includes('cnt')),
+                `cnt is a real read signal: ${missing.join(', ')}`);
+            assert.ok(!missing.some(m => m.includes('integer') || m.includes('image')),
+                `Attribute target/name should not be flagged: ${missing.join(', ')}`);
+        });
+
+        test('character literals are not treated as signal reads', () =>
+        {
+            const diags = checkSensitivityList(
+                'entity tb is end entity;\n' +
+                'architecture sim of tb is\n' +
+                '  signal a : bit;\n' +
+                '  signal c : bit;\n' +
+                'begin\n' +
+                '  process(a)\n' +
+                '  begin\n' +
+                '    c <= a;\n' +
+                '    if a = \'x\' then\n' +
+                '      null;\n' +
+                '    end if;\n' +
+                '  end process;\n' +
+                'end architecture;'
+            );
+            const warnings = diags.filter(d => d.severity === 1);
+            assert.strictEqual(warnings.length, 0, `Got: ${diags.map(d => d.message).join(', ')}`);
+        });
+
+        test('clk\'event still reads clk via the edge comparison', () =>
+        {
+            const diags = checkSensitivityList(
+                'entity tb is end entity;\n' +
+                'architecture sim of tb is\n' +
+                '  signal clk : bit;\n' +
+                '  signal q : bit;\n' +
+                'begin\n' +
+                '  process(clk)\n' +
+                '  begin\n' +
+                '    if clk\'event and clk = \'1\' then\n' +
+                '      q <= \'1\';\n' +
+                '    end if;\n' +
+                '  end process;\n' +
+                'end architecture;'
+            );
+            const warnings = diags.filter(d => d.severity === 1);
+            assert.strictEqual(warnings.length, 0, `Got: ${diags.map(d => d.message).join(', ')}`);
+        });
+    });
 });

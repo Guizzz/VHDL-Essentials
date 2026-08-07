@@ -35,4 +35,29 @@ export const VHDL_KEYWORDS = new Set([
     'fs', 'ps', 'ns', 'us', 'ms', 'sec', 'min', 'hr',
     // Severity levels
     'note', 'warning', 'error', 'failure',
+    // Standard library package names (std.textio, ieee.numeric_std, ...)
+    'textio', 'env', 'standard', 'numeric_std', 'std_logic_1164',
+    'std_logic_arith', 'std_logic_signed', 'std_logic_unsigned',
+    'math_real', 'math_complex',
+    // std.textio procedures and functions
+    'read', 'readline', 'write', 'writeline', 'endfile', 'file_open',
+    'file_close', 'flush', 'hread', 'hwrite', 'oread', 'owrite', 'tee',
+    'deallocate',
+    // std.textio types
+    'text', 'line',
+    // std.env procedures and functions
+    'stop', 'finish', 'resolution_limit',
+    // ieee.math_real functions
+    'sin', 'cos', 'tan', 'arcsin', 'arccos', 'arctan', 'sinh', 'cosh',
+    'tanh', 'arcsinh', 'arccosh', 'arctanh', 'exp', 'log', 'log2',
+    'sqrt', 'cbrt', 'pow', 'floor', 'ceil', 'round', 'trunc', 'sign',
+    'realmax', 'realmin',
+    // ieee.math_real constants
+    'math_e', 'math_1_over_e', 'math_pi', 'math_2_pi', 'math_1_over_pi',
+    'math_pi_over_2', 'math_pi_over_3', 'math_pi_over_4', 'math_3_pi_over_2',
+    'math_log_of_2', 'math_log_of_10', 'math_log_of_e', 'math_sqrt_2',
+    'math_1_over_sqrt_2', 'math_sqrt_1_2',
+    // VHDL-2008 std_logic_1164 / numeric_std helpers
+    'to_01', 'to_x01', 'to_x01z', 'to_ux01', 'to_01z', 'to_string',
+    'to_bstring', 'to_ostring', 'to_hstring', 'resolved',
 ]);

@@ -759,4 +759,97 @@ suite('undeclaredIdentifierLint', () =>
         // resolveSymbol says it's known, so no diagnostic at all
         assert.strictEqual(diags.length, 0);
     });
+
+    // ── standard library (TextIO / math_real / std.env) tests ──
+
+    test('testbench using std.textio produces no diagnostics', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'library ieee;\n' +
+            'use std.textio.all;\n' +
+            'use ieee.std_logic_1164.all;\n' +
+            'entity tb is end entity;\n' +
+            'architecture sim of tb is\n' +
+            '  signal clk : std_logic;\n' +
+            'begin\n' +
+            '  process\n' +
+            '    file f : text;\n' +
+            '    variable l : line;\n' +
+            '  begin\n' +
+            '    file_open(f, "out.txt", write_mode);\n' +
+            '    write(l, integer\'image(42));\n' +
+            '    writeline(f, l);\n' +
+            '    file_close(f);\n' +
+            '  end process;\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0, diags.map(d => d.message).join(', '));
+    });
+
+    test('testbench using ieee.math_real produces no diagnostics', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'library ieee;\n' +
+            'use ieee.math_real.all;\n' +
+            'use ieee.std_logic_1164.all;\n' +
+            'entity tb is end entity;\n' +
+            'architecture sim of tb is\n' +
+            '  signal phase : real;\n' +
+            'begin\n' +
+            '  process\n' +
+            '    variable v : real := 0.0;\n' +
+            '  begin\n' +
+            '    v := sin(phase) + cos(phase);\n' +
+            '    v := floor(v);\n' +
+            '    report real\'image(sqrt(2.0));\n' +
+            '  end process;\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0, diags.map(d => d.message).join(', '));
+    });
+
+    test('std.env.finish and std.env.stop produce no diagnostics', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'library ieee;\n' +
+            'use std.env.all;\n' +
+            'entity tb is end entity;\n' +
+            'architecture sim of tb is\n' +
+            '  signal done : boolean;\n' +
+            'begin\n' +
+            '  process\n' +
+            '  begin\n' +
+            '    done <= true;\n' +
+            '    std.env.finish;\n' +
+            '    std.env.stop;\n' +
+            '  end process;\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0, diags.map(d => d.message).join(', '));
+    });
+
+    test('ieee-qualified math_real functions produce no diagnostics', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            '  signal x : real;\n' +
+            'begin\n' +
+            '  x <= ieee.math_real.log2(x) + ieee.math_real.sin(x);\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 0, diags.map(d => d.message).join(', '));
+    });
+
+    test('genuinely undeclared identifiers are still flagged', () =>
+    {
+        const diags = findUndeclaredIdentifiers(
+            'architecture rtl of top is\n' +
+            '  signal result : real;\n' +
+            'begin\n' +
+            '  result <= sinn(3.0);\n' +
+            'end architecture;'
+        );
+        assert.strictEqual(diags.length, 1);
+        assert.ok(diags[0].message.includes('sinn'));
+    });
 });

@@ -39,6 +39,16 @@ function extractIdents(expr: string): Set<string>
     while ((match = regex.exec(expr)) !== null)
     {
         const word = match[1].toLowerCase();
+        const idx = match.index;
+
+        // Skip attribute names ("foo'image") and attribute targets ("integer'image")
+        const prevChar = idx > 0 ? expr[idx - 1] : '';
+        const nextChar = idx + word.length < expr.length ? expr[idx + word.length] : '';
+        if (prevChar === "'" || nextChar === "'")
+        {
+            continue;
+        }
+
         if (!VHDL_KEYWORDS.has(word))
         {
             idents.add(word);

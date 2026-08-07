@@ -31,7 +31,7 @@ export function parseSignals(text: string): ParsedSignalLike[]
         return beforeOnLine.includes('--');
     }
 
-    const regex = /\b(signal|variable|constant)\s+(\w+(?:\s*,\s*\w+)*)\s*:\s*([\w\s\(\)\d<>:=\-']+)/gi;
+    const regex = /\b(signal|variable|constant|file)\s+(\w+(?:\s*,\s*\w+)*)\s*:\s*([\w\s\(\)\d<>:=\-']+)/gi;
 
     let match: RegExpExecArray | null;
 
