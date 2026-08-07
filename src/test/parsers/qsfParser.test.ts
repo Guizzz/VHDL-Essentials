@@ -73,6 +73,25 @@ suite('qsfParser', () =>
         assert.strictEqual(result.topLevelEntity, undefined);
     });
 
+    test('parse custom PROJECT_OUTPUT_DIRECTORY', () =>
+    {
+        const result = parseQsfText(
+            'set_global_assignment -name PROJECT_OUTPUT_DIRECTORY synthesis_out\n' +
+            'set_global_assignment -name FAMILY "MAX V"\n'
+        );
+
+        assert.strictEqual(result.outputFolder, 'synthesis_out');
+    });
+
+    test('parse quoted PROJECT_OUTPUT_DIRECTORY', () =>
+    {
+        const result = parseQsfText(
+            'set_global_assignment -name PROJECT_OUTPUT_DIRECTORY "build/out"\n'
+        );
+
+        assert.strictEqual(result.outputFolder, '"build/out"');
+    });
+
     test('return empty result for only comments', () =>
     {
         const result = parseQsfText(
