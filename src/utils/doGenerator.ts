@@ -1,4 +1,5 @@
 import { SimulationUnit } from "./simulationScanner";
+import { normalizeToForwardSlashes } from "./fileUtils";
 
 export function generateDoFile(unit: SimulationUnit, vhdlFiles: string[], runtimeNs: number): string 
 {
@@ -13,11 +14,12 @@ export function generateDoFile(unit: SimulationUnit, vhdlFiles: string[], runtim
     lines.push('');
 
     
-    for (const file of vhdlFiles) {
-        lines.push(`vcom ${file}`);
+    for (const file of vhdlFiles)
+    {
+        lines.push(`vcom {${normalizeToForwardSlashes(file)}}`);
     }
     
-    lines.push(`vcom ${unit.file}`);
+    lines.push(`vcom {${normalizeToForwardSlashes(unit.file)}}`);
     lines.push('');
     
     lines.push('file mkdir simulation/waves');

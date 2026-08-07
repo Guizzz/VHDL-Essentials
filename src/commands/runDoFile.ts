@@ -3,6 +3,7 @@ import { getProjectName, getQuestaFile, getWorkspace } from '../quartus/quartusP
 import path from 'path';
 import { quartusOutput } from '../quartus/logger';
 import { QuestaSimOption, runSimulation } from '../quartus/quartusRunner';
+import { normalizeToForwardSlashes } from '../utils/fileUtils';
 
 export function registerRunSimulationUnit(context: vscode.ExtensionContext) 
 {
@@ -32,7 +33,9 @@ export function registerRunSimulationUnit(context: vscode.ExtensionContext)
 
                         quartusOutput.show(true);
                         const opt: QuestaSimOption = {
-                            doFile: vscode.workspace.asRelativePath(uri as vscode.Uri),
+                            doFile: normalizeToForwardSlashes(
+                                vscode.workspace.asRelativePath(uri as vscode.Uri)
+                            ),
                             label: path.basename(uri.fsPath ?? uri.path),
                             projectName: projectName!
                         };
@@ -44,7 +47,7 @@ export function registerRunSimulationUnit(context: vscode.ExtensionContext)
                     {
                         quartusOutput.show(true);
                         const opt: QuestaSimOption = {
-                            doFile: file,
+                            doFile: normalizeToForwardSlashes(file),
                             label: file,
                             projectName: projectName!
                         };
@@ -78,7 +81,7 @@ export function registerRunSimulationUnit(context: vscode.ExtensionContext)
 
                     quartusOutput.show(true);
                     const opt: QuestaSimOption = {
-                        doFile: picked.detail,
+                        doFile: normalizeToForwardSlashes(picked.detail),
                         label: picked.label,
                         projectName: projectName!
                     };

@@ -29,9 +29,9 @@ suite('doGenerator', () =>
 
         assert.ok(result.includes('vdel -all'));
         assert.ok(result.includes('vlib work'));
-        assert.ok(result.includes('vcom src/blinky.vhd'));
-        assert.ok(result.includes('vcom src/clk_div.vhd'));
-        assert.ok(result.includes('vcom test/blinky_tb.vhd'));
+        assert.ok(result.includes('vcom {src/blinky.vhd}'));
+        assert.ok(result.includes('vcom {src/clk_div.vhd}'));
+        assert.ok(result.includes('vcom {test/blinky_tb.vhd}'));
         assert.ok(result.includes('vsim -voptargs=+acc -wlf simulation/waves/blinky_tb.wlf work.blinky_tb'));
         assert.ok(result.includes('add wave sim:/blinky_tb/clk'));
         assert.ok(result.includes('add wave sim:/blinky_tb/rst'));
@@ -44,7 +44,7 @@ suite('doGenerator', () =>
     {
         const result = generateDoFile(EMPTY_UNIT, [], 1000);
 
-        assert.ok(result.includes('vcom test/empty_tb.vhd'));
+        assert.ok(result.includes('vcom {test/empty_tb.vhd}'));
         assert.ok(result.includes('vsim -voptargs=+acc -wlf simulation/waves/empty_tb.wlf work.empty_tb'));
         assert.ok(result.includes('run 1000 ns'));
     });
@@ -70,9 +70,9 @@ suite('doGenerator', () =>
 
         const vdelIdx = lines.findIndex(l => l.includes('vdel'));
         const vlibIdx = lines.findIndex(l => l.includes('vlib'));
-        const vcomA = lines.findIndex(l => l.includes('vcom src/a.vhd'));
-        const vcomB = lines.findIndex(l => l.includes('vcom src/b.vhd'));
-        const vcomTb = lines.findIndex(l => l.includes('vcom test/blinky_tb.vhd'));
+        const vcomA = lines.findIndex(l => l.includes('vcom {src/a.vhd}'));
+        const vcomB = lines.findIndex(l => l.includes('vcom {src/b.vhd}'));
+        const vcomTb = lines.findIndex(l => l.includes('vcom {test/blinky_tb.vhd}'));
         const vsimIdx = lines.findIndex(l => l.includes('vsim'));
         const addWaveIdx = lines.findIndex(l => l.includes('add wave'));
         const runIdx = lines.findIndex(l => l.includes('run'));
@@ -100,5 +100,34 @@ suite('doGenerator', () =>
         const result = generateDoFile(BLINKY_TB_UNIT, [], 9999);
 
         assert.ok(result.includes('run 9999 ns'));
+    });
+
+    test('normalizes Windows backslash paths to forward slashes', () =>
+    {
+        const unit: SimulationUnit = {
+            ...BLINKY_TB_UNIT,
+            file: 'test\\blinky_tb.vhd'
+        };
+
+        const vhdlFiles = ['src\\blinky.vhd', 'src\\clk_div.vhd'];
+        const result = generateDoFile(unit, vhdlFiles, 2100);
+
+        assert.ok(!result.includes('\\'));
+        assert.ok(result.includes('vcom {src/blinky.vhd}'));
+        assert.ok(result.includes('vcom {src/clk_div.vhd}'));
+        assert.ok(result.includes('vcom {test/blinky_tb.vhd}'));
+    });
+
+    test('quotes paths with spaces so Tcl treats them as a single word', () =>
+    {
+        const unit: SimulationUnit = {
+            ...BLINKY_TB_UNIT,
+            file: 'test bench/blinky_tb.vhd'
+        };
+
+        const result = generateDoFile(unit, ['src/my file.vhd'], 1000);
+
+        assert.ok(result.includes('vcom {src/my file.vhd}'));
+        assert.ok(result.includes('vcom {test bench/blinky_tb.vhd}'));
     });
 });

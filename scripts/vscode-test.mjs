@@ -5,6 +5,6 @@ import path from 'path';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-	files: 'out/test/**/*.test.js',
+	files: '../out/test/**/*.test.js',
 	extensionDevelopmentPath: path.resolve(__dirname, '..'),
 });

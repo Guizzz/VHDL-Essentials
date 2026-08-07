@@ -1,5 +1,10 @@
 import * as vscode from 'vscode';
 
+export function normalizeToForwardSlashes(p: string): string
+{
+    return p.replace(/\\/g, '/');
+}
+
 export async function writeFileWithConfirmOverwrite(
     uri: vscode.Uri, content: string, fileLabel?: string
 ): Promise<boolean>
