@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.15.8] - 2026-08-07
+
+### Fixed
+
+- **Signature help in port map** - ripristinato il signature help per istanziazioni dirette (`entity work.<name>`), anche su più righe, dopo un `generic map` e con più port map nello stesso file
+- **Diagnostica simboli di package non importati** - corretta l'emissione del diagnostic `unimported-package-symbol` quando un simbolo esiste in un package `work` ma non è stato importato (ora rispetta anche le `use work.<pkg>.all;` presenti)
+- **Log di build Quartus affidabili** - logging con line buffering e path cross-platform (#107)
+- **Flash rispetta PROJECT_OUTPUT_DIRECTORY** - il comando flash cerca i candidati `.sof`/`.pof` nella cartella di output configurata e supporta i file `.sof` (#108)
+- **Formatter configurabile** - applicate le impostazioni `vhdl.formatter.*` (indentSize, insertSpaces) nel formatter VHDL (#111)
+
 ## [0.15.7] - 2026-08-07
 
 ### Fixed

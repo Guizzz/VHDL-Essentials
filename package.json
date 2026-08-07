@@ -2,7 +2,7 @@
   "name": "quartus-assistant",
   "displayName": "VHDL Essentials",
   "description": "Complete Quartus workflow: build, flash, simulate. VHDL linting, navigation, pin diagnostics, QSF integration.",
-  "version": "0.15.7",
+  "version": "0.15.8",
   "publisher": "Guizzz",
   "icon": "resources/icon.png",
   "galleryBanner": {

@@ -10,6 +10,26 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.8" target="_blank">v0.15.8</a>
+      <span class="tl-date">2026-08-07</span>
+    </div>
+    <div class="tl-section tl-fixed">
+      <div class="tl-heading">Fixed</div>
+      <ul>
+        <li>**Signature help in port map** - ripristinato il signature help per istanziazioni dirette (<code>entity work.&lt;name&gt;</code>), anche su più righe, dopo un <code>generic map</code> e con più port map nello stesso file</li>
+        <li>**Diagnostica simboli di package non importati** - corretta l'emissione del diagnostic <code>unimported-package-symbol</code> quando un simbolo esiste in un package <code>work</code> ma non è stato importato (ora rispetta anche le <code>use work.&lt;pkg&gt;.all;</code> presenti)</li>
+        <li>**Log di build Quartus affidabili** - logging con line buffering e path cross-platform <a href="https://github.com/Guizzz/VHDL-Essentials/issues/107" target="_blank">#107</a></li>
+        <li>**Flash rispetta PROJECT_OUTPUT_DIRECTORY** - il comando flash cerca i candidati <code>.sof</code>/<code>.pof</code> nella cartella di output configurata e supporta i file <code>.sof</code> <a href="https://github.com/Guizzz/VHDL-Essentials/issues/108" target="_blank">#108</a></li>
+        <li>**Formatter configurabile** - applicate le impostazioni <code>vhdl.formatter.*</code> (indentSize, insertSpaces) nel formatter VHDL <a href="https://github.com/Guizzz/VHDL-Essentials/issues/111" target="_blank">#111</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.7" target="_blank">v0.15.7</a>
       <span class="tl-date">2026-08-07</span>
     </div>
