@@ -36,30 +36,44 @@ export function findEnclosingPortMap(
 
     const openParenOffset = lastMatch.index + lastMatch[0].length - 1;
 
+    if (offset <= openParenOffset) { return undefined; }
+
     const closeParenOffset = findBalancedClose(text, openParenOffset);
-    if (closeParenOffset === -1 || offset <= openParenOffset || offset > closeParenOffset)
-    {
-        return undefined;
-    }
+    if (closeParenOffset !== -1 && offset > closeParenOffset) { return undefined; }
 
     if (isInsideComment(text, offset)) { return undefined; }
 
     const textBefore = text.substring(0, lastMatch.index);
+    const entityName = findLabeledEntityName(textBefore);
 
-    const directMatch = textBefore.match(/: entity\s+(?:work\.)?(\w+)\s*$/i);
-    if (directMatch) { return { entityName: directMatch[1], openParenOffset }; }
+    return entityName ? { entityName, openParenOffset } : undefined;
+}
 
-    const compMatch = textBefore.match(/: (\w+)\s*$/i);
-    if (compMatch)
+function findLabeledEntityName(textBefore: string): string | undefined
+{
+    const directRe = /(^|\n)\s*\w+\s*:\s*entity\s+(?:work\.)?(\w+)/gi;
+    let match: RegExpExecArray | null;
+    let lastDirect: RegExpExecArray | null = null;
+
+    while ((match = directRe.exec(textBefore)) !== null)
     {
-        const name = compMatch[1];
-        if (!VHDL_KEYWORDS.has(name.toLowerCase()))
+        lastDirect = match;
+    }
+
+    if (lastDirect) { return lastDirect[2]; }
+
+    const compRe = /(^|\n)\s*\w+\s*:\s*(\w+)/gi;
+    let lastComp: RegExpExecArray | null = null;
+
+    while ((match = compRe.exec(textBefore)) !== null)
+    {
+        if (!VHDL_KEYWORDS.has(match[2].toLowerCase()))
         {
-            return { entityName: name, openParenOffset };
+            lastComp = match;
         }
     }
 
-    return undefined;
+    return lastComp ? lastComp[2] : undefined;
 }
 
 function findBalancedClose(text: string, openIdx: number): number

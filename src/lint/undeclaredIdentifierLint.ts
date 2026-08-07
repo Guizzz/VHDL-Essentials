@@ -7,6 +7,20 @@ import { VHDL_KEYWORDS } from '../utils/vhdlKeywords';
 import { offsetToPosition } from '../utils/positionUtils';
 import { EntityIndexer } from '../services/entityIndexer';
 
+function parseUseClauses(text: string): Set<string>
+{
+    const imported = new Set<string>();
+    const regex = /use\s+(?:work\.)?(\w+)\s*\.\s*all\s*;/gi;
+    let match: RegExpExecArray | null;
+
+    while ((match = regex.exec(text)) !== null)
+    {
+        imported.add(match[1].toLowerCase());
+    }
+
+    return imported;
+}
+
 function parseComponentDeclarations(text: string): string[]
 {
     const names: string[] = [];
@@ -172,6 +186,7 @@ export function findUndeclaredIdentifiers(
 
     const identRegex = /\b([a-zA-Z_]\w*)\b/g;
     let match: RegExpExecArray | null;
+    const importedPackages = parseUseClauses(text);
 
     while ((match = identRegex.exec(text)) !== null)
     {
@@ -290,18 +305,17 @@ export function findUndeclaredIdentifiers(
             continue;
         }
 
-        // 15. Check via external resolver (e.g. cross-file package symbols)
-        if (resolveSymbol && resolveSymbol(word))
-        {
-            continue;
-        }
-
-        // 16. Check if symbol exists in a package but isn't imported
+        // 15. Check if symbol exists in a package but isn't imported
         if (resolvePackageSymbol)
         {
             const pkgResult = resolvePackageSymbol(word);
             if (pkgResult)
             {
+                if (importedPackages.has(pkgResult.packageName.toLowerCase()))
+                {
+                    continue;
+                }
+
                 const pos = offsetToPosition(text, idx);
                 const range = new vscode.Range(pos, pos.translate(0, word.length));
                 const d = new vscode.Diagnostic(
@@ -313,6 +327,12 @@ export function findUndeclaredIdentifiers(
                 diagnostics.push(d);
                 continue;
             }
+        }
+
+        // 16. Check via external resolver (e.g. cross-file entities/symbols)
+        if (resolveSymbol && resolveSymbol(word))
+        {
+            continue;
         }
 
         // === UNDECLARED IDENTIFIER ===

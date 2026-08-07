@@ -705,6 +705,7 @@ suite('undeclaredIdentifierLint', () =>
     {
         const diags = findUndeclaredIdentifiers(
             'architecture rtl of top is\n' +
+            '  signal x : std_logic;\n' +
             'begin\n' +
             '  x <= my_pkg_const;\n' +
             'end architecture;',
@@ -722,6 +723,7 @@ suite('undeclaredIdentifierLint', () =>
         const diags = findUndeclaredIdentifiers(
             'use work.my_pkg.all;\n' +
             'architecture rtl of top is\n' +
+            '  signal x : std_logic;\n' +
             'begin\n' +
             '  x <= my_pkg_const;\n' +
             'end architecture;',
@@ -735,6 +737,7 @@ suite('undeclaredIdentifierLint', () =>
     {
         const diags = findUndeclaredIdentifiers(
             'architecture rtl of top is\n' +
+            '  signal x : std_logic;\n' +
             'begin\n' +
             '  x <= unknown_sym;\n' +
             'end architecture;',
@@ -751,6 +754,7 @@ suite('undeclaredIdentifierLint', () =>
     {
         const diags = findUndeclaredIdentifiers(
             'architecture rtl of top is\n' +
+            '  signal x : std_logic;\n' +
             'begin\n' +
             '  x <= my_pkg_const;\n' +
             'end architecture;',
