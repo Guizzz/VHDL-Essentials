@@ -13,6 +13,23 @@ export interface FormatOptions
     insertSpaces: boolean;
 }
 
+export interface FormatterConfig
+{
+    indentSize?: number;
+    insertSpaces?: boolean;
+}
+
+export function resolveFormatOptions(
+    config: FormatterConfig,
+    editorOptions: { tabSize: number; insertSpaces: boolean }
+): FormatOptions
+{
+    return {
+        indentSize: config.indentSize ?? editorOptions.tabSize,
+        insertSpaces: config.insertSpaces ?? editorOptions.insertSpaces,
+    };
+}
+
 const DEFAULTS: FormatOptions = {
     indentSize: 4,
     insertSpaces: true,

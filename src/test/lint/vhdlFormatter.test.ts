@@ -1,10 +1,103 @@
 import * as assert from 'node:assert';
-import { formatVhdl } from '../../utils/vhdlFormatterCore';
+import { formatVhdl, resolveFormatOptions } from '../../utils/vhdlFormatterCore';
 
 const OPTIONS = {
     indentSize: 4,
     insertSpaces: true,
 };
+
+suite('resolveFormatOptions', () =>
+{
+    const EDITOR = { tabSize: 2, insertSpaces: false };
+
+    test('uses config values when present', () =>
+    {
+        assert.deepStrictEqual(
+            resolveFormatOptions({ indentSize: 4, insertSpaces: true }, EDITOR),
+            { indentSize: 4, insertSpaces: true }
+        );
+    });
+
+    test('falls back to editor options when config missing', () =>
+    {
+        assert.deepStrictEqual(
+            resolveFormatOptions({}, EDITOR),
+            { indentSize: 2, insertSpaces: false }
+        );
+    });
+
+    test('partial config keeps editor fallback for missing key', () =>
+    {
+        assert.deepStrictEqual(
+            resolveFormatOptions({ indentSize: 8 }, EDITOR),
+            { indentSize: 8, insertSpaces: false }
+        );
+
+        assert.deepStrictEqual(
+            resolveFormatOptions({ insertSpaces: true }, EDITOR),
+            { indentSize: 2, insertSpaces: true }
+        );
+    });
+
+    test('explicit false insertSpaces is honored', () =>
+    {
+        assert.deepStrictEqual(
+            resolveFormatOptions({ insertSpaces: false }, EDITOR),
+            { indentSize: 2, insertSpaces: false }
+        );
+    });
+
+    test('config wins over editor options', () =>
+    {
+        assert.deepStrictEqual(
+            resolveFormatOptions({ indentSize: 4, insertSpaces: true }, { tabSize: 2, insertSpaces: false }),
+            { indentSize: 4, insertSpaces: true }
+        );
+    });
+});
+
+suite('config-driven formatting', () =>
+{
+    test('indentSize config changes output', () =>
+    {
+        const input =
+`entity counter is
+port (
+clk : in std_logic
+);
+end entity counter;`;
+
+        const opts = resolveFormatOptions({ indentSize: 2 }, { tabSize: 4, insertSpaces: true });
+        const expected =
+`entity counter is
+  port (
+    clk : in std_logic
+  );
+end entity counter;`;
+
+        assert.strictEqual(formatVhdl(input, opts), expected);
+    });
+
+    test('insertSpaces false config emits tabs', () =>
+    {
+        const input =
+`entity counter is
+port (
+clk : in std_logic
+);
+end entity counter;`;
+
+        const opts = resolveFormatOptions({ insertSpaces: false }, { tabSize: 4, insertSpaces: true });
+        const expected =
+`entity counter is
+\tport (
+\t\tclk : in std_logic
+\t);
+end entity counter;`;
+
+        assert.strictEqual(formatVhdl(input, opts), expected);
+    });
+});
 
 suite('vhdlFormatter', () =>
 {
