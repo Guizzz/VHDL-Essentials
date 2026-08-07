@@ -10,6 +10,25 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.7" target="_blank">v0.15.7</a>
+      <span class="tl-date">2026-08-07</span>
+    </div>
+    <div class="tl-section tl-fixed">
+      <div class="tl-heading">Fixed</div>
+      <ul>
+        <li>**DO file Tcl paths** — i percorsi nei file <code>.do</code> generati ora usano slash normalizzati e vengono racchiusi tra graffe Tcl, evitando errori con spazi e backslash <a href="https://github.com/Guizzz/VHDL-Essentials/issues/102" target="_blank">#102</a></li>
+        <li>**Falsi positivi lint su keyword/attributi** — eliminati i falsi positivi da TextIO/<code>math_real</code>, espressioni con attributi (<code>'image</code>) e dichiarazioni <code>file</code> <a href="https://github.com/Guizzz/VHDL-Essentials/issues/103" target="_blank">#103</a></li>
+        <li>**Posizione diagnostica portLint** — i diagnostic sui port non assegnati ora puntano alla posizione reale nel file <a href="https://github.com/Guizzz/VHDL-Essentials/issues/104" target="_blank">#104</a></li>
+        <li>**QSF Tree View non più bloccato** — il tree view ora gestisce gli errori e non resta più su "Loading" <a href="https://github.com/Guizzz/VHDL-Essentials/issues/105" target="_blank">#105</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.6" target="_blank">v0.15.6</a>
       <span class="tl-date">2026-07-27</span>
     </div>

@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.15.7] - 2026-08-07
+
+### Fixed
+
+- **DO file Tcl paths** — i percorsi nei file `.do` generati ora usano slash normalizzati e vengono racchiusi tra graffe Tcl, evitando errori con spazi e backslash (#102)
+- **Falsi positivi lint su keyword/attributi** — eliminati i falsi positivi da TextIO/`math_real`, espressioni con attributi (`'image`) e dichiarazioni `file` (#103)
+- **Posizione diagnostica portLint** — i diagnostic sui port non assegnati ora puntano alla posizione reale nel file (#104)
+- **QSF Tree View non più bloccato** — il tree view ora gestisce gli errori e non resta più su "Loading" (#105)
+
 ## [0.15.6] - 2026-07-27
 
 ### Changed
