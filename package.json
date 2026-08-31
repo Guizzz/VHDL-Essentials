@@ -44,6 +44,10 @@
       {
         "command": "quartus-assistant.newProject",
         "title": "Quartus: New Project"
+      },
+      {
+        "command": "quartus-assistant.cancelBuild",
+        "title": "Quartus: Cancel Build"
       }
     ],
     "languages": [

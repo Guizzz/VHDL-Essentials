@@ -6,6 +6,7 @@ import { createStatusBar, updateButtonsVisibility } from './ui/statusBar';
 import { registerGenSimulationUnit } from './commands/genDoFile';
 import { registerRunSimulationUnit } from './commands/runDoFile';
 import { registerNewProjectCommand } from './commands/newProject';
+import { registerCancelBuildCommand } from './commands/cancelBuild';
 import { EntityIndexer } from './services/entityIndexer';
 import { registerWorkspaceWatchers } from './services/workspaceWatcher';
 import { registerLanguageFeatures } from './services/languagesRegister';
@@ -29,6 +30,7 @@ export async function activate(context: vscode.ExtensionContext)
     registerGenSimulationUnit(context);
     registerRunSimulationUnit(context);
     registerNewProjectCommand(context);
+    registerCancelBuildCommand(context);
 
     // Tree View
     await registerQsfView(context);

@@ -1,11 +1,12 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { runQuartusTask }
+import { runQuartusTask, isQuartusTaskRunning }
 from '../quartus/quartusRunner';
 import { getProjectName, getProjectDir } from '../quartus/quartusProject';
 import { QuartusCompileLinter } from '../lint/quartusCompileLint';
 import { parseQuartusError, type QuartusCompileError } from '../utils/quartusErrorParser';
+import { setBuildButtonRunning } from '../ui/statusBar';
 
 function makeTextClickable(text: string, fileName: string, absPath: string): string
 {
@@ -27,6 +28,12 @@ export function registerBuildCommand(context: vscode.ExtensionContext)
     const command = vscode.commands.registerCommand(
                         'quartus-assistant.build',
                         async () => {
+                            if (isQuartusTaskRunning())
+                            {
+                                vscode.window.showWarningMessage('A Quartus task is already running');
+                                return;
+                            }
+
                             const projectName = await getProjectName();
 
                             if (!projectName) {
@@ -91,7 +98,10 @@ export function registerBuildCommand(context: vscode.ExtensionContext)
                                         err.message = msg.text;
                                         errors.push(err);
                                     }
-                                }
+                                },
+
+                                onStateChange: setBuildButtonRunning,
+                                cancellable: true
                             });
 
                             linter.setCompileErrors(errors);

@@ -38,6 +38,21 @@ export function createStatusBar(context: vscode.ExtensionContext)
     );
 }
 
+export function setBuildButtonRunning(running: boolean): void
+{
+    if (running)
+    {
+        buildButton.text = "$(close) Cancel Build";
+        buildButton.command = 'quartus-assistant.cancelBuild';
+        buildButton.tooltip = 'Cancel Quartus build';
+        return;
+    }
+
+    buildButton.text = "$(symbol-property) Build";
+    buildButton.command = 'quartus-assistant.build';
+    buildButton.tooltip = 'Build Quartus project';
+}
+
 export async function updateButtonsVisibility() 
 {
     const hasProject = await hasQuartusProject();

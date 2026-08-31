@@ -27,14 +27,16 @@ export class QuartusLogger
         this.output.appendLine('');
     }
 
-    finishBuild(success: boolean)
+    finishBuild(success: boolean, cancelled = false)
     {
         this.flush();
 
         this.output.appendLine('');
         this.output.appendLine('━━━━━━━━━━━━━━━━━━━━━━━━━━');
 
-        if (success) {
+        if (cancelled) {
+            this.output.appendLine('BUILD CANCELLED');
+        } else if (success) {
             this.output.appendLine('BUILD SUCCESSFUL');
         } else {
             this.output.appendLine('BUILD FAILED');
