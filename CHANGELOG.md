@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.15.10] - 2026-08-31
+
+### Fixed
+
+- **VS Code engine alignment** - aggiornato il requisito minimo a `^1.134.0`, coerente con `@types/vscode` e compatibile con il packaging tramite `vsce`
+
 ## [0.15.9] - 2026-08-31
 
 ### Added

@@ -10,6 +10,22 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.10" target="_blank">v0.15.10</a>
+      <span class="tl-date">2026-08-31</span>
+    </div>
+    <div class="tl-section tl-fixed">
+      <div class="tl-heading">Fixed</div>
+      <ul>
+        <li>**VS Code engine alignment** - aggiornato il requisito minimo a <code>^1.134.0</code>, coerente con <code>@types/vscode</code> e compatibile con il packaging tramite <code>vsce</code></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.9" target="_blank">v0.15.9</a>
       <span class="tl-date">2026-08-31</span>
     </div>
