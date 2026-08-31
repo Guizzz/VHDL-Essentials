@@ -10,6 +10,29 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.9" target="_blank">v0.15.9</a>
+      <span class="tl-date">2026-08-31</span>
+    </div>
+    <div class="tl-section tl-added">
+      <div class="tl-heading">Added</div>
+      <ul>
+        <li>**Cancellazione build Quartus** - il pulsante della status bar diventa una croce durante la compilazione e consente di terminare il task in corso <a href="https://github.com/Guizzz/VHDL-Essentials/issues/113" target="_blank">#113</a></li>
+      </ul>
+    </div>
+    <div class="tl-section tl-fixed">
+      <div class="tl-heading">Fixed</div>
+      <ul>
+        <li>**Guard anti-concorrenza** - le build e gli altri task Quartus concorrenti vengono rifiutati mentre un task è attivo, evitando conflitti sui file di progetto <a href="https://github.com/Guizzz/VHDL-Essentials/issues/113" target="_blank">#113</a></li>
+        <li>**Stato build coerente** - il runner distingue tra completamento, errore e cancellazione e ripristina il pulsante della status bar in tutti i casi <a href="https://github.com/Guizzz/VHDL-Essentials/issues/113" target="_blank">#113</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.8" target="_blank">v0.15.8</a>
       <span class="tl-date">2026-08-07</span>
     </div>

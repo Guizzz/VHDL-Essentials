@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.15.9] - 2026-08-31
+
+### Added
+
+- **Cancellazione build Quartus** - il pulsante della status bar diventa una croce durante la compilazione e consente di terminare il task in corso (#113)
+
+### Fixed
+
+- **Guard anti-concorrenza** - le build e gli altri task Quartus concorrenti vengono rifiutati mentre un task è attivo, evitando conflitti sui file di progetto (#113)
+- **Stato build coerente** - il runner distingue tra completamento, errore e cancellazione e ripristina il pulsante della status bar in tutti i casi (#113)
+
 ## [0.15.8] - 2026-08-07
 
 ### Fixed
