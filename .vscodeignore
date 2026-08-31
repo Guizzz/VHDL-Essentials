@@ -5,6 +5,8 @@ docs/**
 .github/**
 .vscode/**
 .vscode-test/**
+.opencode/**
+secrets/**
 out/**
 node_modules/**
 src/**
