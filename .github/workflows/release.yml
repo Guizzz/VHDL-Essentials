@@ -31,6 +31,8 @@ jobs:
 
       - run: vsce package
 
+      - run: npm install -g ovsx
+
       - name: Publish to VSCode Marketplace
         uses: nick-fields/retry@v3
         with:
@@ -38,6 +40,14 @@ jobs:
           max_attempts: 5
           retry_wait_seconds: 60
           command: vsce publish -p ${{ secrets.VSCE_PAT }}
+
+      - name: Publish to Open VSX
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 5
+          retry_wait_seconds: 60
+          command: ovsx publish *.vsix -p ${{ secrets.OVSX_TOKEN }}
 
       - name: Extract changelog section
         id: changelog

@@ -2,6 +2,7 @@
 
 [![Version](https://vsmarketplacebadges.dev/version-short/Guizzz.quartus-assistant.svg)](https://marketplace.visualstudio.com/items?itemName=Guizzz.quartus-assistant)
 [![Installs](https://vsmarketplacebadges.dev/installs-short/Guizzz.quartus-assistant.svg)](https://marketplace.visualstudio.com/items?itemName=Guizzz.quartus-assistant)
+[![Open VSX](https://img.shields.io/open-vsx/v/Guizzz/quartus-assistant.svg)](https://open-vsx.org/extension/Guizzz/quartus-assistant)
 [![Docs](https://img.shields.io/badge/docs-vhdlessentials.dev-blue)](https://guizzz.github.io/VHDL-Essentials/)
 
 > **The only VS Code extension that combines Quartus build/flash/simulation with VHDL intelligence and QSF-aware diagnostics.**
