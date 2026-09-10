@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.16.0] - 2026-09-10
+
+### Added
+
+- **Pubblicazione su Open VSX** - il workflow di release pubblica l'estensione anche su Open VSX al tag `v*`, ampliando l'audience a VSCodium, Cursor e Codium (#116)
+
+### Changed
+
+- Aggiornate dipendenze di sviluppo (`@types/vscode` 1.136.0, `@types/node` 26.4.1, `eslint` 10.10.0, `typescript-eslint` 8.69.0, `serialize-javascript` 7.1.1)
+- Allineato `engines.vscode` a `^1.136.0` per coerenza con `@types/vscode`
+
 ## [0.15.10] - 2026-08-31
 
 ### Fixed

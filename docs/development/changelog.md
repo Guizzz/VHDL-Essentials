@@ -10,6 +10,29 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.16.0" target="_blank">v0.16.0</a>
+      <span class="tl-date">2026-09-10</span>
+    </div>
+    <div class="tl-section tl-added">
+      <div class="tl-heading">Added</div>
+      <ul>
+        <li>**Pubblicazione su Open VSX** - il workflow di release pubblica l'estensione anche su Open VSX al tag <code>v*</code>, ampliando l'audience a VSCodium, Cursor e Codium <a href="https://github.com/Guizzz/VHDL-Essentials/issues/116" target="_blank">#116</a></li>
+      </ul>
+    </div>
+    <div class="tl-section tl-changed">
+      <div class="tl-heading">Changed</div>
+      <ul>
+        <li>Aggiornate dipendenze di sviluppo (<code>@types/vscode</code> 1.136.0, <code>@types/node</code> 26.4.1, <code>eslint</code> 10.10.0, <code>typescript-eslint</code> 8.69.0, <code>serialize-javascript</code> 7.1.1)</li>
+        <li>Allineato <code>engines.vscode</code> a <code>^1.136.0</code> per coerenza con <code>@types/vscode</code></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.15.10" target="_blank">v0.15.10</a>
       <span class="tl-date">2026-08-31</span>
     </div>
