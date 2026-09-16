@@ -206,7 +206,7 @@
     "typescript-eslint": "^8.69.0",
     "vitepress": "^1.6.4",
     "vscode-textmate": "^9.0.0",
-    "yaml": "^2.9.0"
+    "yaml": "^2.9.1"
   },
   "repository": {
     "type": "git",
