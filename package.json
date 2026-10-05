@@ -201,7 +201,7 @@
     "esbuild": "^0.28.2",
     "eslint": "^10.10.0",
     "npm-run-all2": "^9.0.3",
-    "serialize-javascript": ">=7.1.1",
+    "serialize-javascript": ">=7.1.2",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.69.0",
     "vitepress": "^1.6.4",
