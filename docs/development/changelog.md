@@ -10,6 +10,22 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.16.2" target="_blank">v0.16.2</a>
+      <span class="tl-date">2026-10-06</span>
+    </div>
+    <div class="tl-section tl-fixed">
+      <div class="tl-heading">Fixed</div>
+      <ul>
+        <li>**Extension packaging** - aligned <code>engines.vscode</code> (<code>^1.138.0</code>) with <code>@types/vscode</code> so <code>vsce package</code> succeeds <a href="https://github.com/Guizzz/VHDL-Essentials/issues/162" target="_blank">#162</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.16.1" target="_blank">v0.16.1</a>
       <span class="tl-date">2026-10-06</span>
     </div>

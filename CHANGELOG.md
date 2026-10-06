@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.16.2] - 2026-10-06
+
+### Fixed
+
+- **Extension packaging** - aligned `engines.vscode` (`^1.138.0`) with `@types/vscode` so `vsce package` succeeds (#162)
+
 ## [0.16.1] - 2026-10-06
 
 ### Fixed
