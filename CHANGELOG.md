@@ -7,67 +7,67 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- **Pubblicazione su Open VSX** - il workflow di release pubblica l'estensione anche su Open VSX al tag `v*`, ampliando l'audience a VSCodium, Cursor e Codium (#116)
+- **Open VSX publication** - the release workflow now publishes the extension to Open VSX on `v*` tags, broadening the audience to VSCodium, Cursor and Codium (#116)
 
 ### Changed
 
-- Aggiornate dipendenze di sviluppo (`@types/vscode` 1.136.0, `@types/node` 26.4.1, `eslint` 10.10.0, `typescript-eslint` 8.69.0, `serialize-javascript` 7.1.1)
-- Allineato `engines.vscode` a `^1.136.0` per coerenza con `@types/vscode`
+- Updated dev dependencies (`@types/vscode` 1.136.0, `@types/node` 26.4.1, `eslint` 10.10.0, `typescript-eslint` 8.69.0, `serialize-javascript` 7.1.1)
+- Aligned `engines.vscode` to `^1.136.0` for consistency with `@types/vscode`
 
 ## [0.15.10] - 2026-08-31
 
 ### Fixed
 
-- **VS Code engine alignment** - aggiornato il requisito minimo a `^1.134.0`, coerente con `@types/vscode` e compatibile con il packaging tramite `vsce`
+- **VS Code engine alignment** - bumped the minimum requirement to `^1.134.0`, consistent with `@types/vscode` and compatible with packaging via `vsce`
 
 ## [0.15.9] - 2026-08-31
 
 ### Added
 
-- **Cancellazione build Quartus** - il pulsante della status bar diventa una croce durante la compilazione e consente di terminare il task in corso (#113)
+- **Quartus build cancellation** - the status bar button turns into a cross during compilation and lets you terminate the running task (#113)
 
 ### Fixed
 
-- **Guard anti-concorrenza** - le build e gli altri task Quartus concorrenti vengono rifiutati mentre un task è attivo, evitando conflitti sui file di progetto (#113)
-- **Stato build coerente** - il runner distingue tra completamento, errore e cancellazione e ripristina il pulsante della status bar in tutti i casi (#113)
+- **Concurrency guard** - concurrent builds and other Quartus tasks are rejected while a task is active, preventing conflicts on project files (#113)
+- **Consistent build state** - the runner distinguishes completion, error and cancellation, and restores the status bar button in all cases (#113)
 
 ## [0.15.8] - 2026-08-07
 
 ### Fixed
 
-- **Signature help in port map** - ripristinato il signature help per istanziazioni dirette (`entity work.<name>`), anche su più righe, dopo un `generic map` e con più port map nello stesso file
-- **Diagnostica simboli di package non importati** - corretta l'emissione del diagnostic `unimported-package-symbol` quando un simbolo esiste in un package `work` ma non è stato importato (ora rispetta anche le `use work.<pkg>.all;` presenti)
-- **Log di build Quartus affidabili** - logging con line buffering e path cross-platform (#107)
-- **Flash rispetta PROJECT_OUTPUT_DIRECTORY** - il comando flash cerca i candidati `.sof`/`.pof` nella cartella di output configurata e supporta i file `.sof` (#108)
-- **Formatter configurabile** - applicate le impostazioni `vhdl.formatter.*` (indentSize, insertSpaces) nel formatter VHDL (#111)
+- **Signature help in port map** - restored signature help for direct instantiations (`entity work.<name>`), including across multiple lines, after a `generic map` and with several port maps in the same file
+- **Unimported package symbol diagnostics** - fixed emission of the `unimported-package-symbol` diagnostic when a symbol exists in a `work` package but was not imported (now also respects existing `use work.<pkg>.all;` clauses)
+- **Reliable Quartus build log** - logging with line buffering and cross-platform paths (#107)
+- **Flash honors PROJECT_OUTPUT_DIRECTORY** - the flash command looks for `.sof`/`.pof` candidates in the configured output folder and supports `.sof` files (#108)
+- **Configurable formatter** - `vhdl.formatter.*` settings (indentSize, insertSpaces) are now applied in the VHDL formatter (#111)
 
 ## [0.15.7] - 2026-08-07
 
 ### Fixed
 
-- **DO file Tcl paths** — i percorsi nei file `.do` generati ora usano slash normalizzati e vengono racchiusi tra graffe Tcl, evitando errori con spazi e backslash (#102)
-- **Falsi positivi lint su keyword/attributi** — eliminati i falsi positivi da TextIO/`math_real`, espressioni con attributi (`'image`) e dichiarazioni `file` (#103)
-- **Posizione diagnostica portLint** — i diagnostic sui port non assegnati ora puntano alla posizione reale nel file (#104)
-- **QSF Tree View non più bloccato** — il tree view ora gestisce gli errori e non resta più su "Loading" (#105)
+- **DO file Tcl paths** — paths in generated `.do` files now use normalized slashes and are wrapped in Tcl braces, avoiding errors with spaces and backslashes (#102)
+- **Lint false positives on keywords/attributes** — removed false positives from TextIO/`math_real`, attribute expressions (`'image`) and `file` declarations (#103)
+- **portLint diagnostic position** — diagnostics on unassigned ports now point to the actual position in the file (#104)
+- **QSF Tree View no longer stuck** — the tree view now handles errors and no longer stays on "Loading" (#105)
 
 ## [0.15.6] - 2026-07-27
 
 ### Changed
 
-- Sostituito `npm-run-all` (abbandonato) con `npm-run-all2` (fork mantenuta)
-- Risolte 6 vulnerabilità Dependabot: `shell-quote`, `js-yaml`, `brace-expansion`, `postcss`
+- Replaced `npm-run-all` (abandoned) with `npm-run-all2` (maintained fork)
+- Fixed 6 Dependabot vulnerabilities: `shell-quote`, `js-yaml`, `brace-expansion`, `postcss`
 
 ## [0.15.5] - 2026-07-17
 
 ### Added
 
-- **Quick-fix per `is` mancante** — `Ctrl+.` su dichiarazioni VHDL che mancano della keyword `is` propone l'inserimento automatico
-- **Diagnostica simboli di package non importati** — quando un identificatore esiste in un package `work` ma non è stato importato, viene segnalato con un diagnostic e proposto l'import automatico con `use work.<pkg>.all;`
+- **Quick-fix for missing `is`** — `Ctrl+.` on VHDL declarations missing the `is` keyword offers to insert it automatically
+- **Unimported package symbol diagnostics** — when an identifier exists in a `work` package but was not imported, it is flagged with a diagnostic and the automatic import with `use work.<pkg>.all;` is offered
 
 ### Changed
 
-- README riscritto con galleria espansa, quick start e changelog aggiornato
-- Aggiornate dipendenze di sviluppo (`typescript-eslint` 8.63.0, `@types/node` 26.1.1)
+- README rewritten with expanded gallery, quick start and updated changelog
+- Updated dev dependencies (`typescript-eslint` 8.63.0, `@types/node` 26.1.1)
 
 ## [0.15.4] - 2026-07-07
 
@@ -79,7 +79,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
-- **QSF auto-completamento** — scrivendo `set_global_assignment -name VHDL_FILE ` in un file `.qsf`, la tendina mostra i file `.vhd`/`.vhdl` con navigazione drill-down per cartelle (#80)
+- **QSF auto-completion** — when typing `set_global_assignment -name VHDL_FILE ` in a `.qsf` file, the dropdown shows `.vhd`/`.vhdl` files with folder drill-down navigation (#80)
 
 ## [0.15.2] - 2026-06-26
 
@@ -213,7 +213,7 @@ All notable changes to this project will be documented in this file.
 ## [0.13.1] - 2026-06-11
 
 ### Fixed
-- `parseQuartusError` e test cross-platform: rilevamento path assoluti Windows su CI Linux tramite regex `WIN_ABS_RE`, normalizzazione separator backslash/forward-slash, confronti path indipendenti dalla piattaforma nei test
+- `parseQuartusError` and cross-platform tests: detection of absolute Windows paths on Linux CI via the `WIN_ABS_RE` regex, backslash/forward-slash separator normalization, platform-independent path comparisons in tests
 
 ## [0.13.0] - 2026-06-10
 

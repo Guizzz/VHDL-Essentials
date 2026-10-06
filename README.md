@@ -5,7 +5,20 @@
 [![Open VSX](https://img.shields.io/open-vsx/v/Guizzz/quartus-assistant.svg)](https://open-vsx.org/extension/Guizzz/quartus-assistant)
 [![Docs](https://img.shields.io/badge/docs-vhdlessentials.dev-blue)](https://guizzz.github.io/VHDL-Essentials/)
 
-> **The only VS Code extension that combines Quartus build/flash/simulation with VHDL intelligence and QSF-aware diagnostics.**
+> **The only VS Code extension that reads your Quartus project: build, flash, simulate, fit reports, pin-aware diagnostics and VHDL intelligence in one.**
+
+---
+
+## Why this extension
+
+Most VHDL extensions stop at language support. VHDL Essentials is the only one that understands your Quartus project end to end:
+
+- **Build and flash from the editor** — run Quartus flows and program your device without leaving VS Code
+- **Fit reports in the tree view** — resource utilization (logic elements, pins, registers, PLLs, memory bits) parsed from `.fit.summary` after every build
+- **Pin-aware diagnostics** — top-level ports are checked against QSF pin assignments, and hover shows the assigned FPGA pin
+- **QuestaSim/ModelSim integration** — generate `.do` scripts, launch simulations and stream the transcript live
+- **QSF project explorer and linting** — device, top-level entity, pin assignments, plus duplicate and unknown-command checks
+- **Full VHDL intelligence** — go-to-definition, hover, rename, find references, signature help, outline, completion and a configurable formatter
 
 ---
 

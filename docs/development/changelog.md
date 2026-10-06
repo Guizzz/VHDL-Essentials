@@ -16,14 +16,14 @@
     <div class="tl-section tl-added">
       <div class="tl-heading">Added</div>
       <ul>
-        <li>**Pubblicazione su Open VSX** - il workflow di release pubblica l'estensione anche su Open VSX al tag <code>v*</code>, ampliando l'audience a VSCodium, Cursor e Codium <a href="https://github.com/Guizzz/VHDL-Essentials/issues/116" target="_blank">#116</a></li>
+        <li>**Open VSX publication** - the release workflow now publishes the extension to Open VSX on <code>v*</code> tags, broadening the audience to VSCodium, Cursor and Codium <a href="https://github.com/Guizzz/VHDL-Essentials/issues/116" target="_blank">#116</a></li>
       </ul>
     </div>
     <div class="tl-section tl-changed">
       <div class="tl-heading">Changed</div>
       <ul>
-        <li>Aggiornate dipendenze di sviluppo (<code>@types/vscode</code> 1.136.0, <code>@types/node</code> 26.4.1, <code>eslint</code> 10.10.0, <code>typescript-eslint</code> 8.69.0, <code>serialize-javascript</code> 7.1.1)</li>
-        <li>Allineato <code>engines.vscode</code> a <code>^1.136.0</code> per coerenza con <code>@types/vscode</code></li>
+        <li>Updated dev dependencies (<code>@types/vscode</code> 1.136.0, <code>@types/node</code> 26.4.1, <code>eslint</code> 10.10.0, <code>typescript-eslint</code> 8.69.0, <code>serialize-javascript</code> 7.1.1)</li>
+        <li>Aligned <code>engines.vscode</code> to <code>^1.136.0</code> for consistency with <code>@types/vscode</code></li>
       </ul>
     </div>
   </div>
@@ -39,7 +39,7 @@
     <div class="tl-section tl-fixed">
       <div class="tl-heading">Fixed</div>
       <ul>
-        <li>**VS Code engine alignment** - aggiornato il requisito minimo a <code>^1.134.0</code>, coerente con <code>@types/vscode</code> e compatibile con il packaging tramite <code>vsce</code></li>
+        <li>**VS Code engine alignment** - bumped the minimum requirement to <code>^1.134.0</code>, consistent with <code>@types/vscode</code> and compatible with packaging via <code>vsce</code></li>
       </ul>
     </div>
   </div>
@@ -55,14 +55,14 @@
     <div class="tl-section tl-added">
       <div class="tl-heading">Added</div>
       <ul>
-        <li>**Cancellazione build Quartus** - il pulsante della status bar diventa una croce durante la compilazione e consente di terminare il task in corso <a href="https://github.com/Guizzz/VHDL-Essentials/issues/113" target="_blank">#113</a></li>
+        <li>**Quartus build cancellation** - the status bar button turns into a cross during compilation and lets you terminate the running task <a href="https://github.com/Guizzz/VHDL-Essentials/issues/113" target="_blank">#113</a></li>
       </ul>
     </div>
     <div class="tl-section tl-fixed">
       <div class="tl-heading">Fixed</div>
       <ul>
-        <li>**Guard anti-concorrenza** - le build e gli altri task Quartus concorrenti vengono rifiutati mentre un task è attivo, evitando conflitti sui file di progetto <a href="https://github.com/Guizzz/VHDL-Essentials/issues/113" target="_blank">#113</a></li>
-        <li>**Stato build coerente** - il runner distingue tra completamento, errore e cancellazione e ripristina il pulsante della status bar in tutti i casi <a href="https://github.com/Guizzz/VHDL-Essentials/issues/113" target="_blank">#113</a></li>
+        <li>**Concurrency guard** - concurrent builds and other Quartus tasks are rejected while a task is active, preventing conflicts on project files <a href="https://github.com/Guizzz/VHDL-Essentials/issues/113" target="_blank">#113</a></li>
+        <li>**Consistent build state** - the runner distinguishes completion, error and cancellation, and restores the status bar button in all cases <a href="https://github.com/Guizzz/VHDL-Essentials/issues/113" target="_blank">#113</a></li>
       </ul>
     </div>
   </div>
@@ -78,11 +78,11 @@
     <div class="tl-section tl-fixed">
       <div class="tl-heading">Fixed</div>
       <ul>
-        <li>**Signature help in port map** - ripristinato il signature help per istanziazioni dirette (<code>entity work.&lt;name&gt;</code>), anche su più righe, dopo un <code>generic map</code> e con più port map nello stesso file</li>
-        <li>**Diagnostica simboli di package non importati** - corretta l'emissione del diagnostic <code>unimported-package-symbol</code> quando un simbolo esiste in un package <code>work</code> ma non è stato importato (ora rispetta anche le <code>use work.&lt;pkg&gt;.all;</code> presenti)</li>
-        <li>**Log di build Quartus affidabili** - logging con line buffering e path cross-platform <a href="https://github.com/Guizzz/VHDL-Essentials/issues/107" target="_blank">#107</a></li>
-        <li>**Flash rispetta PROJECT_OUTPUT_DIRECTORY** - il comando flash cerca i candidati <code>.sof</code>/<code>.pof</code> nella cartella di output configurata e supporta i file <code>.sof</code> <a href="https://github.com/Guizzz/VHDL-Essentials/issues/108" target="_blank">#108</a></li>
-        <li>**Formatter configurabile** - applicate le impostazioni <code>vhdl.formatter.*</code> (indentSize, insertSpaces) nel formatter VHDL <a href="https://github.com/Guizzz/VHDL-Essentials/issues/111" target="_blank">#111</a></li>
+        <li>**Signature help in port map** - restored signature help for direct instantiations (<code>entity work.&lt;name&gt;</code>), including across multiple lines, after a <code>generic map</code> and with several port maps in the same file</li>
+        <li>**Unimported package symbol diagnostics** - fixed emission of the <code>unimported-package-symbol</code> diagnostic when a symbol exists in a <code>work</code> package but was not imported (now also respects existing <code>use work.&lt;pkg&gt;.all;</code> clauses)</li>
+        <li>**Reliable Quartus build log** - logging with line buffering and cross-platform paths <a href="https://github.com/Guizzz/VHDL-Essentials/issues/107" target="_blank">#107</a></li>
+        <li>**Flash honors PROJECT_OUTPUT_DIRECTORY** - the flash command looks for <code>.sof</code>/<code>.pof</code> candidates in the configured output folder and supports <code>.sof</code> files <a href="https://github.com/Guizzz/VHDL-Essentials/issues/108" target="_blank">#108</a></li>
+        <li>**Configurable formatter** - <code>vhdl.formatter.*</code> settings (indentSize, insertSpaces) are now applied in the VHDL formatter <a href="https://github.com/Guizzz/VHDL-Essentials/issues/111" target="_blank">#111</a></li>
       </ul>
     </div>
   </div>
@@ -98,10 +98,10 @@
     <div class="tl-section tl-fixed">
       <div class="tl-heading">Fixed</div>
       <ul>
-        <li>**DO file Tcl paths** — i percorsi nei file <code>.do</code> generati ora usano slash normalizzati e vengono racchiusi tra graffe Tcl, evitando errori con spazi e backslash <a href="https://github.com/Guizzz/VHDL-Essentials/issues/102" target="_blank">#102</a></li>
-        <li>**Falsi positivi lint su keyword/attributi** — eliminati i falsi positivi da TextIO/<code>math_real</code>, espressioni con attributi (<code>'image</code>) e dichiarazioni <code>file</code> <a href="https://github.com/Guizzz/VHDL-Essentials/issues/103" target="_blank">#103</a></li>
-        <li>**Posizione diagnostica portLint** — i diagnostic sui port non assegnati ora puntano alla posizione reale nel file <a href="https://github.com/Guizzz/VHDL-Essentials/issues/104" target="_blank">#104</a></li>
-        <li>**QSF Tree View non più bloccato** — il tree view ora gestisce gli errori e non resta più su "Loading" <a href="https://github.com/Guizzz/VHDL-Essentials/issues/105" target="_blank">#105</a></li>
+        <li>**DO file Tcl paths** — paths in generated <code>.do</code> files now use normalized slashes and are wrapped in Tcl braces, avoiding errors with spaces and backslashes <a href="https://github.com/Guizzz/VHDL-Essentials/issues/102" target="_blank">#102</a></li>
+        <li>**Lint false positives on keywords/attributes** — removed false positives from TextIO/<code>math_real</code>, attribute expressions (<code>'image</code>) and <code>file</code> declarations <a href="https://github.com/Guizzz/VHDL-Essentials/issues/103" target="_blank">#103</a></li>
+        <li>**portLint diagnostic position** — diagnostics on unassigned ports now point to the actual position in the file <a href="https://github.com/Guizzz/VHDL-Essentials/issues/104" target="_blank">#104</a></li>
+        <li>**QSF Tree View no longer stuck** — the tree view now handles errors and no longer stays on "Loading" <a href="https://github.com/Guizzz/VHDL-Essentials/issues/105" target="_blank">#105</a></li>
       </ul>
     </div>
   </div>
@@ -117,8 +117,8 @@
     <div class="tl-section tl-changed">
       <div class="tl-heading">Changed</div>
       <ul>
-        <li>Sostituito <code>npm-run-all</code> (abbandonato) con <code>npm-run-all2</code> (fork mantenuta)</li>
-        <li>Risolte 6 vulnerabilità Dependabot: <code>shell-quote</code>, <code>js-yaml</code>, <code>brace-expansion</code>, <code>postcss</code></li>
+        <li>Replaced <code>npm-run-all</code> (abandoned) with <code>npm-run-all2</code> (maintained fork)</li>
+        <li>Fixed 6 Dependabot vulnerabilities: <code>shell-quote</code>, <code>js-yaml</code>, <code>brace-expansion</code>, <code>postcss</code></li>
       </ul>
     </div>
   </div>
@@ -134,15 +134,15 @@
     <div class="tl-section tl-added">
       <div class="tl-heading">Added</div>
       <ul>
-        <li>**Quick-fix per <code>is</code> mancante** — <code>Ctrl+.</code> su dichiarazioni VHDL che mancano della keyword <code>is</code> propone l'inserimento automatico</li>
-        <li>**Diagnostica simboli di package non importati** — quando un identificatore esiste in un package <code>work</code> ma non è stato importato, viene segnalato con un diagnostic e proposto l'import automatico con <code>use work.&lt;pkg&gt;.all;</code></li>
+        <li>**Quick-fix for missing <code>is</code>** — <code>Ctrl+.</code> on VHDL declarations missing the <code>is</code> keyword offers to insert it automatically</li>
+        <li>**Unimported package symbol diagnostics** — when an identifier exists in a <code>work</code> package but was not imported, it is flagged with a diagnostic and the automatic import with <code>use work.&lt;pkg&gt;.all;</code> is offered</li>
       </ul>
     </div>
     <div class="tl-section tl-changed">
       <div class="tl-heading">Changed</div>
       <ul>
-        <li>README riscritto con galleria espansa, quick start e changelog aggiornato</li>
-        <li>Aggiornate dipendenze di sviluppo (<code>typescript-eslint</code> 8.63.0, <code>@types/node</code> 26.1.1)</li>
+        <li>README rewritten with expanded gallery, quick start and updated changelog</li>
+        <li>Updated dev dependencies (<code>typescript-eslint</code> 8.63.0, <code>@types/node</code> 26.1.1)</li>
       </ul>
     </div>
   </div>
@@ -174,7 +174,7 @@
     <div class="tl-section tl-added">
       <div class="tl-heading">Added</div>
       <ul>
-        <li>**QSF auto-completamento** — scrivendo <code>set_global_assignment -name VHDL_FILE </code> in un file <code>.qsf</code>, la tendina mostra i file <code>.vhd</code>/<code>.vhdl</code> con navigazione drill-down per cartelle <a href="https://github.com/Guizzz/VHDL-Essentials/issues/80" target="_blank">#80</a></li>
+        <li>**QSF auto-completion** — when typing <code>set_global_assignment -name VHDL_FILE </code> in a <code>.qsf</code> file, the dropdown shows <code>.vhd</code>/<code>.vhdl</code> files with folder drill-down navigation <a href="https://github.com/Guizzz/VHDL-Essentials/issues/80" target="_blank">#80</a></li>
       </ul>
     </div>
   </div>
@@ -450,7 +450,7 @@
     <div class="tl-section tl-fixed">
       <div class="tl-heading">Fixed</div>
       <ul>
-        <li><code>parseQuartusError</code> e test cross-platform: rilevamento path assoluti Windows su CI Linux tramite regex <code>WIN_ABS_RE</code>, normalizzazione separator backslash/forward-slash, confronti path indipendenti dalla piattaforma nei test</li>
+        <li><code>parseQuartusError</code> and cross-platform tests: detection of absolute Windows paths on Linux CI via the <code>WIN_ABS_RE</code> regex, backslash/forward-slash separator normalization, platform-independent path comparisons in tests</li>
       </ul>
     </div>
   </div>
