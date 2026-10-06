@@ -2,7 +2,7 @@
   "name": "quartus-assistant",
   "displayName": "VHDL Essentials",
   "description": "The only VS Code extension that reads your Quartus project: build, flash, simulate, fit reports, pin-aware diagnostics and VHDL intelligence in one.",
-  "version": "0.16.0",
+  "version": "0.16.1",
   "publisher": "Guizzz",
   "icon": "resources/icon.png",
   "galleryBanner": {

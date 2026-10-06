@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.16.1] - 2026-10-06
+
+### Fixed
+
+- **Reliable build output clearing** - starting a new build no longer brings back the log lines of the previous one
+- **Build log colors** - warning and error lines keep their native colors in the Quartus output channel
+
 ## [0.16.0] - 2026-09-10
 
 ### Added

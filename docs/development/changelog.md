@@ -10,6 +10,23 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.16.1" target="_blank">v0.16.1</a>
+      <span class="tl-date">2026-10-06</span>
+    </div>
+    <div class="tl-section tl-fixed">
+      <div class="tl-heading">Fixed</div>
+      <ul>
+        <li>**Reliable build output clearing** - starting a new build no longer brings back the log lines of the previous one</li>
+        <li>**Build log colors** - warning and error lines keep their native colors in the Quartus output channel</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.16.0" target="_blank">v0.16.0</a>
       <span class="tl-date">2026-09-10</span>
     </div>
