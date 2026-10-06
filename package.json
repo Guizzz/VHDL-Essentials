@@ -1,7 +1,7 @@
 {
   "name": "quartus-assistant",
   "displayName": "VHDL Essentials",
-  "description": "Complete Quartus workflow: build, flash, simulate. VHDL linting, navigation, pin diagnostics, QSF integration.",
+  "description": "The only VS Code extension that reads your Quartus project: build, flash, simulate, fit reports, pin-aware diagnostics and VHDL intelligence in one.",
   "version": "0.16.0",
   "publisher": "Guizzz",
   "icon": "resources/icon.png",
@@ -112,6 +112,18 @@
             "scope": "keyword.annotation.todo.vhdl",
             "settings": {
               "foreground": "#FFD700"
+            }
+          },
+          {
+            "scope": "log.error",
+            "settings": {
+              "foreground": "#f14c4c"
+            }
+          },
+          {
+            "scope": "log.warning",
+            "settings": {
+              "foreground": "#cca700"
             }
           }
         ]
@@ -228,6 +240,18 @@
     "fpga development",
     "testbench",
     "ip core",
-    "pin planner"
+    "pin planner",
+    "vhdl2008",
+    "vhdl-2019",
+    "ghdl",
+    "intel fpga lite",
+    "sdc",
+    "tcl",
+    "hdl",
+    "rtl",
+    "board",
+    "de10",
+    "cyclone",
+    "max"
   ]
 }

@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { type QuartusSeverity, type QuartusMessage, extractMessage, parseRawLine } from './outputParser';
 import { LineBuffer } from './lineBuffer';
 
-export const quartusOutput = vscode.window.createOutputChannel('Quartus Assistant', { log: true });
+export const quartusOutput = vscode.window.createOutputChannel('Quartus Assistant', 'log');
 
 export class QuartusLogger
 {
@@ -10,7 +10,7 @@ export class QuartusLogger
     private errors = 0;
     private lineBuffer = new LineBuffer();
 
-    constructor(private output: vscode.LogOutputChannel) {}
+    constructor(private output: vscode.OutputChannel) {}
 
     appendLine(line: string)
     {
@@ -143,19 +143,29 @@ export class QuartusLogger
         return msg.text;
     }
 
+    private _timestamp(): string
+    {
+        const d = new Date();
+        const p = (n: number, len = 2) => String(n).padStart(len, '0');
+
+        return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}.${p(d.getMilliseconds(), 3)}`;
+    }
+
     private _log(severity: QuartusSeverity, text: string): void
     {
+        const ts = this._timestamp();
+
         switch (severity)
         {
             case 'warning':
             case 'critical':
-                this.output.warn(text);
+                this.output.appendLine(`${ts} [warning] ${text}`);
                 break;
             case 'error':
-                this.output.error(text);
+                this.output.appendLine(`${ts} [error] ${text}`);
                 break;
             default:
-                this.output.info(text);
+                this.output.appendLine(`${ts} [info] ${text}`);
                 break;
         }
     }
