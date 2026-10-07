@@ -215,7 +215,7 @@
     "npm-run-all2": "^9.0.3",
     "serialize-javascript": ">=7.1.2",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.70.1",
+    "typescript-eslint": "^8.71.0",
     "vitepress": "^1.6.4",
     "vscode-textmate": "^9.0.0",
     "yaml": "^2.9.1"
