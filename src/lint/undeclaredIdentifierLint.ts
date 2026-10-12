@@ -355,6 +355,7 @@ export class UndeclaredIdentifiersLinter
 {
     private diagnostics = vscode.languages.createDiagnosticCollection('vhdl-undeclared');
     private debounceTimer: ReturnType<typeof setTimeout> | undefined;
+    private revalidateTimer: ReturnType<typeof setTimeout> | undefined;
     private indexer: EntityIndexer | undefined;
 
     constructor(
@@ -373,6 +374,13 @@ export class UndeclaredIdentifiersLinter
             vscode.workspace.onDidOpenTextDocument(doc => this.validate(doc)),
             vscode.workspace.onDidChangeTextDocument(e => this.schedule(e.document))
         );
+
+        if (this.indexer)
+        {
+            context.subscriptions.push(
+                this.indexer.onDidChange(() => this.scheduleRevalidateAll())
+            );
+        }
     }
 
     private schedule(document: vscode.TextDocument)
@@ -385,6 +393,26 @@ export class UndeclaredIdentifiersLinter
             () => this.validate(document),
             400
         );
+    }
+
+    private scheduleRevalidateAll()
+    {
+        clearTimeout(this.revalidateTimer);
+        this.revalidateTimer = setTimeout(
+            () => this.revalidateAll(),
+            200
+        );
+    }
+
+    private revalidateAll()
+    {
+        for (const document of vscode.workspace.textDocuments)
+        {
+            if (document.languageId !== 'vhdl') { continue; }
+            if (document.uri.scheme !== 'file') { continue; }
+
+            this.validate(document);
+        }
     }
 
     private validate(document: vscode.TextDocument)
@@ -407,6 +435,7 @@ export class UndeclaredIdentifiersLinter
     dispose(): void
     {
         clearTimeout(this.debounceTimer);
+        clearTimeout(this.revalidateTimer);
         this.diagnostics.dispose();
     }
 }
