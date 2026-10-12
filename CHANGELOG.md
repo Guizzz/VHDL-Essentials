@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.16.3] - 2026-10-12
+
+### Fixed
+
+- **Live diagnostics refresh** - the port-map and undeclared-identifier linters now re-validate dependent files automatically when an entity's ports change, so warnings and errors update without reloading the window
+
 ## [0.16.2] - 2026-10-06
 
 ### Fixed

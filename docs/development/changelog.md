@@ -10,6 +10,22 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.16.3" target="_blank">v0.16.3</a>
+      <span class="tl-date">2026-10-12</span>
+    </div>
+    <div class="tl-section tl-fixed">
+      <div class="tl-heading">Fixed</div>
+      <ul>
+        <li>**Live diagnostics refresh** - the port-map and undeclared-identifier linters now re-validate dependent files automatically when an entity's ports change, so warnings and errors update without reloading the window</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.16.2" target="_blank">v0.16.2</a>
       <span class="tl-date">2026-10-06</span>
     </div>
