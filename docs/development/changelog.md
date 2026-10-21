@@ -10,6 +10,30 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.16.4" target="_blank">v0.16.4</a>
+      <span class="tl-date">2026-10-21</span>
+    </div>
+    <div class="tl-section tl-fixed">
+      <div class="tl-heading">Fixed</div>
+      <ul>
+        <li>**Dead code removal** - removed an unused completion guard, an unused helper and a no-op Quartus logger branch <a href="https://github.com/Guizzz/VHDL-Essentials/issues/112" target="_blank">#112</a></li>
+      </ul>
+    </div>
+    <div class="tl-section tl-changed">
+      <div class="tl-heading">Changed</div>
+      <ul>
+        <li>**Code cleanup** - the language id and diagnostic source are centralized in <code>src/constants.ts</code>, and the older files now follow the Allman brace style <a href="https://github.com/Guizzz/VHDL-Essentials/issues/112" target="_blank">#112</a></li>
+        <li>**Quartus version detection** - new projects derive <code>QUARTUS_VERSION</code> from <code>maxv.quartusPath</code> instead of a hardcoded value <a href="https://github.com/Guizzz/VHDL-Essentials/issues/112" target="_blank">#112</a></li>
+        <li>Updated dev dependencies (<code>@types/vscode</code> 1.140.0, <code>eslint</code> 10.12.0, <code>typescript-eslint</code> 8.71.0, <code>@types/node</code> 26.6.4, <code>shell-quote</code>)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.16.3" target="_blank">v0.16.3</a>
       <span class="tl-date">2026-10-12</span>
     </div>

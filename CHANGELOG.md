@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.16.4] - 2026-10-21
+
+### Changed
+
+- **Code cleanup** - the language id and diagnostic source are centralized in `src/constants.ts`, and the older files now follow the Allman brace style (#112)
+- **Quartus version detection** - new projects derive `QUARTUS_VERSION` from `maxv.quartusPath` instead of a hardcoded value (#112)
+- Updated dev dependencies (`@types/vscode` 1.140.0, `eslint` 10.12.0, `typescript-eslint` 8.71.0, `@types/node` 26.6.4, `shell-quote`)
+
+### Fixed
+
+- **Dead code removal** - removed an unused completion guard, an unused helper and a no-op Quartus logger branch (#112)
+
 ## [0.16.3] - 2026-10-12
 
 ### Fixed
