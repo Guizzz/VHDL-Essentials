@@ -55,6 +55,7 @@ When closing a GitHub issue, **always link the relevant commit** in the closing 
 ## Key constraints
 
 - **Tests exist** in `src/test/` (parsers, utils, linters). Compile with `npm run compile-tests` and run with `npm test`. When adding tests, place them in the appropriate subdirectory under `src/test/`.
+- **Never run commands or write files as root in this project.** Generated output (`dist/`, `out/`, `node_modules/`, `.vscode-test/`) must stay owned by the user. If a command needs elevated permissions, stop and ask.
 - **Generated files in `dist/` and `out/`** are gitignored and vscodeignored. Do not commit build output.
 - **Extension is packaged** — `.vscodeignore` excludes `src/`, `*.ts`, `*.map`, config files from the `.vsix`.
 - **CI**: GitHub Actions on `v*` tags — runs `npm ci && vsce package && vsce publish`. No tests run in CI.
