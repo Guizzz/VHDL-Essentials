@@ -12,6 +12,10 @@ export class EntityIndexer
     private packageMap   = new Map<string, PackageInfo>();
     private filePackages = new Map<string, string[]>();
 
+    private readonly changeEmitter = new vscode.EventEmitter<void>();
+
+    readonly onDidChange = this.changeEmitter.event;
+
     async buildIndex(): Promise<void>
     {
         this.entityMap.clear();
@@ -27,7 +31,7 @@ export class EntityIndexer
     async indexFile(file: vscode.Uri) 
     {
         const path = file.fsPath;
-        this.removeFile(path);
+        this.removeFileInternal(path);
 
         let doc: vscode.TextDocument;
 
@@ -39,6 +43,7 @@ export class EntityIndexer
         {
             const msg = err instanceof Error ? err.message : String(err);
             console.error(`Failed to open ${path}: ${msg}`);
+            this.changeEmitter.fire();
             return;
         }
 
@@ -123,9 +128,17 @@ export class EntityIndexer
         }
 
         this.filePackages.set(path, packageNames);
+
+        this.changeEmitter.fire();
     }
 
-    removeFile(path: string) 
+    removeFile(path: string)
+    {
+        this.removeFileInternal(path);
+        this.changeEmitter.fire();
+    }
+
+    private removeFileInternal(path: string)
     {
         const entities = this.fileEntities.get(path);
 
@@ -207,5 +220,10 @@ export class EntityIndexer
     getEntity(name: string) 
     {
         return this.entityMap.get(name);
+    }
+
+    dispose()
+    {
+        this.changeEmitter.dispose();
     }
 }

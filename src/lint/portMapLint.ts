@@ -68,6 +68,7 @@ export class PortMapLinter
 {
     private diagnostics = vscode.languages.createDiagnosticCollection('vhdl-portmap');
     private debounceTimer: ReturnType<typeof setTimeout> | undefined;
+    private revalidateTimer: ReturnType<typeof setTimeout> | undefined;
 
     constructor(
         private indexer: EntityIndexer,
@@ -81,8 +82,29 @@ export class PortMapLinter
 
         context.subscriptions.push(
             vscode.workspace.onDidOpenTextDocument(doc => this.validate(doc)),
-            vscode.workspace.onDidChangeTextDocument(e => this.schedule(e.document))
+            vscode.workspace.onDidChangeTextDocument(e => this.schedule(e.document)),
+            this.indexer.onDidChange(() => this.scheduleRevalidateAll())
         );
+    }
+
+    private scheduleRevalidateAll()
+    {
+        clearTimeout(this.revalidateTimer);
+        this.revalidateTimer = setTimeout(
+            () => this.revalidateAll(),
+            200
+        );
+    }
+
+    private revalidateAll()
+    {
+        for (const document of vscode.workspace.textDocuments)
+        {
+            if (document.languageId !== 'vhdl') { continue; }
+            if (document.uri.scheme !== 'file') { continue; }
+
+            this.validate(document);
+        }
     }
 
     private schedule(document: vscode.TextDocument)
@@ -139,6 +161,7 @@ export class PortMapLinter
     dispose(): void
     {
         clearTimeout(this.debounceTimer);
+        clearTimeout(this.revalidateTimer);
         this.diagnostics.dispose();
     }
 }
