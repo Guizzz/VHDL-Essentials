@@ -1,12 +1,13 @@
 import * as vscode from 'vscode';
 import { resolvePin } from '../../quartus/qsfPinResolver';
+import { LANGUAGE_ID } from '../../constants';
 
 
 export class PinHoverProvider implements vscode.HoverProvider {
 
     async provideHover( document: vscode.TextDocument, position: vscode.Position ): Promise<vscode.Hover | null>
     {
-        if (document.languageId !== 'vhdl'){return null;}
+        if (document.languageId !== LANGUAGE_ID){return null;}
 
         const range = document.getWordRangeAtPosition( position);
         if (!range) {return null;}

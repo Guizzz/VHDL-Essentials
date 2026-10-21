@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { LANGUAGE_ID, DIAGNOSTIC_SOURCE } from '../constants';
 
 const TAG_PATTERN = /\b(TODO|FIXME|HACK|XXX|NOTE)\b/gi;
 
@@ -58,7 +59,7 @@ export function extractTodoComments(text: string): vscode.Diagnostic[]
                 message,
                 vscode.DiagnosticSeverity.Information
             );
-            diagnostic.source = 'VHDL Essentials';
+            diagnostic.source = DIAGNOSTIC_SOURCE;
             diagnostic.code = 'todo.tag';
             diagnostics.push(diagnostic);
         }
@@ -87,7 +88,7 @@ export class TodoCommentLinter
 
     private schedule(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
 
         clearTimeout(this.debounceTimer);
         this.debounceTimer = setTimeout(
@@ -98,7 +99,7 @@ export class TodoCommentLinter
 
     private validate(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
 
         const diags = extractTodoComments(document.getText());
         this.diagnostics.set(document.uri, diags);

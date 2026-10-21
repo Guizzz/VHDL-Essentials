@@ -11,10 +11,13 @@ export async function writeFileWithConfirmOverwrite(
 {
     let exists = false;
 
-    try {
+    try
+    {
         await vscode.workspace.fs.stat(uri);
         exists = true;
-    } catch {
+    }
+    catch
+    {
         exists = false;
     }
 
@@ -42,7 +45,8 @@ export async function writeFileWithConfirmOverwrite(
         }
     );
 
-    if (!choice || choice.label !== "Overwrite") {
+    if (!choice || choice.label !== "Overwrite")
+    {
         return false;
     }
 

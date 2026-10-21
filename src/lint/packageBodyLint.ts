@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { LANGUAGE_ID } from '../constants';
 
 export function extractPackageDeclaredNames(text: string): Map<string, number>
 {
@@ -72,7 +73,7 @@ export class PackageBodyLint
 
     private schedule(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
 
         clearTimeout(this.debounceTimer);
         this.debounceTimer = setTimeout(
@@ -83,7 +84,7 @@ export class PackageBodyLint
 
     private validate(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
 
         const text = document.getText();
         const diags: vscode.Diagnostic[] = [];

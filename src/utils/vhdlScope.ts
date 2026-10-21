@@ -273,11 +273,6 @@ export function closeScope(line: string, stack: ScopeFrame[]): boolean
     return false;
 }
 
-export function hasBeginKeyword(line: string): boolean
-{
-    return /^begin\b/i.test(stripCommentLine(line).trim());
-}
-
 export function hasElseKeyword(line: string): boolean
 {
     const trimmed = stripCommentLine(line).trim();

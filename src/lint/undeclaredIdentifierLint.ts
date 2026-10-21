@@ -6,6 +6,7 @@ import { parsePackages } from '../parsers/packageParser';
 import { VHDL_KEYWORDS } from '../utils/vhdlKeywords';
 import { offsetToPosition } from '../utils/positionUtils';
 import { EntityIndexer } from '../services/entityIndexer';
+import { LANGUAGE_ID } from '../constants';
 
 function parseUseClauses(text: string): Set<string>
 {
@@ -385,7 +386,7 @@ export class UndeclaredIdentifiersLinter
 
     private schedule(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
         if (document.uri.scheme !== 'file') { return; }
 
         clearTimeout(this.debounceTimer);
@@ -408,7 +409,7 @@ export class UndeclaredIdentifiersLinter
     {
         for (const document of vscode.workspace.textDocuments)
         {
-            if (document.languageId !== 'vhdl') { continue; }
+            if (document.languageId !== LANGUAGE_ID) { continue; }
             if (document.uri.scheme !== 'file') { continue; }
 
             this.validate(document);
@@ -417,7 +418,7 @@ export class UndeclaredIdentifiersLinter
 
     private validate(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
         if (document.uri.scheme !== 'file') { return; }
 
         const resolveSymbol = this.indexer

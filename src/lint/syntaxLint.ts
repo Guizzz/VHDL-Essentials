@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { LANGUAGE_ID, DIAGNOSTIC_SOURCE } from '../constants';
 
 interface ScopeFrame
 {
@@ -36,7 +37,7 @@ function makeDiag(
 ): vscode.Diagnostic
 {
     const d = new vscode.Diagnostic(range, message, severity);
-    d.source = 'VHDL Essentials';
+    d.source = DIAGNOSTIC_SOURCE;
     if (code) { d.code = code; }
     return d;
 }
@@ -606,7 +607,7 @@ export class SyntaxLinter
 
     private schedule(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
 
         clearTimeout(this.debounceTimer);
         this.debounceTimer = setTimeout(
@@ -617,7 +618,7 @@ export class SyntaxLinter
 
     private validate(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
 
         const diags = validateSyntax(document.getText());
         this.diagnostics.set(document.uri, diags);

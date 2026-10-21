@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { EntityIndexer } from './entityIndexer';
+import { LANGUAGE_ID } from '../constants';
 
 export function registerWorkspaceWatchers( context: vscode.ExtensionContext, indexer: EntityIndexer)
 {
@@ -9,7 +10,7 @@ export function registerWorkspaceWatchers( context: vscode.ExtensionContext, ind
     const saveListener =
         vscode.workspace.onDidSaveTextDocument(
             async (doc) => {
-                if (doc.languageId !== 'vhdl') { return;}
+                if (doc.languageId !== LANGUAGE_ID) { return;}
                 await indexer.indexFile(doc.uri);
             }
         );
@@ -19,7 +20,7 @@ export function registerWorkspaceWatchers( context: vscode.ExtensionContext, ind
             (event) => {
                 const doc = event.document;
 
-                if (doc.languageId !== 'vhdl') { return; }
+                if (doc.languageId !== LANGUAGE_ID) { return; }
                 if (doc.uri.scheme !== 'file') { return; }
 
                 pendingChanges.add(doc.uri.fsPath);

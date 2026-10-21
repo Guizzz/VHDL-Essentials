@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { VHDL_KEYWORDS } from '../utils/vhdlKeywords';
+import { LANGUAGE_ID, DIAGNOSTIC_SOURCE } from '../constants';
 
 function stripComment(line: string): string
 {
@@ -213,7 +214,7 @@ export function checkSensitivityList(text: string): vscode.Diagnostic[]
                 msg,
                 vscode.DiagnosticSeverity.Warning
             );
-            d.source = 'VHDL Essentials';
+            d.source = DIAGNOSTIC_SOURCE;
             d.code = 'sensitivity.missing-signal';
             diags.push(d);
         }
@@ -232,7 +233,7 @@ export function checkSensitivityList(text: string): vscode.Diagnostic[]
                         `Unnecessary signal '${sig}' in sensitivity list (never read)`,
                         vscode.DiagnosticSeverity.Hint
                     );
-                    d.source = 'VHDL Essentials';
+                    d.source = DIAGNOSTIC_SOURCE;
                     d.code = 'sensitivity.unnecessary-signal';
                     d.tags = [vscode.DiagnosticTag.Unnecessary];
                     diags.push(d);
@@ -264,7 +265,7 @@ export class SensitivityLinter
 
     private schedule(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
 
         clearTimeout(this.debounceTimer);
         this.debounceTimer = setTimeout(
@@ -275,7 +276,7 @@ export class SensitivityLinter
 
     private validate(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
 
         const diags = checkSensitivityList(document.getText());
         this.diagnostics.set(document.uri, diags);

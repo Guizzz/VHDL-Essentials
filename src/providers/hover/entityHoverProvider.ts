@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { EntityIndexer } from '../../services/entityIndexer';
+import { LANGUAGE_ID } from '../../constants';
 
 
 export class EntityHoverProvider implements vscode.HoverProvider {
@@ -8,7 +9,7 @@ export class EntityHoverProvider implements vscode.HoverProvider {
 
     async provideHover( document: vscode.TextDocument, position: vscode.Position ): Promise<vscode.Hover | null>
     {
-        if (document.languageId !== 'vhdl'){return null;}
+        if (document.languageId !== LANGUAGE_ID){return null;}
 
         const range = document.getWordRangeAtPosition(position);
         if (!range) {return null;}
@@ -22,18 +23,18 @@ export class EntityHoverProvider implements vscode.HoverProvider {
         markdown.supportThemeIcons = true;
         markdown.appendCodeblock(
                 `entity ${word} is\n\tport(\n`,
-                'vhdl'
+                LANGUAGE_ID
             );
         for(const [, port] of entity.ports)
         {
             markdown.appendCodeblock(
                 `\t\t${port.name} : ${port.direction} ${port.type}\n`,
-                'vhdl'
+                LANGUAGE_ID
             );
         }
         markdown.appendCodeblock(
                 `\t);\nend entity;`,
-                'vhdl'
+                LANGUAGE_ID
             );
 
         markdown.isTrusted = true;

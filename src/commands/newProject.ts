@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 
 import { getWorkspace } from '../quartus/quartusProject';
 import { writeFileWithConfirmOverwrite } from '../utils/fileUtils';
+import { DEFAULT_QUARTUS_VERSION } from '../constants';
 
 const DEVICE_FAMILIES = [
     'MAX 10',
@@ -13,7 +14,7 @@ const DEVICE_FAMILIES = [
     'Stratix V'
 ];
 
-function generateQpf(projectName: string): string
+function generateQpf(projectName: string, quartusVersion: string): string
 {
     const now = new Date();
     const time = now.toLocaleTimeString('en-US', { hour12: false });
@@ -22,7 +23,7 @@ function generateQpf(projectName: string): string
     );
     const lines: string[] = [];
 
-    lines.push('QUARTUS_VERSION = "25.1"');
+    lines.push(`QUARTUS_VERSION = "${quartusVersion}"`);
     lines.push(`DATE = "${time}  ${dateStr}"`);
     lines.push('');
     lines.push(`PROJECT_REVISION = "${projectName}"`);
@@ -138,14 +139,16 @@ export function registerNewProjectCommand(context: vscode.ExtensionContext)
 {
     const command = vscode.commands.registerCommand(
         'quartus-assistant.newProject',
-        async () => {
+        async () =>
+        {
             const workspace = getWorkspace();
             if (!workspace) {return;}
 
             const projectName = await vscode.window.showInputBox({
                 title: 'Project name',
                 placeHolder: 'e.g. blinky',
-                validateInput: (value) => {
+                validateInput: (value) =>
+                {
                     if (!value || !isValidProjectName(value))
                     {
                         return 'Must be a valid identifier (letters, digits, underscores)';
@@ -174,7 +177,8 @@ export function registerNewProjectCommand(context: vscode.ExtensionContext)
                 const custom = await vscode.window.showInputBox({
                     title: 'Device family',
                     placeHolder: 'e.g. MAX V',
-                    validateInput: (value) => {
+                    validateInput: (value) =>
+                    {
                         if (!value || value.trim().length === 0)
                         {
                             return 'Device family cannot be empty';
@@ -193,7 +197,8 @@ export function registerNewProjectCommand(context: vscode.ExtensionContext)
             const partNumber = await vscode.window.showInputBox({
                 title: 'Device part number',
                 placeHolder: 'e.g. 10M50DAF484C7G',
-                validateInput: (value) => {
+                validateInput: (value) =>
+                {
                     if (!value || value.trim().length === 0)
                     {
                         return 'Part number cannot be empty';
@@ -206,7 +211,8 @@ export function registerNewProjectCommand(context: vscode.ExtensionContext)
             const entityName = await vscode.window.showInputBox({
                 title: 'Top-level entity name',
                 value: projectName,
-                validateInput: (value) => {
+                validateInput: (value) =>
+                {
                     if (!value || !isValidProjectName(value))
                     {
                         return 'Must be a valid VHDL identifier (letters, digits, underscores)';
@@ -236,7 +242,8 @@ export function registerNewProjectCommand(context: vscode.ExtensionContext)
                     title: 'Project path',
                     value: projectDir.fsPath,
                     placeHolder: 'Full path to project directory',
-                    validateInput: (value) => {
+                    validateInput: (value) =>
+                    {
                         if (!value || value.trim().length === 0)
                         {
                             return 'Path cannot be empty';
@@ -258,10 +265,13 @@ export function registerNewProjectCommand(context: vscode.ExtensionContext)
                 await vscode.workspace.fs.createDirectory(dir);
             }
 
+            const quartusPath = vscode.workspace.getConfiguration('maxv').get<string>('quartusPath') ?? '';
+            const quartusVersion = quartusPath.match(/\d+\.\d+/)?.[0] ?? DEFAULT_QUARTUS_VERSION;
+
             const files: { uri: vscode.Uri; content: string; label: string }[] = [
                 {
                     uri: vscode.Uri.joinPath(projectDir, `${projectName}.qpf`),
-                    content: generateQpf(projectName),
+                    content: generateQpf(projectName, quartusVersion),
                     label: `${projectName}.qpf`
                 },
                 {

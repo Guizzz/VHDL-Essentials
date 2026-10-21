@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { parseSignals } from '../parsers/variableParser';
 import { offsetToPosition } from '../utils/positionUtils';
+import { LANGUAGE_ID, DIAGNOSTIC_SOURCE } from '../constants';
 
 export function findDuplicateSignals(text: string): vscode.Diagnostic[]
 {
@@ -23,7 +24,7 @@ export function findDuplicateSignals(text: string): vscode.Diagnostic[]
                 `Duplicate declaration of '${signal.name}'`,
                 vscode.DiagnosticSeverity.Error
             );
-            diagnostic.source = 'VHDL Essentials';
+            diagnostic.source = DIAGNOSTIC_SOURCE;
             diagnostic.code = 'duplicate-signal';
             diagnostics.push(diagnostic);
         }
@@ -38,7 +39,7 @@ export function findDuplicateSignals(text: string): vscode.Diagnostic[]
 
 export class DuplicateSignalLinter
 {
-    private diagnostics = vscode.languages.createDiagnosticCollection('vhdl');
+    private diagnostics = vscode.languages.createDiagnosticCollection(LANGUAGE_ID);
 
     constructor(context: vscode.ExtensionContext)
     {
@@ -54,7 +55,7 @@ export class DuplicateSignalLinter
 
     private refresh(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') {return;}
+        if (document.languageId !== LANGUAGE_ID) {return;}
 
         const diags = findDuplicateSignals(document.getText());
         this.diagnostics.set(document.uri, diags);

@@ -1,13 +1,14 @@
 import * as vscode from 'vscode';
 import { getSettingsFile } from '../../quartus/quartusProject';
 import { parseQsf } from '../../parsers/qsfParser';
+import { LANGUAGE_ID } from '../../constants';
 
 export class PinDefinitionProvider implements vscode.DefinitionProvider {
 
     async provideDefinition(document: vscode.TextDocument, position: vscode.Position): Promise<vscode.Definition | null> 
     {
 
-        if (document.languageId !== 'vhdl') { return null;}
+        if (document.languageId !== LANGUAGE_ID) { return null;}
 
         const range = document.getWordRangeAtPosition(position);
 

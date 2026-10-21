@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { EntityIndexer } from '../../services/entityIndexer';
 import { getIcon } from '../../utils/hoverIcon';
+import { LANGUAGE_ID } from '../../constants';
 
 
 export class VarPackHoverProvider implements vscode.HoverProvider {
@@ -9,7 +10,7 @@ export class VarPackHoverProvider implements vscode.HoverProvider {
 
     async provideHover( document: vscode.TextDocument, position: vscode.Position ): Promise<vscode.Hover | null>
     {
-        if (document.languageId !== 'vhdl'){return null;}
+        if (document.languageId !== LANGUAGE_ID){return null;}
 
         const range = document.getWordRangeAtPosition(position);
         if (!range) {return null;}
@@ -26,7 +27,7 @@ export class VarPackHoverProvider implements vscode.HoverProvider {
 
         markdown.appendCodeblock(
             `${symbol.symbol.kind} ${word} : ${symbol.symbol.type}${symbol.symbol.value ? ` := ${symbol.symbol.value}` : ''}`,
-            'vhdl'
+            LANGUAGE_ID
         );
 
         markdown.isTrusted = true;

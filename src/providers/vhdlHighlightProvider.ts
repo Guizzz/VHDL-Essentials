@@ -2,6 +2,7 @@
 import * as vscode from 'vscode';
 import { EntityIndexer } from '../services/entityIndexer';
 import { findUnusedSignals } from '../lint/unusedSignalsLint';
+import { LANGUAGE_ID } from '../constants';
 
 export class VhdlHighlightProvider implements vscode.Disposable 
 {
@@ -44,7 +45,7 @@ export class VhdlHighlightProvider implements vscode.Disposable
         const editor = vscode.window.activeTextEditor;
 
         if (!editor) { return;}
-        if (editor.document.languageId !== 'vhdl') {return;}
+        if (editor.document.languageId !== LANGUAGE_ID) {return;}
 
         this.update(editor);
     }

@@ -3,6 +3,7 @@ import { PortMapClause, parsePortMaps } from '../parsers/portMapParser';
 import { EntityPort } from '../types/types';
 import { EntityIndexer } from '../services/entityIndexer';
 import { offsetToPosition } from '../utils/positionUtils';
+import { LANGUAGE_ID, DIAGNOSTIC_SOURCE } from '../constants';
 
 export function validatePortMaps(
     text: string,
@@ -39,7 +40,7 @@ export function validatePortMaps(
                 `Missing port '${portName}' (${port.direction} ${port.type})`,
                 vscode.DiagnosticSeverity.Warning
             );
-            d.source = 'VHDL Essentials';
+            d.source = DIAGNOSTIC_SOURCE;
             d.code = 'portmap.missing-port';
             diags.push(d);
         }
@@ -55,7 +56,7 @@ export function validatePortMaps(
                 `Port '${mapping.formal}' not found in entity '${clause.entityName}'`,
                 vscode.DiagnosticSeverity.Error
             );
-            d.source = 'VHDL Essentials';
+            d.source = DIAGNOSTIC_SOURCE;
             d.code = 'portmap.undefined-port';
             diags.push(d);
         }
@@ -100,7 +101,7 @@ export class PortMapLinter
     {
         for (const document of vscode.workspace.textDocuments)
         {
-            if (document.languageId !== 'vhdl') { continue; }
+            if (document.languageId !== LANGUAGE_ID) { continue; }
             if (document.uri.scheme !== 'file') { continue; }
 
             this.validate(document);
@@ -109,7 +110,7 @@ export class PortMapLinter
 
     private schedule(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
 
         clearTimeout(this.debounceTimer);
         this.debounceTimer = setTimeout(
@@ -134,7 +135,7 @@ export class PortMapLinter
 
     private validate(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
 
         const text = document.getText();
         const portMaps = parsePortMaps(text);

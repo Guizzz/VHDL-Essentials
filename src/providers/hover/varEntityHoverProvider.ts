@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { parseSignals } from '../../parsers/variableParser';
 import { getIcon } from '../../utils/hoverIcon';
+import { LANGUAGE_ID } from '../../constants';
 
 export class VarEntityHoverProvider implements vscode.HoverProvider
 {
@@ -22,7 +23,7 @@ export class VarEntityHoverProvider implements vscode.HoverProvider
         
         markdown.appendCodeblock(
             `${symbol.kind} ${symbol.name} : ${symbol.direction ? symbol.direction + ' ' : ''}${symbol.type}`,
-            'vhdl'
+            LANGUAGE_ID
         );
 
         markdown.appendMarkdown(`$(${getIcon(symbol.kind)}) **${symbol.name}**\n\n`);

@@ -32,11 +32,6 @@ const FUNC_ITEMS: vscode.CompletionItem[] = [
     return item;
 });
 
-const SIMPLE_TYPES = new Set([
-    'std_logic', 'std_logic_vector', 'integer', 'natural', 'positive',
-    'boolean', 'bit', 'bit_vector', 'real', 'time', 'string', 'character',
-]);
-
 export class VhdlCompletionProvider implements vscode.CompletionItemProvider
 {
     constructor(private indexer: EntityIndexer) {}
@@ -231,15 +226,8 @@ export class VhdlCompletionProvider implements vscode.CompletionItemProvider
             const item = new vscode.CompletionItem(sym.name, kind);
             item.detail = `${sym.kind}: ${sym.type}`;
             items.push(item);
-
-            if (SIMPLE_TYPES.has(sym.name.toLowerCase()))
-            {
-                continue;
-            }
         }
     }
-
-
 
     private kindFromSignalKind(kind: string): vscode.CompletionItemKind
     {

@@ -116,10 +116,6 @@ export class QuartusLogger
     {
         if (msg.code === 'IQEXE_ERROR_COUNT')
         {
-            if (msg.text.includes('successful')) {
-                return msg.text;
-            }
-
             return msg.text;
         }
 

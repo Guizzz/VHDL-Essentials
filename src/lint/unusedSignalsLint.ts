@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { parseSignals } from '../parsers/variableParser';
 import { VHDL_KEYWORDS } from '../utils/vhdlKeywords';
 import { offsetToPosition } from '../utils/positionUtils';
+import { LANGUAGE_ID, DIAGNOSTIC_SOURCE } from '../constants';
 
 export function findUnusedSignals(text: string): vscode.Diagnostic[]
 {
@@ -87,7 +88,7 @@ export function findUnusedSignals(text: string): vscode.Diagnostic[]
                 `Unused ${signal.kind} '${signal.name}'`,
                 vscode.DiagnosticSeverity.Warning
             );
-            diagnostic.source = 'VHDL Essentials';
+            diagnostic.source = DIAGNOSTIC_SOURCE;
             diagnostic.code = 'unused-signal';
             diagnostics.push(diagnostic);
         }
@@ -116,7 +117,7 @@ export class UnusedSignalsLinter
 
     private schedule(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
         if (document.uri.scheme !== 'file') { return; }
 
         clearTimeout(this.debounceTimer);
@@ -128,7 +129,7 @@ export class UnusedSignalsLinter
 
     private validate(document: vscode.TextDocument)
     {
-        if (document.languageId !== 'vhdl') { return; }
+        if (document.languageId !== LANGUAGE_ID) { return; }
         if (document.uri.scheme !== 'file') { return; }
 
         const diags = findUnusedSignals(document.getText());

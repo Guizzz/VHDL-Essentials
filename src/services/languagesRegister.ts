@@ -16,41 +16,42 @@ import { VhdlSignatureProvider } from '../providers/vhdlSignatureProvider';
 import { VhdlRenameProvider } from '../providers/renameProvider';
 import { VhdlDocumentFormatter } from '../providers/vhdlFormatter';
 import { QsfCompletionProvider } from '../providers/qsfCompletionProvider';
+import { LANGUAGE_ID } from '../constants';
 
 export function registerLanguageFeatures(context: vscode.ExtensionContext, indexer: EntityIndexer) 
 {
     const definitionProvider    = vscode.languages.registerDefinitionProvider(
-                                    'vhdl',
+                                    LANGUAGE_ID,
                                     new VhdlDefinitionProvider(indexer)
                                 );
     
     const varPackHoverProvider  = vscode.languages.registerHoverProvider(
-                                    'vhdl',
+                                    LANGUAGE_ID,
                                     new VarPackHoverProvider(indexer)
                                 );
 
     const entityHoverProvider  = vscode.languages.registerHoverProvider(
-                                    'vhdl',
+                                    LANGUAGE_ID,
                                     new EntityHoverProvider(indexer)
                                 );
 
     const varEntityHoverProvider  = vscode.languages.registerHoverProvider(
-                                    'vhdl',
+                                    LANGUAGE_ID,
                                     new VarEntityHoverProvider()
                                 );
 
     const pinHoverProvider      = vscode.languages.registerHoverProvider(
-                                    'vhdl',
+                                    LANGUAGE_ID,
                                     new PinHoverProvider()
                                 );
     
     const pinDefinitionProvider = vscode.languages.registerDefinitionProvider(
-                                    'vhdl',
+                                    LANGUAGE_ID,
                                     new PinDefinitionProvider()
                                 );
     
     const completionProvider = vscode.languages.registerCompletionItemProvider(
-        'vhdl',
+        LANGUAGE_ID,
         new VhdlCompletionProvider(indexer),
         '.'
     );
@@ -59,34 +60,34 @@ export function registerLanguageFeatures(context: vscode.ExtensionContext, index
     highlightProvider.activate();
 
     const docSymbolProvider = vscode.languages.registerDocumentSymbolProvider(
-        'vhdl',
+        LANGUAGE_ID,
         new VhdlDocumentSymbolProvider()
     );
 
     const codeActionProvider = vscode.languages.registerCodeActionsProvider(
-        'vhdl',
+        LANGUAGE_ID,
         new VhdlCodeActionProvider(indexer)
     );
 
     const referenceProvider = vscode.languages.registerReferenceProvider(
-        'vhdl',
+        LANGUAGE_ID,
         new VhdlReferenceProvider(indexer)
     );
 
     const signatureProvider = vscode.languages.registerSignatureHelpProvider(
-        'vhdl',
+        LANGUAGE_ID,
         new VhdlSignatureProvider(indexer),
         '(',
         ','
     );
 
     const renameProvider = vscode.languages.registerRenameProvider(
-        'vhdl',
+        LANGUAGE_ID,
         new VhdlRenameProvider(indexer)
     );
 
     const vhdlFormatter = vscode.languages.registerDocumentFormattingEditProvider(
-        'vhdl',
+        LANGUAGE_ID,
         new VhdlDocumentFormatter()
     );
 
