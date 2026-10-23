@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
+## [0.16.5] - 2026-10-23
+
+### Fixed
+
+- **Extension publishing** - `@types/vscode` is back to `^1.138.0`, aligned with `engines.vscode`, so `vsce package` succeeds again (the v0.16.4 release failed for this reason)
+- Dependabot no longer proposes `@types/vscode` updates that exceed `engines.vscode`
+
 ## [0.16.4] - 2026-10-21
 
 ### Changed

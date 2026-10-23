@@ -10,6 +10,23 @@
   <div class="tl-dot"></div>
   <div class="tl-card">
     <div class="tl-version">
+      <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.16.5" target="_blank">v0.16.5</a>
+      <span class="tl-date">2026-10-23</span>
+    </div>
+    <div class="tl-section tl-fixed">
+      <div class="tl-heading">Fixed</div>
+      <ul>
+        <li>**Extension publishing** - <code>@types/vscode</code> is back to <code>^1.138.0</code>, aligned with <code>engines.vscode</code>, so <code>vsce package</code> succeeds again (the v0.16.4 release failed for this reason)</li>
+        <li>Dependabot no longer proposes <code>@types/vscode</code> updates that exceed <code>engines.vscode</code></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="tl-entry">
+  <div class="tl-dot"></div>
+  <div class="tl-card">
+    <div class="tl-version">
       <a href="https://github.com/Guizzz/VHDL-Essentials/releases/tag/v0.16.4" target="_blank">v0.16.4</a>
       <span class="tl-date">2026-10-21</span>
     </div>
