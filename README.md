@@ -13,8 +13,23 @@
 
 Most VHDL extensions stop at language support. VHDL Essentials is the only one that understands your Quartus project end to end:
 
+| Capability | VHDL Essentials | vhdl_ls | TerosHDL | Generic VHDL extensions |
+|---|---|---|---|---|
+| Build the Quartus flow from the editor | ✅ | — | — | — |
+| Program the device (`.sof`/`.pof`) without leaving VS Code | ✅ | — | — | — |
+| Parses `.fit.summary` into a resource summary (LE, registers, pins, PLLs, memory bits) | ✅ | — | — | — |
+| Pin-aware diagnostics from the QSF (port ↔ FPGA pin) | ✅ | — | — | — |
+| QSF project explorer (device, top level, pins, testbenches, scripts) | ✅ | — | — | — |
+| QuestaSim `.do` generation and live transcript | ✅ | Partial | Partial | — |
+| VHDL intelligence: definition, hover, rename, references, signature help, outline, completion, formatter | ✅ | ✅ | ✅ | Partial |
+| Works with no external language server or runtime dependency | ✅ | — | ❌ | — |
+
+*Comparison based on each project's public feature documentation.*
+
+What that means in practice:
+
 - **Build and flash from the editor** — run Quartus flows and program your device without leaving VS Code
-- **Fit reports in the tree view** — resource utilization (logic elements, pins, registers, PLLs, memory bits) parsed from `.fit.summary` after every build
+- **Fit reports in the tree view** — resource utilization parsed from `.fit.summary` after every build
 - **Pin-aware diagnostics** — top-level ports are checked against QSF pin assignments, and hover shows the assigned FPGA pin
 - **QuestaSim/ModelSim integration** — generate `.do` scripts, launch simulations and stream the transcript live
 - **QSF project explorer and linting** — device, top-level entity, pin assignments, plus duplicate and unknown-command checks

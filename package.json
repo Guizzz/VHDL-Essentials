@@ -16,8 +16,7 @@
     "Programming Languages",
     "Debuggers",
     "Snippets",
-    "Formatters",
-    "Education"
+    "Formatters"
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
