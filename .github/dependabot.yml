@@ -5,6 +5,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      dev-dependencies:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
     ignore:
       # @types/vscode must not exceed engines.vscode (vsce rejects the package otherwise)
       - dependency-name: "@types/vscode"
