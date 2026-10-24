@@ -3,17 +3,16 @@
   "skills": {
     "paths": ["./skills"]
   },
-  "plugin": [
-    "opencode-conductor",
-    "opencode-type-inject",
-    "opencode-shell-strategy"
-  ],
+  // Plugin disabilitati (chiave V2: "plugins"):
+  // - opencode-type-inject / opencode-shell-strategy: non esistono su npm (404)
+  // - opencode-conductor: v1.0.6 usa l'API plugin V1, non caricabile in V2
+  // Reintrodurli solo quando esiste una versione funzionante.
   "mcp": {
     "github": {
       "type": "local",
       "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
       "environment": {
-        "GITHUB_TOKEN": "{file:../secrets/github-token.txt}"
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{file:../secrets/github-token.txt}"
       }
     }
   }
