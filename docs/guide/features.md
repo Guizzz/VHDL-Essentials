@@ -106,6 +106,17 @@ The summary is ordered by usage descending (most critical first), and the parent
 
 ![Fit Resource Summary](/screenshots/summary.png)
 
+### Resource Usage View
+
+A dedicated **Resource Usage** view in the same activity bar container shows the same fit summary with build-over-build comparison:
+
+- a **usage bar** plus percentage and absolute values for every resource
+- the **Δ change** against the previous recorded build, so regressions are visible at a glance
+- the timestamp and Fitter status of the last build
+- history persisted per project (last 20 builds), so the comparison survives window reloads
+
+The color thresholds are the same as the Fit Summary section (green below 70%, orange 70–90%, red at or above 90%).
+
 ---
 
 ## Quartus Workflow Integration

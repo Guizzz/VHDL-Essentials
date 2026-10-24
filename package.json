@@ -143,9 +143,20 @@
           "id": "quartus-assistant-view",
           "name": "Quartus Assistant Panel",
           "icon": "$(chip)"
+        },
+        {
+          "id": "quartus-assistant-resource-usage",
+          "name": "Resource Usage",
+          "icon": "$(dashboard)"
         }
       ]
     },
+    "viewsWelcome": [
+      {
+        "view": "quartus-assistant-resource-usage",
+        "contents": "No fit report found yet.\nBuild the project to populate resource usage.\n[Build now](command:quartus-assistant.build)"
+      }
+    ],
     "menus": {
       "view/item/context": [
         {

@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { FitSummaryEntry, PinAssignment } from '../types/types';
+import { usageColor, usageSeverity } from '../quartus/buildHistory';
 
 export class PinAssignmentsNode extends vscode.TreeItem
 {
@@ -118,27 +119,10 @@ export class FitSummaryNode extends vscode.TreeItem
         {
             const item = new vscode.TreeItem(e.label, vscode.TreeItemCollapsibleState.None);
             item.description = `${e.used} / ${e.total} (${e.percent}%)`;
-
-            let icon: string;
-            let color: vscode.ThemeColor;
-
-            if (e.percent >= 90)
-            {
-                icon = 'error';
-                color = new vscode.ThemeColor('charts.red');
-            }
-            else if (e.percent >= 70)
-            {
-                icon = 'warning';
-                color = new vscode.ThemeColor('charts.orange');
-            }
-            else
-            {
-                icon = 'check';
-                color = new vscode.ThemeColor('charts.green');
-            }
-
-            item.iconPath = new vscode.ThemeIcon(icon, color);
+            item.iconPath = new vscode.ThemeIcon(
+                usageSeverity(e.percent),
+                new vscode.ThemeColor(usageColor(e.percent))
+            );
             return item;
         });
     }

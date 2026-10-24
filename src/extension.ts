@@ -12,6 +12,7 @@ import { registerWorkspaceWatchers } from './services/workspaceWatcher';
 import { registerLanguageFeatures } from './services/languagesRegister';
 import { registerUiWatchers } from './ui/uiWatcher';
 import { registerQsfView } from './services/qsfViewService';
+import { registerResourceUsageView } from './services/resourceUsageService';
 import { registerLintFeature } from './services/lintRegister';
 
 
@@ -34,6 +35,7 @@ export async function activate(context: vscode.ExtensionContext)
 
     // Tree View
     await registerQsfView(context);
+    await registerResourceUsageView(context);
 
     // VHDL indexing
     const indexer = new EntityIndexer();
